@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
  *
- * This file is part of libbitcoin.
+ * This file is part of libbitcoin-consensus.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
+ * libbitcoin-consensus is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -19,12 +19,49 @@
  */
 #include "script.hpp"
 
+#include <ctype.h>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/test/unit_test.hpp>
-#include <bitcoin/bitcoin.hpp>
+#include <bitcoin/consensus.hpp>
 
-using namespace bc;
+using namespace libbitcoin;
+
+static unsigned from_hex(const char c)
+{
+    if ('A' <= c && c <= 'F')
+        return 10 + c - 'A';
+    if ('a' <= c && c <= 'f')
+        return 10 + c - 'a';
+    return c - '0';
+}
+
+bool decode_base16_private(uint8_t* out, size_t out_size, const char* in)
+{
+    if (!std::all_of(in, in + 2 * out_size, isxdigit))
+        return false;
+
+    for (size_t i = 0; i < out_size; ++i)
+    {
+        out[i] = (from_hex(in[0]) << 4) + from_hex(in[1]);
+        in += 2;
+    }
+    return true;
+}
+
+bool decode_base16(data_chunk& out, const std::string& in)
+{
+    // This prevents a last odd character from being ignored:
+    if (in.size() % 2 != 0)
+        return false;
+
+    data_chunk result(in.size() / 2);
+    if (!decode_base16_private(result.data(), result.size(), in.data()))
+        return false;
+
+    out = result;
+    return true;
+}
 
 bool is_number(const std::string& token)
 {
@@ -42,7 +79,7 @@ bool is_hex_data(const std::string& token)
     if (!boost::starts_with(token, "0x"))
         return false;
     std::string hex_part(token.begin() + 2, token.end());
-    return boost::all(hex_part, [](char c) { return std::isxdigit(c); });
+    return boost::all(hex_part, [](char c) { return isxdigit(c); });
 }
 
 bool is_quoted_string(const std::string& token)
@@ -146,7 +183,7 @@ bool parse_token(data_chunk& raw_script, std::string token)
     }
     else if (is_number(token))
     {
-        int64_t value = boost::lexical_cast<int64_t>(token);
+        auto value = boost::lexical_cast<int64_t>(token);
         if (is_opx(value))
             push_literal(raw_script, value);
         else
@@ -175,7 +212,7 @@ bool parse_token(data_chunk& raw_script, std::string token)
     }
     else
     {
-        log_error() << "Token parsing failed with: " << token;
+        //////log_error() << "Token parsing failed with: " << token;
         return false;
     }
     return true;
@@ -219,10 +256,10 @@ bool run_script(const script_test& test)
     return output.run(input, tx, 0);
 }
 
-void ignore_output(log_level,
-    const std::string&, const std::string&)
-{
-}
+//void ignore_output(log_level,
+//    const std::string&, const std::string&)
+//{
+//}
 
 BOOST_AUTO_TEST_SUITE(script_tests)
 
@@ -237,7 +274,7 @@ BOOST_AUTO_TEST_CASE(script_json_valid)
 BOOST_AUTO_TEST_CASE(script_json_invalid)
 {
     // Shut up!
-    log_fatal().set_output_function(ignore_output);
+    //log_fatal().set_output_function(ignore_output);
     for (const script_test& test: invalid_scripts)
     {
         BOOST_REQUIRE(!run_script(test));

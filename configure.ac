@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright (c) 2011-2014 libbitcoin developers (see COPYING).
+# Copyright (c) 2011-2014 libbitcoin-consensus developers (see COPYING).
 #
 #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
@@ -11,7 +11,7 @@
 AC_PREREQ([2.65])
 
 # Process command-line arguments and perform initialization and verification.
-AC_INIT([libbitcoin], [2.8.0], [genjix@riseup.net])
+AC_INIT([libbitcoin-consensus], [3.0.0], [eric@voskuil.org])
 
 # Do compilation tests.
 AC_LANG(C++)
@@ -113,14 +113,6 @@ AS_IF([test x$enable_testnet != xno], AC_SUBST([testnet], [-DENABLE_TESTNET]))
 AS_IF([test x$enable_shared != xno], AC_DEFINE([BOOST_TEST_DYN_LINK]))
 
 
-# Set unconditional preprocessor defines.
-#==============================================================================
-# Unconditionally define the preprocessor symbol SYSCONFDIR.
-#------------------------------------------------------------------------------
-# Set the value of SYSCONFDIR for source usage.
-AC_DEFINE([SYSCONFDIR], ["${sysconfdir}"])
-
-
 # Check dependencies.
 #==============================================================================
 # Require Boost of at least version 1.49.0 if in gcc.
@@ -135,33 +127,11 @@ AS_CASE([${CC}], [*clang*],
     [AX_BOOST_BASE([1.54.0], [], [AC_MSG_ERROR(
         [Boost 1.54.0 or later is required but was not found.])])])
 
-AX_BOOST_DATE_TIME
-
-AX_BOOST_FILESYSTEM
-
-AX_BOOST_PROGRAM_OPTIONS
-
-AX_BOOST_REGEX
-
-AX_BOOST_SYSTEM
-
 AS_IF([test x$with_tests = xyes], [AX_BOOST_UNIT_TEST_FRAMEWORK])
-
-# Require rt if on linux and output ${rt_LIBS}.
-#------------------------------------------------------------------------------
-AS_CASE([${host_os}], [*linux*], 
-    [AC_CHECK_LIB([rt],[clock_gettime],
-        [AC_SUBST([rt_LIBS], [-lrt])],
-        [AC_SUBST([rt_LIBS], [])
-            AC_MSG_ERROR([rt library is required but was not found.])])])
 
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CFLAGS} and ${secp256k1_LIBS}.
 #------------------------------------------------------------------------------
 PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1])
-
-# Output ${boost_LIBS}
-#------------------------------------------------------------------------------
-AC_SUBST([boost_LIBS], ["-lboost_date_time -lboost_filesystem -lboost_program_options -lboost_regex -lboost_system"])
 
 
 # Set flags.
@@ -239,5 +209,5 @@ AS_CASE([${CC}], [*gcc*],
 
 # Process outputs into templates.
 #==============================================================================
-AC_CONFIG_FILES([Makefile libbitcoin.pc ])
+AC_CONFIG_FILES([Makefile libbitcoin-consensus.pc ])
 AC_OUTPUT

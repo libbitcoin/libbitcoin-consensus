@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
  *
- * This file is part of libbitcoin.
+ * This file is part of libbitcoin-consensus.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
+ * libbitcoin-consensus is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -17,26 +17,27 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+#include <bitcoin/consensus/script.hpp>
 
+#include <cstddef>
+#include <cstdint>
+#include <iostream>
+#include <sstream>
 #include <stack>
-#include <type_traits>
-#include <boost/algorithm/string.hpp>
-#include <boost/optional.hpp>
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/primitives.hpp>
-#include <bitcoin/bitcoin/script.hpp>
-#include <bitcoin/bitcoin/transaction.hpp>
-#include <bitcoin/bitcoin/formats/base16.hpp>
-#include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/math/script_number.hpp>
-#include <bitcoin/bitcoin/utility/assert.hpp>
-#include <bitcoin/bitcoin/utility/logger.hpp>
-#include <bitcoin/bitcoin/utility/serializer.hpp>
+#include <bitcoin/consensus/constants.hpp>
+#include <bitcoin/consensus/math/hash.hpp>
+#include <bitcoin/consensus/math/script_number.hpp>
+#include <bitcoin/consensus/primitives.hpp>
+#include <bitcoin/consensus/transaction.hpp>
+#include <bitcoin/consensus/utility/assert.hpp>
+#include <bitcoin/consensus/utility/endian.hpp>
+#include <bitcoin/consensus/utility/serializer.hpp>
 
 namespace libbitcoin {
 
+// False is an empty stack.
+static const data_chunk stack_false_value;
 static const data_chunk stack_true_value{1};
-static const data_chunk stack_false_value;  // False is an empty
 
 constexpr size_t op_counter_limit = 201;
 
@@ -1003,26 +1004,6 @@ bool create_signature(data_chunk& signature, const ec_secret& private_key,
     return true;
 }
 
-// This uses the legacy non-deterministic nonce technique.
-bool create_signature(data_chunk& signature, const ec_secret& private_key,
-    const script_type& prevout_script, const transaction_type& new_tx,
-    uint32_t input_index, uint32_t hash_type, const ec_secret& nonce)
-{
-    // This always produces a valid signature hash.
-    const auto sighash =
-        script_type::generate_signature_hash(
-            new_tx, input_index, prevout_script, hash_type);
-
-    // Create the EC signature.
-    signature = sign(private_key, sighash, nonce);
-    if (signature.empty())
-        return false;
-
-    // Add the sighash type to the end of the signature.
-    signature.push_back(hash_type);
-    return true;
-}
-
 bool check_signature(data_slice signature, const ec_point& public_key,
     const script_type& script_code, const transaction_type& parent_tx,
     uint32_t input_index)
@@ -1447,8 +1428,8 @@ bool script_type::run_operation(const operation& op,
             return false;
 
         default:
-            log_fatal(LOG_SCRIPT) << "Unimplemented operation <none "
-                << static_cast<int>(op.code) << ">";
+            //////log_fatal(LOG_SCRIPT) << "Unimplemented operation <none "
+            //////    << static_cast<int>(op.code) << ">";
             return false;
     }
     return false;
@@ -2010,83 +1991,83 @@ opcode string_to_opcode(const std::string& code_repr)
     return opcode::bad_operation;
 }
 
-std::string pretty(const script_type& script)
-{
-    const operation_stack& opers = script.operations();
-    std::ostringstream ss;
-    for (auto it = opers.begin(); it != opers.end(); ++it)
-    {
-        if (it != opers.begin())
-            ss << " ";
-        const operation& op = *it;
-        if (op.data.empty())
-            ss << opcode_to_string(op.code);
-        else
-            ss << "[ " << encode_base16(op.data) << " ]";
-    }
-    return ss.str();
-}
+//std::string pretty(const script_type& script)
+//{
+//    const operation_stack& opers = script.operations();
+//    std::ostringstream ss;
+//    for (auto it = opers.begin(); it != opers.end(); ++it)
+//    {
+//        if (it != opers.begin())
+//            ss << " ";
+//        const operation& op = *it;
+//        if (op.data.empty())
+//            ss << opcode_to_string(op.code);
+//        else
+//            ss << "[ " << encode_base16(op.data) << " ]";
+//    }
+//    return ss.str();
+//}
 
-opcode data_to_opcode(const data_chunk& data)
-{
-    opcode code;
-    constexpr size_t limit = 76;
-    if (data.size() < limit)
-        code = opcode::special;
-    else if (data.size() < max_uint8)
-        code = opcode::pushdata1;
-    else if (data.size() < max_uint16)
-        code = opcode::pushdata2;
-    else if (data.size() < max_uint32)
-        code = opcode::pushdata4;
-    else
-        code = opcode::bad_operation;
-    return code;
-}
+//opcode data_to_opcode(const data_chunk& data)
+//{
+//    opcode code;
+//    constexpr size_t limit = 76;
+//    if (data.size() < limit)
+//        code = opcode::special;
+//    else if (data.size() < max_uint8)
+//        code = opcode::pushdata1;
+//    else if (data.size() < max_uint16)
+//        code = opcode::pushdata2;
+//    else if (data.size() < max_uint32)
+//        code = opcode::pushdata4;
+//    else
+//        code = opcode::bad_operation;
+//    return code;
+//}
 
-script_type unpretty(const std::string& pretty)
-{
-    script_type script;
-    std::vector<std::string> tokens;
-    boost::split(tokens, pretty, boost::is_any_of(" "),
-        boost::token_compress_on);
-    for (auto token = tokens.begin(); token != tokens.end(); ++token)
-    {
-        operation op;
-        if (*token == "[")
-        {
-            data_chunk data;
-            if (!decode_base16(data, *++token))
-                return script_type();
-            if (data.empty() || *++token != "]")
-                return script_type();
-            op.code = data_to_opcode(data);
-            if (op.code == opcode::bad_operation)
-                return script_type();
-            op.data = data;
-        }
-        else
-        {
-            op.code = string_to_opcode(*token);
-        }
-        script.push_operation(op);
-    }
-    return script;
-}
-
-std::istream& operator>>(std::istream& stream, script_type& script)
-{
-    std::string text;
-    stream >> text;
-    script = unpretty(text);
-    return stream;
-}
-
-std::ostream& operator<<(std::ostream& stream, const script_type& script)
-{
-    stream << pretty(script);
-    return stream;
-}
+//script_type unpretty(const std::string& pretty)
+//{
+//    script_type script;
+//    std::vector<std::string> tokens;
+//    boost::split(tokens, pretty, boost::is_any_of(" "),
+//        boost::token_compress_on);
+//    for (auto token = tokens.begin(); token != tokens.end(); ++token)
+//    {
+//        operation op;
+//        if (*token == "[")
+//        {
+//            data_chunk data;
+//            if (!decode_base16(data, *++token))
+//                return script_type();
+//            if (data.empty() || *++token != "]")
+//                return script_type();
+//            op.code = data_to_opcode(data);
+//            if (op.code == opcode::bad_operation)
+//                return script_type();
+//            op.data = data;
+//        }
+//        else
+//        {
+//            op.code = string_to_opcode(*token);
+//        }
+//        script.push_operation(op);
+//    }
+//    return script;
+//}
+//
+//std::istream& operator>>(std::istream& stream, script_type& script)
+//{
+//    std::string text;
+//    stream >> text;
+//    script = unpretty(text);
+//    return stream;
+//}
+//
+//std::ostream& operator<<(std::ostream& stream, const script_type& script)
+//{
+//    stream << pretty(script);
+//    return stream;
+//}
 
 script_type raw_data_script(data_slice raw_script)
 {
@@ -2143,8 +2124,8 @@ script_type parse_script(data_slice raw_script)
             op.code = opcode::special;
         if (must_read_data(op.code))
         {
-            size_t read_n_bytes =
-                number_bytes_to_read(op.code, raw_byte, deserial);
+            auto read_n_bytes = static_cast<uint32_t>(
+                number_bytes_to_read(op.code, raw_byte, deserial));
             op.data = deserial.read_data(read_n_bytes);
             BITCOIN_ASSERT(read_n_bytes || op.data.empty());
         }
@@ -2160,9 +2141,11 @@ inline data_chunk operation_metadata(const opcode code, size_t data_size)
         case opcode::pushdata1:
             return data_chunk{ static_cast<uint8_t>(data_size) };
         case opcode::pushdata2:
-            return to_data_chunk(to_little_endian<uint16_t>(data_size));
+            return to_data_chunk(
+                to_little_endian(static_cast<uint16_t>(data_size)));
         case opcode::pushdata4:
-            return to_data_chunk(to_little_endian<uint32_t>(data_size));
+            return to_data_chunk(
+                to_little_endian(static_cast<uint32_t>(data_size)));
         default:
             return data_chunk();
     }
@@ -2180,7 +2163,7 @@ data_chunk save_script(const script_type& script)
     {
         uint8_t raw_byte = static_cast<uint8_t>(op.code);
         if (op.code == opcode::special)
-            raw_byte = op.data.size();
+            raw_byte = static_cast<uint8_t>(op.data.size());
         raw_script.push_back(raw_byte);
         extend_data(raw_script, operation_metadata(op.code, op.data.size()));
         extend_data(raw_script, op.data);

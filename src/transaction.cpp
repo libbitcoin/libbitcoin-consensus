@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
  *
- * This file is part of libbitcoin.
+ * This file is part of libbitcoin-consensus.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
+ * libbitcoin-consensus is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -17,14 +17,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <bitcoin/bitcoin/transaction.hpp>
+#include <bitcoin/consensus/transaction.hpp>
 
-#include <bitcoin/bitcoin/constants.hpp>
-#include <bitcoin/bitcoin/satoshi_serialize.hpp>
-#include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/utility/endian.hpp>
-#include <bitcoin/bitcoin/utility/logger.hpp>
-#include <bitcoin/bitcoin/utility/serializer.hpp>
+#include <cstdint>
+#include <cstddef>
+#include <bitcoin/consensus/constants.hpp>
+#include <bitcoin/consensus/define.hpp>
+#include <bitcoin/consensus/math/hash.hpp>
+#include <bitcoin/consensus/primitives.hpp>
+#include <bitcoin/consensus/satoshi_serialize.hpp>
+#include <bitcoin/consensus/utility/assert.hpp>
+#include <bitcoin/consensus/utility/data.hpp>
+#include <bitcoin/consensus/utility/endian.hpp>
+#include <bitcoin/consensus/utility/serializer.hpp>
 
 namespace libbitcoin {
 
@@ -98,39 +103,39 @@ hash_digest generate_merkle_root(const transaction_list& transactions)
     return build_merkle_tree(tx_hashes);
 }
 
-std::string pretty(const transaction_input_type& input)
-{
-    std::ostringstream ss;
-    ss << "\thash = " << encode_hash(input.previous_output.hash) << "\n"
-        << "\tindex = " << input.previous_output.index << "\n"
-        << "\t" << input.script << "\n"
-        << "\tsequence = " << input.sequence << "\n";
-    return ss.str();
-}
-
-std::string pretty(const transaction_output_type& output)
-{
-    std::ostringstream ss;
-    ss << "\tvalue = " << output.value << "\n"
-        << "\t" << output.script << "\n";
-    return ss.str();
-}
-
-std::string pretty(const transaction_type& tx)
-{
-    std::ostringstream ss;
-    ss << "Transaction:\n"
-        << "\tversion = " << tx.version << "\n"
-        << "\tlocktime = " << tx.locktime << "\n"
-        << "Inputs:\n";
-    for (transaction_input_type input: tx.inputs)
-        ss << pretty(input);
-    ss << "Outputs:\n";
-    for (transaction_output_type output: tx.outputs)
-        ss << pretty(output);
-    ss << "\n";
-    return ss.str();
-}
+//std::string pretty(const transaction_input_type& input)
+//{
+//    std::ostringstream ss;
+//    ss << "\thash = " << encode_hash(input.previous_output.hash) << "\n"
+//        << "\tindex = " << input.previous_output.index << "\n"
+//        << "\t" << input.script << "\n"
+//        << "\tsequence = " << input.sequence << "\n";
+//    return ss.str();
+//}
+//
+//std::string pretty(const transaction_output_type& output)
+//{
+//    std::ostringstream ss;
+//    ss << "\tvalue = " << output.value << "\n"
+//        << "\t" << output.script << "\n";
+//    return ss.str();
+//}
+//
+//std::string pretty(const transaction_type& tx)
+//{
+//    std::ostringstream ss;
+//    ss << "Transaction:\n"
+//        << "\tversion = " << tx.version << "\n"
+//        << "\tlocktime = " << tx.locktime << "\n"
+//        << "Inputs:\n";
+//    for (transaction_input_type input: tx.inputs)
+//        ss << pretty(input);
+//    ss << "Outputs:\n";
+//    for (transaction_output_type output: tx.outputs)
+//        ss << pretty(output);
+//    ss << "\n";
+//    return ss.str();
+//}
 
 bool previous_output_is_null(const output_point& previous_output)
 {
@@ -156,7 +161,7 @@ bool is_final(const transaction_type& tx,
         return true;
     uint32_t max_locktime = block_time;
     if (tx.locktime < locktime_threshold)
-        max_locktime = block_height;
+        max_locktime = static_cast<uint32_t>(block_height);
     if (tx.locktime < max_locktime)
         return true;
     for (const transaction_input_type& tx_input: tx.inputs)

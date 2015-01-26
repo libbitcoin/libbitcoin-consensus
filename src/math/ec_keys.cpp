@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2011-2014 libbitcoin developers (see AUTHORS)
  *
- * This file is part of libbitcoin.
+ * This file is part of libbitcoin-consensus.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
+ * libbitcoin-consensus is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -17,13 +17,13 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <bitcoin/bitcoin/math/ec_keys.hpp>
+#include <bitcoin/consensus/math/ec_keys.hpp>
 
 #include <algorithm>
 #include <secp256k1.h>
-#include <bitcoin/bitcoin/math/hash.hpp>
-#include <bitcoin/bitcoin/utility/assert.hpp>
-#include <bitcoin/bitcoin/utility/endian.hpp>
+#include <bitcoin/consensus/math/hash.hpp>
+#include <bitcoin/consensus/utility/assert.hpp>
+#include <bitcoin/consensus/utility/endian.hpp>
 
 namespace libbitcoin {
 
@@ -86,8 +86,8 @@ ec_point secret_to_public_key(const ec_secret& secret,
 bool verify_public_key(const ec_point& public_key)
 {
     init.init();
-    return secp256k1_ec_pubkey_verify(public_key.data(), public_key.size())
-        == 1;
+    return secp256k1_ec_pubkey_verify(public_key.data(),
+        static_cast<uint32_t>(public_key.size())) == 1;
 }
 
 bool verify_public_key_fast(const ec_point& public_key)
@@ -144,7 +144,8 @@ bool verify_signature(const ec_point& public_key, hash_digest hash,
     init.init();
 
     auto result = secp256k1_ecdsa_verify(hash.data(), signature.data(),
-        signature.size(), public_key.data(), public_key.size());
+        static_cast<uint32_t>(signature.size()), public_key.data(), 
+        static_cast<uint32_t>(public_key.size()));
 
     BITCOIN_ASSERT_MSG(result >= 0, "secp256k1_ecdsa_verify failed");
 
@@ -178,7 +179,8 @@ ec_point recover_compact(compact_signature signature, hash_digest hash,
 bool ec_add(ec_point& a, const ec_secret& b)
 {
     init.init();
-    return secp256k1_ec_pubkey_tweak_add(a.data(), a.size(), b.data()) == 1;
+    return secp256k1_ec_pubkey_tweak_add(a.data(), 
+        static_cast<uint32_t>(a.size()), b.data()) == 1;
 }
 
 bool ec_add(ec_secret& a, const ec_secret& b)
@@ -190,72 +192,14 @@ bool ec_add(ec_secret& a, const ec_secret& b)
 bool ec_multiply(ec_point& a, const ec_secret& b)
 {
     init.init();
-    return secp256k1_ec_pubkey_tweak_mul(a.data(), a.size(), b.data()) == 1;
+    return secp256k1_ec_pubkey_tweak_mul(a.data(), 
+        static_cast<uint32_t>(a.size()), b.data()) == 1;
 }
 
 bool ec_multiply(ec_secret& a, const ec_secret& b)
 {
     init.init();
     return secp256k1_ec_privkey_tweak_mul(a.data(), b.data()) == 1;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// DEPRECATED (now redundant with secp256k1 implementation)
-///////////////////////////////////////////////////////////////////////////////
-ec_secret create_nonce(ec_secret secret, hash_digest hash, unsigned index)
-{
-    init.init();
-
-    hash_digest K
-    {{
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-    }};
-    hash_digest V
-    {{
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-        0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
-    }};
-
-    K = hmac_sha256_hash(build_data({V, to_byte(0x00), secret, hash}), K);
-    V = hmac_sha256_hash(V, K);
-    K = hmac_sha256_hash(build_data({V, to_byte(0x01), secret, hash}), K);
-    V = hmac_sha256_hash(V, K);
-
-    while (true)
-    {
-        V = hmac_sha256_hash(V, K);
-
-        if (0 == index)
-            return V;
-        --index;
-
-        K = hmac_sha256_hash(build_data({V, to_byte(0x00)}), K);
-        V = hmac_sha256_hash(V, K);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// DEPRECATED (deterministic signatures are safer)
-///////////////////////////////////////////////////////////////////////////////
-endorsement sign(ec_secret secret, hash_digest hash, ec_secret /* nonce */)
-{
-    // THE CALLER'S NONCE IS IGNORED.
-    return sign(secret, hash);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// DEPRECATED (deterministic signatures are safer)
-///////////////////////////////////////////////////////////////////////////////
-compact_signature sign_compact(ec_secret secret, hash_digest hash,
-    ec_secret /* nonce */)
-{
-    // THE CALLER'S NONCE IS IGNORED.
-    return sign_compact(secret, hash);
 }
 
 } // namespace libbitcoin

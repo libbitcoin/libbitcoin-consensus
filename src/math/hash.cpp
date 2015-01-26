@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2011-2013 libbitcoin developers (see AUTHORS)
  *
- * This file is part of libbitcoin.
+ * This file is part of libbitcoin-consensus.
  *
- * libbitcoin is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License with
+ * libbitcoin-consensus is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License with
  * additional permissions to the one published by the Free Software
  * Foundation, either version 3 of the License, or (at your option)
  * any later version. For more information see LICENSE.
@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <bitcoin/bitcoin/math/hash.hpp>
+#include <bitcoin/consensus/math/hash.hpp>
 
 #include <algorithm>
-#include <bitcoin/bitcoin/math/external/hmac_sha256.h>
-#include <bitcoin/bitcoin/math/external/hmac_sha512.h>
-#include <bitcoin/bitcoin/math/external/ripemd160.h>
-#include <bitcoin/bitcoin/math/external/sha1.h>
-#include <bitcoin/bitcoin/math/external/sha256.h>
-#include <bitcoin/bitcoin/math/external/sha512.h>
+#include <bitcoin/consensus/math/external/hmac_sha256.h>
+#include <bitcoin/consensus/math/external/hmac_sha512.h>
+#include <bitcoin/consensus/math/external/ripemd160.h>
+#include <bitcoin/consensus/math/external/sha1.h>
+#include <bitcoin/consensus/math/external/sha256.h>
+#include <bitcoin/consensus/math/external/sha512.h>
 
 namespace libbitcoin {
 

@@ -1,11 +1,11 @@
 #!/bin/bash
 ###############################################################################
-# Copyright (c) 2011-2014 libbitcoin developers (see COPYING).
+# Copyright (c) 2011-2014 libbitcoin-consensus developers (see COPYING).
 #
 #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
 ###############################################################################
-# Script to build and install libbitcoin.
+# Script to build and install libbitcoin-consensus.
 #
 # Script options:
 # --build-boost            Builds Boost libraries.
@@ -28,7 +28,7 @@
 #==============================================================================
 # The default build directory.
 #------------------------------------------------------------------------------
-BUILD_DIR="build-libbitcoin"
+BUILD_DIR="build-libbitcoin-consensus"
 
 # Boost archives for gcc.
 #------------------------------------------------------------------------------
@@ -175,10 +175,6 @@ BOOST_OPTIONS_GCC=\
 "threading=single "\
 "variant=release "\
 "--disable-icu "\
-"--with-date_time "\
-"--with-filesystem "\
-"--with-program_options "\
-"--with-regex "\
 "--with-system "\
 "--with-test "\
 "-d0 "\
@@ -195,10 +191,6 @@ BOOST_OPTIONS_CLANG=\
 "threading=single "\
 "variant=release "\
 "--disable-icu "\
-"--with-date_time "\
-"--with-filesystem "\
-"--with-program_options "\
-"--with-regex "\
 "--with-system "\
 "--with-test "\
 "-d0 "\
@@ -212,9 +204,9 @@ SECP256K1_OPTIONS=\
 "--enable-tests=no "\
 "--with-bignum=no "
 
-# Define bitcoin options.
+# Define bitcoin-consensus options.
 #------------------------------------------------------------------------------
-BITCOIN_OPTIONS=\
+BITCOIN_CONSENSUS_OPTIONS=\
 "${with_boost} "\
 "${with_pkgconfigdir} "
 
@@ -458,7 +450,7 @@ build_all()
 {
     build_from_tarball_boost $BOOST_URL $BOOST_ARCHIVE boost $PARALLEL $BOOST_OPTIONS
     build_from_github libbitcoin secp256k1 version2 $PARALLEL "$@" $SECP256K1_OPTIONS
-    build_from_travis libbitcoin libbitcoin version2 $PARALLEL "$@" $BITCOIN_OPTIONS
+    build_from_travis evoskuil libbitcoin-consensus master $PARALLEL "$@" $BITCOIN_CONSENSUS_OPTIONS
 }
 
 

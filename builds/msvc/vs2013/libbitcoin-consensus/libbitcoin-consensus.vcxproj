@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <PlatformToolset>CTP_Nov2013</PlatformToolset>
+    <ProjectGuid>{6C521D95-00CE-4120-97D1-430E2870D738}</ProjectGuid>
+    <ProjectName>libbitcoin-consensus</ProjectName>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugDLL|Win32">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|Win32">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugDLL|x64">
+      <Configuration>DebugDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseDLL|x64">
+      <Configuration>ReleaseDLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLTCG|Win32">
+      <Configuration>DebugLTCG</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLTCG|Win32">
+      <Configuration>ReleaseLTCG</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLTCG|x64">
+      <Configuration>DebugLTCG</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLTCG|x64">
+      <Configuration>ReleaseLTCG</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLIB|Win32">
+      <Configuration>DebugLIB</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLIB|Win32">
+      <Configuration>ReleaseLIB</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLIB|x64">
+      <Configuration>DebugLIB</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLIB|x64">
+      <Configuration>ReleaseLIB</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType Condition="$(Configuration.IndexOf('DLL')) == -1">StaticLibrary</ConfigurationType>
+    <ConfigurationType Condition="$(Configuration.IndexOf('DLL')) != -1">DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(ProjectDir)..\..\properties\$(Configuration).props" />
+    <Import Project="$(ProjectDir)..\..\properties\Output.props" />
+    <Import Project="$(ProjectDir)$(ProjectName).props" />
+  </ImportGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\include\bitcoin\consensus\impl\serialize\block.ipp" />
+    <None Include="..\..\..\..\include\bitcoin\consensus\impl\serialize\misc.ipp" />
+    <None Include="..\..\..\..\include\bitcoin\consensus\impl\utility\array_slice.ipp" />
+    <None Include="..\..\..\..\include\bitcoin\consensus\impl\utility\data.ipp" />
+    <None Include="..\..\..\..\include\bitcoin\consensus\impl\utility\endian.ipp" />
+    <None Include="..\..\..\..\include\bitcoin\consensus\impl\utility\serializer.ipp" />
+    <None Include="packages.config">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\compat.h" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\compat.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\constants.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\define.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\checksum.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\ec_keys.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\hmac_sha256.h" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\hmac_sha512.h" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\ripemd160.h" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\sha1.h" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\sha256.h" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\sha512.h" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\uint256.h" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\zeroize.h" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\hash.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\hash_number.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\script_number.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\primitives.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\satoshi_serialize.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\script.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\transaction.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\array_slice.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\assert.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\data.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\endian.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\serializer.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\src\math\checksum.cpp" />
+    <ClCompile Include="..\..\..\..\src\math\ec_keys.cpp" />
+    <ClCompile Include="..\..\..\..\src\math\external\hmac_sha256.c" />
+    <ClCompile Include="..\..\..\..\src\math\external\hmac_sha512.c" />
+    <ClCompile Include="..\..\..\..\src\math\external\ripemd160.c" />
+    <ClCompile Include="..\..\..\..\src\math\external\sha1.c" />
+    <ClCompile Include="..\..\..\..\src\math\external\sha256.c" />
+    <ClCompile Include="..\..\..\..\src\math\external\sha512.c" />
+    <ClCompile Include="..\..\..\..\src\math\external\zeroize.c" />
+    <ClCompile Include="..\..\..\..\src\math\hash.cpp" />
+    <ClCompile Include="..\..\..\..\src\math\hash_number.cpp" />
+    <ClCompile Include="..\..\..\..\src\math\script_number.cpp" />
+    <ClCompile Include="..\..\..\..\src\satoshi_serialize.cpp" />
+    <ClCompile Include="..\..\..\..\src\script.cpp" />
+    <ClCompile Include="..\..\..\..\src\transaction.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\..\..\..\..\nuget\secp256k1_vc120.0.1.0.4\build\native\secp256k1_vc120.targets" Condition="Exists('..\..\..\..\..\..\nuget\secp256k1_vc120.0.1.0.4\build\native\secp256k1_vc120.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\..\..\..\nuget\secp256k1_vc120.0.1.0.4\build\native\secp256k1_vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\..\..\..\nuget\secp256k1_vc120.0.1.0.4\build\native\secp256k1_vc120.targets'))" />
+  </Target>
+</Project>
