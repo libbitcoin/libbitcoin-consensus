@@ -243,6 +243,7 @@ bool parse(script_type& result_script, std::string format)
     return true;
 }
 
+// TODO: eliminate use of production code in test vector generation.
 bool run_script(const script_test& test)
 {
     script_type input, output;
