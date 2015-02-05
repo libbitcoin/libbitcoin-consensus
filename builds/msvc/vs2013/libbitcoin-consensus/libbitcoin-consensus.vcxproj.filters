@@ -141,6 +141,9 @@
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\serializer.hpp">
       <Filter>include\bitcoin\consensus\utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\version.hpp">
+      <Filter>include\bitcoin\consensus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\math\external\sha256.c">

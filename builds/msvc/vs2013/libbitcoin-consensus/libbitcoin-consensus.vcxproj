@@ -105,6 +105,7 @@
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\data.hpp" />
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\endian.hpp" />
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\serializer.hpp" />
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\version.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\math\checksum.cpp" />

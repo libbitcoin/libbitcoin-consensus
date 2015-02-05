@@ -41,5 +41,6 @@
 #include <bitcoin/consensus/satoshi_serialize.hpp>
 #include <bitcoin/consensus/script.hpp>
 #include <bitcoin/consensus/transaction.hpp>
+#include <bitcoin/consensus/version.hpp>
 
 #endif

@@ -28,7 +28,8 @@ bitcoin_consensus_include_HEADERS = \
     include/bitcoin/consensus/primitives.hpp \
     include/bitcoin/consensus/satoshi_serialize.hpp \
     include/bitcoin/consensus/script.hpp \
-    include/bitcoin/consensus/transaction.hpp
+    include/bitcoin/consensus/transaction.hpp \
+    include/bitcoin/consensus/version.hpp
 
 bitcoin_consensus_impl_serialize_includedir = ${includedir}/bitcoin/consensus/impl/serialize
 bitcoin_consensus_impl_serialize_include_HEADERS = \
