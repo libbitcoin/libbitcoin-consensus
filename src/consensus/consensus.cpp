@@ -64,7 +64,7 @@ namespace consensus {
 
 script_verification_result verify_script(const uint8_t* transaction,
     size_t transactionSize, const uint8_t* publicKey, size_t publicKeySize,
-    uint32_t inputIndex, uint32_t flags)
+    uint32_t inputIndex, uint32_t flags, script_verification_info& code)
 {
     CTransaction tx;
     try 
@@ -87,10 +87,13 @@ script_verification_result verify_script(const uint8_t* transaction,
     TransactionSignatureChecker checker(&tx, inputIndex);
     const CScript& signature = tx.vin[inputIndex].scriptSig;
 
-    bool verified = VerifyScript(signature, script, flags, checker, NULL);
+    ScriptError error = ScriptError::SCRIPT_ERR_VERIFY;
+    bool verified = VerifyScript(signature, script, flags, checker, &error);
+    code = static_cast<script_verification_info>(error);
+
     return verified ?
-        script_verification_result_type::verified : 
-        script_verification_result_type::unverified;
+        script_verification_result::verified :
+        script_verification_result::unverified;
 }
 
 } // namespace consensus
