@@ -23,24 +23,7 @@
 // Convenience header that includes everything
 // Not to be used internally. For API users.
 
-//#include <bitcoin/consensus/compat.h>
-#include <bitcoin/consensus/compat.hpp>
-#include <bitcoin/consensus/constants.hpp>
 #include <bitcoin/consensus/define.hpp>
-#include <bitcoin/consensus/math/checksum.hpp>
-#include <bitcoin/consensus/math/ec_keys.hpp>
-#include <bitcoin/consensus/math/hash.hpp>
-#include <bitcoin/consensus/math/hash_number.hpp>
-#include <bitcoin/consensus/math/script_number.hpp>
-#include <bitcoin/consensus/utility/array_slice.hpp>
-#include <bitcoin/consensus/utility/assert.hpp>
-#include <bitcoin/consensus/utility/data.hpp>
-#include <bitcoin/consensus/utility/endian.hpp>
-#include <bitcoin/consensus/utility/serializer.hpp>
-#include <bitcoin/consensus/primitives.hpp>
-#include <bitcoin/consensus/satoshi_serialize.hpp>
-#include <bitcoin/consensus/script.hpp>
-#include <bitcoin/consensus/transaction.hpp>
 #include <bitcoin/consensus/version.hpp>
 
 #endif
