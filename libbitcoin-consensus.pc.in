@@ -11,15 +11,15 @@ libdir=@libdir@
 includedir=@includedir@
 
 Name: libbitcoin-consensus
-Description: Bitcoin Consensus Library
+Description: Libbitcoin Consensus Library
 URL: https://github.com/libbitcoin/libbitcoin-consensus
 Version: @PACKAGE_VERSION@
 
 # Our dependencies that publish package configuration.
-Requires: libsecp256k1 >= 0.0.1
+Requires: 
 
 # Our own include directory and any other compiler flags we require.
-Cflags: -I${includedir} -std=c++11 @testnet@
+Cflags: -I${includedir} -std=c++11
 
 # Our own lib and any we require that do not publish package configuration.
 Libs: -L${libdir} -lbitcoin-consensus  

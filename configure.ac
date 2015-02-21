@@ -11,7 +11,7 @@
 AC_PREREQ([2.65])
 
 # Process command-line arguments and perform initialization and verification.
-AC_INIT([libbitcoin-consensus], [3.0.0], [eric@voskuil.org])
+AC_INIT([libbitcoin-consensus], [1.0.0], [eric@voskuil.org])
 
 # Do compilation tests.
 AC_LANG(C++)
@@ -85,6 +85,28 @@ AC_ARG_WITH([tests],
 AC_MSG_RESULT([$with_tests])
 AM_CONDITIONAL([WITH_TESTS], [test x$with_tests != xno])
 
+# Implement --with-openssl.
+#------------------------------------------------------------------------------
+AC_MSG_CHECKING(--with-openssl option)
+AC_ARG_WITH([openssl],
+    AS_HELP_STRING([--with-openssl],
+        [Require OpenSSL dependency. @<:@default=yes@:>@]),
+    [with_openssl=$withval],
+    [with_openssl=yes])
+AC_MSG_RESULT([$with_openssl])
+
+# Implement --with-secp256k1 and define USE_SECP256K1 and declare WITH_SECP256K1.
+#------------------------------------------------------------------------------
+AC_MSG_CHECKING(--with-secp256k1 option)
+AC_ARG_WITH([secp256k1],
+    AS_HELP_STRING([--with-secp256k1],
+        [Compile with Secp256k1 instead of OpenSSL. @<:@default=no@:>@]),
+    [with_secp256k1=$withval],
+    [with_secp256k1=no])
+AC_MSG_RESULT([$with_secp256k1])
+AS_IF([test x$with_secp256k1 != xno], AC_DEFINE([USE_SECP256K1]))
+AM_CONDITIONAL([WITH_SECP256K1], [test x$with_secp256k1 != xno])
+
 # Implement --enable-ndebug option and define NDEBUG.
 #------------------------------------------------------------------------------
 AC_MSG_CHECKING(--enable-ndebug option)
@@ -95,18 +117,6 @@ AC_ARG_ENABLE([ndebug],
     [enable_ndebug=yes])
 AC_MSG_RESULT([$enable_ndebug])
 AS_IF([test x$enable_ndebug != xno], AC_DEFINE([NDEBUG]))
-
-# Implement --enable-testnet option and define ENABLE_TESTNET and output ${testnet}.
-#------------------------------------------------------------------------------
-AC_MSG_CHECKING(--enable-testnet option)
-AC_ARG_ENABLE([testnet],
-    AS_HELP_STRING([--enable-testnet],
-        [Compile for testnet (deprecated). @<:@default=no@:>@]),
-    [enable_testnet=$enableval],
-    [enable_testnet=no])
-AC_MSG_RESULT([$enable_testnet])
-AS_IF([test x$enable_testnet != xno], AC_DEFINE([ENABLE_TESTNET]))
-AS_IF([test x$enable_testnet != xno], AC_SUBST([testnet], [-DENABLE_TESTNET]))
 
 # Inherit --enable-shared option and define BOOST_TEST_DYN_LINK.
 #------------------------------------------------------------------------------
@@ -131,11 +141,28 @@ AS_IF([test x$with_tests = xyes], [AX_BOOST_UNIT_TEST_FRAMEWORK])
 
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CFLAGS} and ${secp256k1_LIBS}.
 #------------------------------------------------------------------------------
-PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1])
+AS_IF([test x$with_secp256k1 = xyes],
+    [PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1])])
+
+# Require ssl of at least version 1.0.1 and output ${ssl_CFLAGS} and ${ssl_LIBS}.
+#------------------------------------------------------------------------------
+AS_IF([test x$with_openssl = xyes],
+    [PKG_CHECK_MODULES([ssl], [libssl >= 1.0.1])])
+
+# Require crypto of at least version 1.0.1 and output ${crypto_CFLAGS} and ${crypto_LIBS}.
+#------------------------------------------------------------------------------
+AS_IF([test x$with_openssl = xyes],
+    [PKG_CHECK_MODULES([crypto], [libcrypto >= 1.0.1])])
 
 
 # Set flags.
 #==============================================================================
+# Require a c++11 compiler.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-std=c++11],
+        [CXXFLAGS="$CXXFLAGS -std=c++11"])])
+
 # Warn on all stuff.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
