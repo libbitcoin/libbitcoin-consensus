@@ -64,12 +64,6 @@
     <Import Project="$(ProjectDir)..\..\properties\Output.props" />
     <Import Project="$(ProjectDir)$(ProjectName).props" />
   </ImportGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDEXE|Win32'">
-    <Option-secp256k1>true</Option-secp256k1>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDEXE|x64'">
-    <Option-secp256k1>true</Option-secp256k1>
-  </PropertyGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\test\script.hpp" />
   </ItemGroup>

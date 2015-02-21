@@ -26,9 +26,6 @@
 #include "script/interpreter.h"
 #include "version.h"
 
-namespace libbitcoin {
-namespace consensus {
-
 /**
  * Deserialization helper class, not exported.
  */
@@ -62,13 +59,12 @@ private:
     size_t remaining;
 };
 
-script_verification_result verify_script(
-    const uint8_t* publicKey,
-    uint32_t publicKeySize,
-    const uint8_t* transaction,
-    uint32_t transactionSize,
-    uint32_t inputIndex,
-    uint32_t flags)
+namespace libbitcoin {
+namespace consensus {
+
+script_verification_result verify_script(const uint8_t* transaction,
+    size_t transactionSize, const uint8_t* publicKey, size_t publicKeySize,
+    uint32_t inputIndex, uint32_t flags)
 {
     CTransaction tx;
     try 

@@ -20,9 +20,13 @@
 #ifndef LIBBITCOIN_CONSENSUS_EXPORT_HPP
 #define LIBBITCOIN_CONSENSUS_EXPORT_HPP
 
+#include <cstddef>
 #include <cstdint>
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/version.hpp>
+
+namespace libbitcoin {
+namespace consensus {
 
 /**
  * Result codes for script calls.
@@ -58,7 +62,7 @@ typedef enum script_verification_result_type
 /**
  * Additional flags for script verification.
  */
-typedef enum script_verification_flags_type
+enum script_verification_flags
 {
     /**
      * No flags.
@@ -74,23 +78,26 @@ typedef enum script_verification_flags_type
      * Enforce BIP66 (strict DER compliance).
      */
     verify_bip66 = (1U << 2)
-} script_verification_flags;
+};
 
 /**
  * Verify that the transaction correctly spends the public key, considering any
  * additional constraints specified by flags.
+ * @param[in]  transaction      The transaction with the script to verify.
+ * @param[in]  transactionSize  The character length of the transaction.
  * @param[in]  publicKey        The script public key to verify against.
  * @param[in]  publicKeySize    The byte length of the script public key.
- * @param[in]  transaction      The transaction with the script to verify.
- * @param[in]  transactionSize  The byte length of the transaction.
  * @param[in]  inputIndex       The zero-based index of the transaction input
  *                              of which the script is to be verified.
+ * @param[in]  flags            Flags for additional verification constraints.
  * @returns                     A script verification result with a value of
  *                              okay if the script verifies.
  */
-BCX_API script_verification_result verify_script(const uint8_t* publicKey,
-    uint32_t publicKeySize, const uint8_t* transaction,
-    uint32_t transactionSize, uint32_t inputIndex,
-    script_verification_flags flags);
+BCX_API script_verification_result verify_script(const uint8_t* transaction,
+    size_t transactionSize, const uint8_t* publicKey, size_t publicKeySize,
+    uint32_t inputIndex, uint32_t flags);
+
+} // namespace consensus
+} // namespace libbitcoin
 
 #endif
