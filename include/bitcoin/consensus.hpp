@@ -24,6 +24,7 @@
 // Not to be used internally. For API users.
 
 #include <bitcoin/consensus/define.hpp>
+#include <bitcoin/consensus/export.hpp>
 #include <bitcoin/consensus/version.hpp>
 
 #endif

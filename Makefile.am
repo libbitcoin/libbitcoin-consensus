@@ -23,6 +23,8 @@ bitcoin_include_HEADERS = \
 
 bitcoin_consensus_includedir = ${includedir}/bitcoin/consensus
 bitcoin_consensus_include_HEADERS = \
+    include/bitcoin/consensus/define.hpp \
+    include/bitcoin/consensus/export.hpp \
     include/bitcoin/consensus/version.hpp
 
 #
@@ -31,6 +33,7 @@ bitcoin_consensus_include_HEADERS = \
 lib_LTLIBRARIES = src/libbitcoin-consensus.la
 
 src_libbitcoin_consensus_la_CPPFLAGS = \
+    -I${srcdir}/include \
     -I${srcdir}/src
 
 if WITH_SECP256K1
@@ -43,6 +46,7 @@ src_libbitcoin_consensus_la_CPPFLAGS += \
 endif
 
 src_libbitcoin_consensus_la_SOURCES = \
+    src/consensus/consensus.cpp \
     src/crypto/hmac_sha512.cpp \
     src/crypto/ripemd160.cpp \
     src/crypto/sha1.cpp \

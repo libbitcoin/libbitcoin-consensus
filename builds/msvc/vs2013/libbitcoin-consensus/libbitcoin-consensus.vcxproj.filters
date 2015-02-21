@@ -25,6 +25,9 @@
     <Filter Include="src\script">
       <UniqueIdentifier>{2ff9328c-b7af-4019-a468-810056437d23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\consensus">
+      <UniqueIdentifier>{34b36c91-43b0-41f5-bfe1-70348e414767}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus.hpp">
@@ -96,6 +99,9 @@
     <ClInclude Include="..\..\..\..\src\crypto\sha512.h">
       <Filter>src\crypto</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\export.hpp">
+      <Filter>include\bitcoin\consensus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\eccryptoverify.cpp">
@@ -139,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\crypto\sha512.cpp">
       <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\consensus\consensus.cpp">
+      <Filter>src\consensus</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
