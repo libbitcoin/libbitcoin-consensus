@@ -2,24 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="..\..\..\..\include\bitcoin\consensus\impl\utility\array_slice.ipp">
-      <Filter>include\bitcoin\consensus\impl\utility</Filter>
-    </None>
-    <None Include="..\..\..\..\include\bitcoin\consensus\impl\utility\data.ipp">
-      <Filter>include\bitcoin\consensus\impl\utility</Filter>
-    </None>
-    <None Include="..\..\..\..\include\bitcoin\consensus\impl\utility\endian.ipp">
-      <Filter>include\bitcoin\consensus\impl\utility</Filter>
-    </None>
-    <None Include="..\..\..\..\include\bitcoin\consensus\impl\serialize\misc.ipp">
-      <Filter>include\bitcoin\consensus\impl\serialize</Filter>
-    </None>
-    <None Include="..\..\..\..\include\bitcoin\consensus\impl\utility\serializer.ipp">
-      <Filter>include\bitcoin\consensus\impl\utility</Filter>
-    </None>
-    <None Include="..\..\..\..\include\bitcoin\consensus\impl\serialize\block.ipp">
-      <Filter>include\bitcoin\consensus\impl\serialize</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="include">
@@ -28,168 +10,135 @@
     <Filter Include="include\bitcoin">
       <UniqueIdentifier>{77725f15-3bf1-413d-bc37-2a84e1c42a8c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\bitcoin\consensus">
-      <UniqueIdentifier>{eb1a61e2-8bbf-4266-99a9-a2609144e942}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\bitcoin\consensus\math">
-      <UniqueIdentifier>{704993b5-efa6-4725-aba7-a9ebd80ffe4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\bitcoin\consensus\math\external">
-      <UniqueIdentifier>{f6d78621-018d-48d3-ad9a-cda8de792b6b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\bitcoin\consensus\utility">
-      <UniqueIdentifier>{b5fe1edf-2e9c-4dda-88c9-c936fe07a64a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\bitcoin\consensus\impl">
-      <UniqueIdentifier>{3674c684-34db-4552-a8c5-1bd19a53e8c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\bitcoin\consensus\impl\utility">
-      <UniqueIdentifier>{838c97e6-d355-4db3-91e5-dbe055a72ec2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\bitcoin\consensus\impl\serialize">
-      <UniqueIdentifier>{6b46f8da-e7cf-4554-8113-9838d44471c2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{85274e2a-3e8f-44bd-9791-649cc30153d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\math">
-      <UniqueIdentifier>{64a74940-0b29-4c1c-b480-d5c63ef9acc1}</UniqueIdentifier>
+    <Filter Include="include\bitcoin\consensus">
+      <UniqueIdentifier>{7941946d-ec4e-428c-8938-6738ce134bf9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\math\external">
-      <UniqueIdentifier>{fc2a81a8-8754-4f1a-aad3-1b5c4086a19e}</UniqueIdentifier>
+    <Filter Include="src\crypto">
+      <UniqueIdentifier>{49ade34d-149b-4932-80a4-c90b4910b9e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\primitives">
+      <UniqueIdentifier>{d6170c23-0c80-48de-8376-81d7f5b9a27c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\script">
+      <UniqueIdentifier>{2ff9328c-b7af-4019-a468-810056437d23}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus.hpp">
       <Filter>include\bitcoin</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\hash_number.hpp">
-      <Filter>include\bitcoin\consensus\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\script_number.hpp">
-      <Filter>include\bitcoin\consensus\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\checksum.hpp">
-      <Filter>include\bitcoin\consensus\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\ec_keys.hpp">
-      <Filter>include\bitcoin\consensus\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\hash.hpp">
-      <Filter>include\bitcoin\consensus\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\sha256.h">
-      <Filter>include\bitcoin\consensus\math\external</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\sha512.h">
-      <Filter>include\bitcoin\consensus\math\external</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\uint256.h">
-      <Filter>include\bitcoin\consensus\math\external</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\zeroize.h">
-      <Filter>include\bitcoin\consensus\math\external</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\hmac_sha256.h">
-      <Filter>include\bitcoin\consensus\math\external</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\hmac_sha512.h">
-      <Filter>include\bitcoin\consensus\math\external</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\ripemd160.h">
-      <Filter>include\bitcoin\consensus\math\external</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\math\external\sha1.h">
-      <Filter>include\bitcoin\consensus\math\external</Filter>
+    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\version.hpp">
+      <Filter>include\bitcoin\consensus</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\define.hpp">
       <Filter>include\bitcoin\consensus</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\data.hpp">
-      <Filter>include\bitcoin\consensus\utility</Filter>
+    <ClInclude Include="..\..\..\..\src\serialize.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\array_slice.hpp">
-      <Filter>include\bitcoin\consensus\utility</Filter>
+    <ClInclude Include="..\..\..\..\src\tinyformat.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\script.hpp">
-      <Filter>include\bitcoin\consensus</Filter>
+    <ClInclude Include="..\..\..\..\src\uint256.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\transaction.hpp">
-      <Filter>include\bitcoin\consensus</Filter>
+    <ClInclude Include="..\..\..\..\src\utilstrencodings.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\primitives.hpp">
-      <Filter>include\bitcoin\consensus</Filter>
+    <ClInclude Include="..\..\..\..\src\version.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\constants.hpp">
-      <Filter>include\bitcoin\consensus</Filter>
+    <ClInclude Include="..\..\..\..\src\amount.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\compat.hpp">
-      <Filter>include\bitcoin\consensus</Filter>
+    <ClInclude Include="..\..\..\..\src\eccryptoverify.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\endian.hpp">
-      <Filter>include\bitcoin\consensus\utility</Filter>
+    <ClInclude Include="..\..\..\..\src\ecwrapper.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\assert.hpp">
-      <Filter>include\bitcoin\consensus\utility</Filter>
+    <ClInclude Include="..\..\..\..\src\hash.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\compat.h">
-      <Filter>include\bitcoin\consensus</Filter>
+    <ClInclude Include="..\..\..\..\src\pubkey.h">
+      <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\satoshi_serialize.hpp">
-      <Filter>include\bitcoin\consensus</Filter>
+    <ClInclude Include="..\..\..\..\src\script\interpreter.h">
+      <Filter>src\script</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\utility\serializer.hpp">
-      <Filter>include\bitcoin\consensus\utility</Filter>
+    <ClInclude Include="..\..\..\..\src\script\script.h">
+      <Filter>src\script</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\include\bitcoin\consensus\version.hpp">
-      <Filter>include\bitcoin\consensus</Filter>
+    <ClInclude Include="..\..\..\..\src\script\script_error.h">
+      <Filter>src\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\primitives\transaction.h">
+      <Filter>src\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\crypto\common.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\crypto\hmac_sha512.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\crypto\ripemd160.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\crypto\sha1.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\crypto\sha256.h">
+      <Filter>src\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\crypto\sha512.h">
+      <Filter>src\crypto</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\src\math\external\sha256.c">
-      <Filter>src\math\external</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\external\sha512.c">
-      <Filter>src\math\external</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\external\zeroize.c">
-      <Filter>src\math\external</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\external\hmac_sha256.c">
-      <Filter>src\math\external</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\external\hmac_sha512.c">
-      <Filter>src\math\external</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\external\ripemd160.c">
-      <Filter>src\math\external</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\external\sha1.c">
-      <Filter>src\math\external</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\hash_number.cpp">
-      <Filter>src\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\script_number.cpp">
-      <Filter>src\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\checksum.cpp">
-      <Filter>src\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\ec_keys.cpp">
-      <Filter>src\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\math\hash.cpp">
-      <Filter>src\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\script.cpp">
+    <ClCompile Include="..\..\..\..\src\eccryptoverify.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\transaction.cpp">
+    <ClCompile Include="..\..\..\..\src\ecwrapper.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\src\satoshi_serialize.cpp">
+    <ClCompile Include="..\..\..\..\src\hash.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\pubkey.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\uint256.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\utilstrencodings.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\script\interpreter.cpp">
+      <Filter>src\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\script\script.cpp">
+      <Filter>src\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\primitives\transaction.cpp">
+      <Filter>src\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\crypto\hmac_sha512.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\crypto\ripemd160.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\crypto\sha1.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\crypto\sha256.cpp">
+      <Filter>src\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\crypto\sha512.cpp">
+      <Filter>src\crypto</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
