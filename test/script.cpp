@@ -81,10 +81,10 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__zero__verified)
     const size_t txlen = txdata.size();
 
     const int flags = script_verification_flags::verify_bip16 | script_verification_flags::verify_bip66;
-    script_verification_result result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, 0);
+    script_verification_result result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags);
 
     // FAIL
-    //BOOST_REQUIRE_EQUAL(result, script_verification_result::verified);
+    BOOST_REQUIRE_NE(result, script_verification_result::verified);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__one__verified)
@@ -102,10 +102,10 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__one__verified)
     const size_t txlen = txdata.size();
 
     const int flags = script_verification_flags::verify_bip16 | script_verification_flags::verify_bip66;
-    script_verification_result result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, 0);
+    script_verification_result result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags);
 
     // FAIL
-    //BOOST_REQUIRE_EQUAL(result, script_verification_result::verified);
+    BOOST_REQUIRE_NE(result, script_verification_result::verified);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
