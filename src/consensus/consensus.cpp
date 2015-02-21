@@ -84,11 +84,11 @@ script_verification_result verify_script(const uint8_t* transaction,
         return script_verification_result::invalid_tx_length;
 
     CScript script(publicKey, publicKey + publicKeySize);
-    TransactionSignatureChecker signatureChecker(&tx, inputIndex);
-    bool verified = VerifyScript(tx.vin[inputIndex].scriptSig, script, flags, 
-        signatureChecker, NULL);
+    TransactionSignatureChecker checker(&tx, inputIndex);
+    const CScript& signature = tx.vin[inputIndex].scriptSig;
 
-    return verified ? 
+    bool verified = VerifyScript(signature, script, flags, checker, NULL);
+    return verified ?
         script_verification_result_type::verified : 
         script_verification_result_type::unverified;
 }
