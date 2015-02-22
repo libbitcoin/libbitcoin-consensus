@@ -198,7 +198,7 @@ verify_result_type verify_script(const uint8_t* transaction,
         return verify_result_tx_size_invalid;
 
     ScriptError_t error;
-    TransactionSignatureChecker tx_input_checker(&tx, tx_input_index);
+    TransactionSignatureChecker checker(&tx, tx_input_index);
     const uint32_t script_flags = verify_flags_to_script_flags(flags);
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
     const CScript& input_script = tx.vin[tx_input_index].scriptSig;
@@ -207,7 +207,7 @@ verify_result_type verify_script(const uint8_t* transaction,
     // if (!output_script.run(input.script, tx, current_input))...
     // if (!output_script.run(input.script, current_tx, input_index,
     //     bip16_enabled))...
-    VerifyScript(input_script, output_script, flags, tx_input_checker, &error);
+    VerifyScript(input_script, output_script, script_flags, checker, &error);
 
     return script_error_to_verify_result(error);
 }

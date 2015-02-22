@@ -72,19 +72,67 @@ static bool decode_base16(data_chunk& out, const std::string& in)
 
 static verify_result test_verify(const std::string& transaction,
     const std::string& prevout_script, uint32_t tx_input_index=0,
-    uint32_t flags=(verify_flags_standard | verify_flags_mandatory))
+    uint32_t flags=(verify_flags_standard | verify_flags_mandatory),
+    int32_t tx_size_hack=0)
 {
     data_chunk tx_data, prevout_script_data;
     BOOST_REQUIRE(decode_base16(tx_data, transaction));
     BOOST_REQUIRE(decode_base16(prevout_script_data, prevout_script));
-    return verify_script(&tx_data[0], tx_data.size(), &prevout_script_data[0],
-        prevout_script_data.size(), tx_input_index, flags);
+    return verify_script(&tx_data[0], tx_data.size() + tx_size_hack, 
+        &prevout_script_data[0], prevout_script_data.size(), tx_input_index,
+        flags);
 }
+
+// Test cases derived from:
+// github.com/libbitcoin/libbitcoin-explorer/wiki/How-to-Spend-Bitcoin
+
+#define CONSENSUS_SCRIPT_VERIFY_TX \
+    "01000000017d01943c40b7f3d8a00a2d62fa1d560bf739a2368c180615b0a7937c0e883e7c000000006b4830450221008f66d188c664a8088893ea4ddd9689024ea5593877753ecc1e9051ed58c15168022037109f0d06e6068b7447966f751de8474641ad2b15ec37f4a9d159b02af68174012103e208f5403383c77d5832a268c9f71480f6e7bfbdfa44904becacfad66163ea31ffffffff01c8af0000000000001976a91458b7a60f11a904feef35a639b6048de8dd4d9f1c88ac00000000"
+#define CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT \
+    "76a914c564c740c6900b93afc9f1bdaef0a9d466adf6ee88ac"
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)
 {
     const verify_result result = test_verify("42", "42");
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_invalid);
 }
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_input__tx_input_invalid)
+{
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
+        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 1);
+    BOOST_REQUIRE_EQUAL(result, verify_result_tx_input_invalid);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__undersized_tx__tx_invalid)
+{
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
+        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0,
+        verify_flags_standard | verify_flags_mandatory, -1);
+    BOOST_REQUIRE_EQUAL(result, verify_result_tx_invalid);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__oversized_tx__tx_size_invalid)
+{
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
+        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0,
+        verify_flags_standard | verify_flags_mandatory, +1);
+    BOOST_REQUIRE_EQUAL(result, verify_result_tx_size_invalid);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__incorrect_pubkey_hash__equalverify)
+{
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
+        "76a914c564c740c6900b93afc9f1bdaef0a9d466adf6ef88ac");
+    BOOST_REQUIRE_EQUAL(result, verify_result_equalverify);
+}
+
+// Crashes secp256k1
+//BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true)
+//{
+//    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
+//        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
+//    BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
+//}
 
 BOOST_AUTO_TEST_SUITE_END()
