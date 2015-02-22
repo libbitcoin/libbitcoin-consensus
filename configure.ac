@@ -224,6 +224,12 @@ AS_CASE([${CC}], [*gcc*],
     [AX_CHECK_COMPILE_FLAG([-fvisibility-inlines-hidden],
         [CXXFLAGS="$CXXFLAGS -fvisibility-inlines-hidden"])])
 
+# Don't warn on use of 'long long' in c++98 build.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-c++11-long-long],
+        [CXXFLAGS="$CXXFLAGS -Wno-c++11-long-long"])])
+
 
 # Process outputs into templates.
 #==============================================================================
