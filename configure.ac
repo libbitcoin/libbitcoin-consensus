@@ -198,6 +198,18 @@ AS_CASE([${CC}], [*gcc*],
     [AX_CHECK_COMPILE_FLAG([-Wno-unused-local-typedefs],
         [CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])])
 
+# Clean up consensus warnings. Enabled in gcc only.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*gcc*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-long-long],
+        [CXXFLAGS="$CXXFLAGS -Wno-long-long"])])
+
+# Clean up consensus warnings Enabled in clang only.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*clang*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-c++11-long-long],
+        [CXXFLAGS="$CXXFLAGS -Wno-c++11-long-long"])])
+
 # Protect stack.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
@@ -223,12 +235,6 @@ AS_CASE([${CC}], [*gcc*],
 AS_CASE([${CC}], [*gcc*],
     [AX_CHECK_COMPILE_FLAG([-fvisibility-inlines-hidden],
         [CXXFLAGS="$CXXFLAGS -fvisibility-inlines-hidden"])])
-
-# Don't warn on use of 'long long' in c++98 build.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-c++11-long-long],
-        [CXXFLAGS="$CXXFLAGS -Wno-c++11-long-long"])])
 
 
 # Process outputs into templates.
