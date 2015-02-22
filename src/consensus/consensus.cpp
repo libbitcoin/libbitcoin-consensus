@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin-consensus.
  *
@@ -33,8 +33,8 @@
 class TxInputStream
 {
 public:
-    TxInputStream(const uint8_t* transaction, size_t transactionSize)
-        : source(transaction), remaining(transactionSize)
+    TxInputStream(const uint8_t* transaction, size_t transaction_size)
+        : source(transaction), remaining(transaction_size)
     {
     }
 
@@ -151,7 +151,7 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
 // This function is not published (but non-static for testability).
 uint32_t verify_flags_to_script_flags(uint32_t flags)
 {
-    unsigned int script_flags = SCRIPT_VERIFY_NONE;
+    uint32_t script_flags = SCRIPT_VERIFY_NONE;
 
     if ((flags & verify_flags_p2sh) != 0)
         script_flags |= SCRIPT_VERIFY_P2SH;
@@ -175,15 +175,15 @@ uint32_t verify_flags_to_script_flags(uint32_t flags)
     return script_flags;
 }
 
-// This function is published. The signature exposes no satoshi internals.
+// This function is published. The implementation exposes no satoshi internals.
 verify_result_type verify_script(const uint8_t* transaction, 
-    size_t transactionSize, const uint8_t* publicKey, size_t publicKeySize,
-    uint32_t inputIndex, uint32_t flags)
+    size_t transaction_size, const uint8_t* prevout_script, 
+    size_t prevout_script_size, uint32_t tx_input_index, uint32_t flags)
 {
     CTransaction tx;
     try 
     {
-        TxInputStream stream(transaction, transactionSize);
+        TxInputStream stream(transaction, transaction_size);
         Unserialize(stream, tx, SER_NETWORK, PROTOCOL_VERSION);
     }
     catch (const std::exception&)
@@ -191,22 +191,25 @@ verify_result_type verify_script(const uint8_t* transaction,
         return verify_result_tx_invalid;
     }
 
-    if (inputIndex >= tx.vin.size())
+    if (tx_input_index >= tx.vin.size())
         return verify_result_tx_input_invalid;
 
-    if (tx.GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION) != transactionSize)
+    if (tx.GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION) != transaction_size)
         return verify_result_tx_size_invalid;
 
-    CScript script(publicKey, publicKey + publicKeySize);
-    TransactionSignatureChecker checker(&tx, inputIndex);
-    const CScript& endorsement = tx.vin[inputIndex].scriptSig;
+    ScriptError_t error;
+    TransactionSignatureChecker tx_input_checker(&tx, tx_input_index);
     const uint32_t script_flags = verify_flags_to_script_flags(flags);
+    CScript output_script(prevout_script, prevout_script + prevout_script_size);
+    const CScript& input_script = tx.vin[tx_input_index].scriptSig;
 
-    ScriptError_t result;
-    if (!VerifyScript(endorsement, script, script_flags, checker, &result))
-        return script_error_to_verify_result(result);
+    // See libbitcoin-blockchain : validate.cpp :
+    // if (!output_script.run(input.script, tx, current_input))...
+    // if (!output_script.run(input.script, current_tx, input_index,
+    //     bip16_enabled))...
+    VerifyScript(input_script, output_script, flags, tx_input_checker, &error);
 
-    return verify_result_eval_true;
+    return script_error_to_verify_result(error);
 }
 
 } // namespace consensus
