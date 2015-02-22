@@ -102,6 +102,9 @@
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\export.hpp">
       <Filter>include\bitcoin\consensus</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\consensus\consensus.h">
+      <Filter>src\consensus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\eccryptoverify.cpp">

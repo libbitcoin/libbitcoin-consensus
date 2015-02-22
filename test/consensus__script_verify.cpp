@@ -80,13 +80,12 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__zero__verified)
     data_chunk txdata;
     BOOST_REQUIRE(decode_base16(txdata, tx));
     const size_t txlen = txdata.size();
-
-    const int flags = verify_bip16 | verify_bip66;
-    const int result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags);
+    
+    const verify_flags flags = VERIFY_FLAGS_NONE;
+    const verify_result result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags);
 
     // FAIL
-    BOOST_REQUIRE_EQUAL(result, script_unverified);
-    //BOOST_REQUIRE_EQUAL(code, SCRIPT_ERR_BAD_OPCODE);
+    BOOST_REQUIRE_EQUAL(result, VERIFY_RESULT_BAD_OPCODE);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__one__verified)
@@ -103,12 +102,11 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__one__verified)
     BOOST_REQUIRE(decode_base16(txdata, tx));
     const size_t txlen = txdata.size();
 
-    const int flags = verify_bip16 | verify_bip66;
-    const int result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags);
+    const verify_flags flags = VERIFY_FLAGS_NONE;
+    const verify_result result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags);
 
     // FAIL
-    BOOST_REQUIRE_EQUAL(result, script_unverified);
-    //BOOST_REQUIRE_EQUAL(code, SCRIPT_ERR_BAD_OPCODE);
+    BOOST_REQUIRE_EQUAL(result, VERIFY_RESULT_BAD_OPCODE);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

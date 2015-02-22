@@ -87,6 +87,7 @@ check_PROGRAMS = test/libbitcoin_consensus_test
 
 test_libbitcoin_consensus_test_CPPFLAGS = \
     -I${srcdir}/include \
+    -I${srcdir}/src \
     -I${srcdir}/test
 
 if WITH_SECP256K1
@@ -100,7 +101,9 @@ endif
 
 test_libbitcoin_consensus_test_SOURCES = \
     test/main.cpp \
-    test/script.cpp
+    test/consensus__script_verify.cpp \
+    test/consensus__verify_flags_to_script_flags.cpp \
+    test/consensus__script_error_to_verify_result.cpp
 
 #TODO:
 #test/script.cpp

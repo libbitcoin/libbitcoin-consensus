@@ -78,6 +78,7 @@
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\export.hpp" />
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\version.hpp" />
     <ClInclude Include="..\..\..\..\src\amount.h" />
+    <ClInclude Include="..\..\..\..\src\consensus\consensus.h" />
     <ClInclude Include="..\..\..\..\src\crypto\common.h" />
     <ClInclude Include="..\..\..\..\src\crypto\hmac_sha512.h" />
     <ClInclude Include="..\..\..\..\src\crypto\ripemd160.h" />
