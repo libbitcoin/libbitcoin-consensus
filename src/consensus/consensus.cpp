@@ -72,77 +72,77 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
     {
         // Logical result
         case SCRIPT_ERR_OK:
-            return consensus::VERIFY_RESULT_EVAL_TRUE;
+            return consensus::verify_result_eval_true;
         case SCRIPT_ERR_EVAL_FALSE:
-            return consensus::VERIFY_RESULT_EVAL_FALSE;
+            return consensus::verify_result_eval_false;
 
         // Max size errors
         case SCRIPT_ERR_SCRIPT_SIZE:
-            return consensus::VERIFY_RESULT_SCRIPT_SIZE;
+            return consensus::verify_result_script_size;
         case SCRIPT_ERR_PUSH_SIZE:
-            return consensus::VERIFY_RESULT_PUSH_SIZE;
+            return consensus::verify_result_push_size;
         case SCRIPT_ERR_OP_COUNT:
-            return consensus::VERIFY_RESULT_OP_COUNT;
+            return consensus::verify_result_op_count;
         case SCRIPT_ERR_STACK_SIZE:
-            return consensus::VERIFY_RESULT_STACK_SIZE;
+            return consensus::verify_result_stack_size;
         case SCRIPT_ERR_SIG_COUNT:
-            return consensus::VERIFY_RESULT_SIG_COUNT;
+            return consensus::verify_result_sig_count;
         case SCRIPT_ERR_PUBKEY_COUNT:
-            return consensus::VERIFY_RESULT_PUBKEY_COUNT;
+            return consensus::verify_result_pubkey_count;
 
         // Failed verify operations
         case SCRIPT_ERR_VERIFY:
-            return consensus::VERIFY_RESULT_VERIFY;
+            return consensus::verify_result_verify;
         case SCRIPT_ERR_EQUALVERIFY:
-            return consensus::VERIFY_RESULT_EQUALVERIFY;
+            return consensus::verify_result_equalverify;
         case SCRIPT_ERR_CHECKMULTISIGVERIFY:
-            return consensus::VERIFY_RESULT_CHECKMULTISIGVERIFY;
+            return consensus::verify_result_checkmultisigverify;
         case SCRIPT_ERR_CHECKSIGVERIFY:
-            return consensus::VERIFY_RESULT_CHECKSIGVERIFY;
+            return consensus::verify_result_checksigverify;
         case SCRIPT_ERR_NUMEQUALVERIFY:
-            return consensus::VERIFY_RESULT_NUMEQUALVERIFY;
+            return consensus::verify_result_numequalverify;
 
         // Logical/Format/Canonical errors
         case SCRIPT_ERR_BAD_OPCODE:
-            return consensus::VERIFY_RESULT_BAD_OPCODE;
+            return consensus::verify_result_bad_opcode;
         case SCRIPT_ERR_DISABLED_OPCODE:
-            return consensus::VERIFY_RESULT_DISABLED_OPCODE;
+            return consensus::verify_result_disabled_opcode;
         case SCRIPT_ERR_INVALID_STACK_OPERATION:
-            return consensus::VERIFY_RESULT_INVALID_STACK_OPERATION;
+            return consensus::verify_result_invalid_stack_operation;
         case SCRIPT_ERR_INVALID_ALTSTACK_OPERATION:
-            return consensus::VERIFY_RESULT_INVALID_ALTSTACK_OPERATION;
+            return consensus::verify_result_invalid_altstack_operation;
         case SCRIPT_ERR_UNBALANCED_CONDITIONAL:
-            return consensus::VERIFY_RESULT_UNBALANCED_CONDITIONAL;
+            return consensus::verify_result_unbalanced_conditional;
 
         // BIP62
         case SCRIPT_ERR_SIG_HASHTYPE:
-            return consensus::VERIFY_RESULT_SIG_HASHTYPE;
+            return consensus::verify_result_sig_hashtype;
         case SCRIPT_ERR_SIG_DER:
-            return consensus::VERIFY_RESULT_SIG_DER;
+            return consensus::verify_result_sig_der;
         case SCRIPT_ERR_MINIMALDATA:
-            return consensus::VERIFY_RESULT_MINIMALDATA;
+            return consensus::verify_result_minimaldata;
         case SCRIPT_ERR_SIG_PUSHONLY:
-            return consensus::VERIFY_RESULT_SIG_PUSHONLY;
+            return consensus::verify_result_sig_pushonly;
         case SCRIPT_ERR_SIG_HIGH_S:
-            return consensus::VERIFY_RESULT_SIG_HIGH_S;
+            return consensus::verify_result_sig_high_s;
         case SCRIPT_ERR_SIG_NULLDUMMY:
-            return consensus::VERIFY_RESULT_SIG_NULLDUMMY;
+            return consensus::verify_result_sig_nulldummy;
         case SCRIPT_ERR_PUBKEYTYPE:
-            return consensus::VERIFY_RESULT_PUBKEYTYPE;
+            return consensus::verify_result_pubkeytype;
         case SCRIPT_ERR_CLEANSTACK:
-            return consensus::VERIFY_RESULT_CLEANSTACK;
+            return consensus::verify_result_cleanstack;
 
         // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
-            return consensus::VERIFY_RESULT_DISCOURAGE_UPGRADABLE_NOPS;
+            return consensus::verify_result_discourage_upgradable_nops;
 
         // Other
         case SCRIPT_ERR_OP_RETURN:
-            return consensus::VERIFY_RESULT_OP_RETURN;
+            return consensus::verify_result_op_return;
         case SCRIPT_ERR_UNKNOWN_ERROR:
         case SCRIPT_ERR_ERROR_COUNT:
         default:
-            return consensus::VERIFY_RESULT_UNKNOWN_ERROR;
+            return consensus::verify_result_unknown_error;
     }
 }
 
@@ -153,23 +153,23 @@ uint32_t verify_flags_to_script_flags(uint32_t flags)
 {
     unsigned int script_flags = SCRIPT_VERIFY_NONE;
 
-    if ((flags & consensus::VERIFY_FLAGS_P2SH) != 0)
+    if ((flags & consensus::verify_flags_p2sh) != 0)
         script_flags |= SCRIPT_VERIFY_P2SH;
-    if ((flags & consensus::VERIFY_FLAGS_STRICTENC) != 0)
+    if ((flags & consensus::verify_flags_strictenc) != 0)
         script_flags |= SCRIPT_VERIFY_STRICTENC;
-    if ((flags & consensus::VERIFY_FLAGS_DERSIG) != 0)
+    if ((flags & consensus::verify_flags_dersig) != 0)
         script_flags |= SCRIPT_VERIFY_DERSIG;
-    if ((flags & consensus::VERIFY_FLAGS_LOW_S) != 0)
+    if ((flags & consensus::verify_flags_low_s) != 0)
         script_flags |= SCRIPT_VERIFY_LOW_S;
-    if ((flags & consensus::VERIFY_FLAGS_NULLDUMMY) != 0)
+    if ((flags & consensus::verify_flags_nulldummy) != 0)
         script_flags |= SCRIPT_VERIFY_NULLDUMMY;
-    if ((flags & consensus::VERIFY_FLAGS_SIGPUSHONLY) != 0)
+    if ((flags & consensus::verify_flags_sigpushonly) != 0)
         script_flags |= SCRIPT_VERIFY_SIGPUSHONLY;
-    if ((flags & consensus::VERIFY_FLAGS_MINIMALDATA) != 0)
+    if ((flags & consensus::verify_flags_minimaldata) != 0)
         script_flags |= SCRIPT_VERIFY_MINIMALDATA;
-    if ((flags & consensus::VERIFY_FLAGS_DISCOURAGE_UPGRADABLE_NOPS) != 0)
+    if ((flags & consensus::verify_flags_discourage_upgradable_nops) != 0)
         script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS;
-    if ((flags & consensus::VERIFY_FLAGS_CLEANSTACK) != 0)
+    if ((flags & consensus::verify_flags_cleanstack) != 0)
         script_flags |= SCRIPT_VERIFY_CLEANSTACK;
 
     return script_flags;
@@ -188,14 +188,14 @@ verify_result_type verify_script(const uint8_t* transaction,
     }
     catch (const std::exception&)
     {
-        return consensus::VERIFY_RESULT_TX_INVALID;
+        return consensus::verify_result_tx_invalid;
     }
 
     if (inputIndex >= tx.vin.size())
-        return consensus::VERIFY_RESULT_TX_INPUT_INVALID;
+        return consensus::verify_result_tx_input_invalid;
 
     if (tx.GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION) != transactionSize)
-        return consensus::VERIFY_RESULT_TX_SIZE_INVALID;
+        return consensus::verify_result_tx_size_invalid;
 
     CScript script(publicKey, publicKey + publicKeySize);
     TransactionSignatureChecker checker(&tx, inputIndex);
@@ -206,7 +206,7 @@ verify_result_type verify_script(const uint8_t* transaction,
     if (!VerifyScript(endorsement, script, script_flags, checker, &result))
         return script_error_to_verify_result(result);
 
-    return consensus::VERIFY_RESULT_EVAL_TRUE;
+    return consensus::verify_result_eval_true;
 }
 
 } // namespace consensus

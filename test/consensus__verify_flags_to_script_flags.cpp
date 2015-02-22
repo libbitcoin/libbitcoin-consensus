@@ -31,69 +31,69 @@ BOOST_AUTO_TEST_SUITE(consensus__verify_flags_to_script_flags)
 
 // Unnamed enum values require cast for boost comparison macros.
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__NONE__NONE)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__none__NONE)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_NONE), (uint32_t)SCRIPT_VERIFY_NONE);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_none), (uint32_t)SCRIPT_VERIFY_NONE);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__P2SH__P2SH)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__p2sh__P2SH)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_P2SH), (uint32_t)SCRIPT_VERIFY_P2SH);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_p2sh), (uint32_t)SCRIPT_VERIFY_P2SH);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__STRICTENC__STRICTENC)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__strictenc__STRICTENC)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_STRICTENC), (uint32_t)SCRIPT_VERIFY_STRICTENC);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_strictenc), (uint32_t)SCRIPT_VERIFY_STRICTENC);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__DERSIG__DERSIG)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__dersig__DERSIG)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_DERSIG), (uint32_t)SCRIPT_VERIFY_DERSIG);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_dersig), (uint32_t)SCRIPT_VERIFY_DERSIG);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__LOW_S__LOW_S)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__low_s__LOW_S)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_LOW_S), (uint32_t)SCRIPT_VERIFY_LOW_S);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_low_s), (uint32_t)SCRIPT_VERIFY_LOW_S);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__NULLDUMMY__NULLDUMMY)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__nulldummy__NULLDUMMY)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_NULLDUMMY), (uint32_t)SCRIPT_VERIFY_NULLDUMMY);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_nulldummy), (uint32_t)SCRIPT_VERIFY_NULLDUMMY);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__SIGPUSHONLY__SIGPUSHONLY)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__sigpushonly__SIGPUSHONLY)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_SIGPUSHONLY), (uint32_t)SCRIPT_VERIFY_SIGPUSHONLY);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_sigpushonly), (uint32_t)SCRIPT_VERIFY_SIGPUSHONLY);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__MINIMALDATA__MINIMALDATA)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__minimaldata__MINIMALDATA)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_MINIMALDATA), (uint32_t)SCRIPT_VERIFY_MINIMALDATA);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_minimaldata), (uint32_t)SCRIPT_VERIFY_MINIMALDATA);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__DISCOURAGE_UPGRADABLE_NOPS__DISCOURAGE_UPGRADABLE_NOPS)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__discourage_upgradable_nops__DISCOURAGE_UPGRADABLE_NOPS)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_DISCOURAGE_UPGRADABLE_NOPS), (uint32_t)SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_discourage_upgradable_nops), (uint32_t)SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__CLEANSTACK__CLEANSTACK)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__cleanstack__CLEANSTACK)
 {
-    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(VERIFY_FLAGS_CLEANSTACK), (uint32_t)SCRIPT_VERIFY_CLEANSTACK);
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_cleanstack), (uint32_t)SCRIPT_VERIFY_CLEANSTACK);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
 {
     const uint32_t all_verify_flags =
-        VERIFY_FLAGS_NONE |
-        VERIFY_FLAGS_P2SH |
-        VERIFY_FLAGS_STRICTENC |
-        VERIFY_FLAGS_DERSIG |
-        VERIFY_FLAGS_LOW_S |
-        VERIFY_FLAGS_NULLDUMMY |
-        VERIFY_FLAGS_SIGPUSHONLY |
-        VERIFY_FLAGS_MINIMALDATA |
-        VERIFY_FLAGS_DISCOURAGE_UPGRADABLE_NOPS |
-        VERIFY_FLAGS_CLEANSTACK;
+        verify_flags_none |
+        verify_flags_p2sh |
+        verify_flags_strictenc |
+        verify_flags_dersig |
+        verify_flags_low_s |
+        verify_flags_nulldummy |
+        verify_flags_sigpushonly |
+        verify_flags_minimaldata |
+        verify_flags_discourage_upgradable_nops |
+        verify_flags_cleanstack;
 
     const uint32_t all_script_flags =
         SCRIPT_VERIFY_NONE |

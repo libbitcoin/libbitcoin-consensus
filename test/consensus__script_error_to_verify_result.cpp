@@ -31,166 +31,166 @@ BOOST_AUTO_TEST_SUITE(consensus__script_error_to_verify_result)
 
 // Logical result
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__OK__EVAL_TRUE)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__OK__eval_true)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_OK), VERIFY_RESULT_EVAL_TRUE);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_OK), verify_result_eval_true);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__EVAL_FALSE__EVAL_FALSE)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__EVAL_FALSE__eval_false)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_EVAL_FALSE), VERIFY_RESULT_EVAL_FALSE);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_EVAL_FALSE), verify_result_eval_false);
 }
 
 // Max size errors
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SCRIPT_SIZE__SCRIPT_SIZE)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SCRIPT_SIZE__script_size)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SCRIPT_SIZE), VERIFY_RESULT_SCRIPT_SIZE);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SCRIPT_SIZE), verify_result_script_size);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUSH_SIZE__PUSH_SIZE)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUSH_SIZE__push_size)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUSH_SIZE), VERIFY_RESULT_PUSH_SIZE);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUSH_SIZE), verify_result_push_size);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__OP_COUNT__OP_COUNT)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__OP_COUNT__op_count)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_OP_COUNT), VERIFY_RESULT_OP_COUNT);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_OP_COUNT), verify_result_op_count);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__STACK_SIZE__STACK_SIZE)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__STACK_SIZE__stack_size)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_STACK_SIZE), VERIFY_RESULT_STACK_SIZE);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_STACK_SIZE), verify_result_stack_size);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_COUNT__SIG_COUNT)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_COUNT__sig_count)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_COUNT), VERIFY_RESULT_SIG_COUNT);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_COUNT), verify_result_sig_count);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUBKEY_COUNT__PUBKEY_COUNT)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUBKEY_COUNT__pubkey_count)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUBKEY_COUNT), VERIFY_RESULT_PUBKEY_COUNT);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUBKEY_COUNT), verify_result_pubkey_count);
 }
 
 // Failed verify operations
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__VERIFY__VERIFY)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__VERIFY__verify)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_VERIFY), VERIFY_RESULT_VERIFY);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_VERIFY), verify_result_verify);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__EQUALVERIFY__EQUALVERIFY)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__EQUALVERIFY__equalverify)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_EQUALVERIFY), VERIFY_RESULT_EQUALVERIFY);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_EQUALVERIFY), verify_result_equalverify);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CHECKMULTISIGVERIFY__CHECKMULTISIGVERIFY)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CHECKMULTISIGVERIFY__checkmultisigverify)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CHECKMULTISIGVERIFY), VERIFY_RESULT_CHECKMULTISIGVERIFY);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CHECKMULTISIGVERIFY), verify_result_checkmultisigverify);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CHECKSIGVERIFY__CHECKSIGVERIFY)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CHECKSIGVERIFY__checksigverify)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CHECKSIGVERIFY), VERIFY_RESULT_CHECKSIGVERIFY);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CHECKSIGVERIFY), verify_result_checksigverify);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__NUMEQUALVERIFY__NUMEQUALVERIFY)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__NUMEQUALVERIFY__numequalverify)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_NUMEQUALVERIFY), VERIFY_RESULT_NUMEQUALVERIFY);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_NUMEQUALVERIFY), verify_result_numequalverify);
 }
 
 // Logical/Format/Canonical errors
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__BAD_OPCODE__BAD_OPCODE)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__BAD_OPCODE__bad_opcode)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_BAD_OPCODE), VERIFY_RESULT_BAD_OPCODE);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_BAD_OPCODE), verify_result_bad_opcode);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__DISABLED_OPCODE__DISABLED_OPCODE)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__DISABLED_OPCODE__disabled_opcode)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_DISABLED_OPCODE), VERIFY_RESULT_DISABLED_OPCODE);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_DISABLED_OPCODE), verify_result_disabled_opcode);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__INVALID_STACK_OPERATION__INVALID_STACK_OPERATION)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__INVALID_STACK_OPERATION__invalid_stack_operation)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_INVALID_STACK_OPERATION), VERIFY_RESULT_INVALID_STACK_OPERATION);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_INVALID_STACK_OPERATION), verify_result_invalid_stack_operation);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__INVALID_ALTSTACK_OPERATION__INVALID_ALTSTACK_OPERATION)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__INVALID_ALTSTACK_OPERATION__invalid_altstack_operation)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_INVALID_ALTSTACK_OPERATION), VERIFY_RESULT_INVALID_ALTSTACK_OPERATION);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_INVALID_ALTSTACK_OPERATION), verify_result_invalid_altstack_operation);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__UNBALANCED_CONDITIONAL__UNBALANCED_CONDITIONAL)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__UNBALANCED_CONDITIONAL__unbalanced_conditional)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_UNBALANCED_CONDITIONAL), VERIFY_RESULT_UNBALANCED_CONDITIONAL);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_UNBALANCED_CONDITIONAL), verify_result_unbalanced_conditional);
 }
 
 // BIP62
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_HASHTYPE__SIG_HASHTYPE)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_HASHTYPE__sig_hashtype)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_HASHTYPE), VERIFY_RESULT_SIG_HASHTYPE);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_HASHTYPE), verify_result_sig_hashtype);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERR_SIG_DER__ERR_SIG_DER)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERR_SIG_DER__err_sig_der)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_DER), VERIFY_RESULT_SIG_DER);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_DER), verify_result_sig_der);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERR_MINIMALDATA__ERR_MINIMALDATA)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERR_MINIMALDATA__err_minimaldata)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_MINIMALDATA), VERIFY_RESULT_MINIMALDATA);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_MINIMALDATA), verify_result_minimaldata);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_PUSHONLY__SIG_PUSHONLY)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_PUSHONLY__sig_pushonly)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_PUSHONLY), VERIFY_RESULT_SIG_PUSHONLY);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_PUSHONLY), verify_result_sig_pushonly);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_HIGH_S__SIG_HIGH_S)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_HIGH_S__sig_high_s)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_HIGH_S), VERIFY_RESULT_SIG_HIGH_S);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_HIGH_S), verify_result_sig_high_s);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_NULLDUMMY__SIG_NULLDUMMY)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_NULLDUMMY__sig_nulldummy)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_NULLDUMMY), VERIFY_RESULT_SIG_NULLDUMMY);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_NULLDUMMY), verify_result_sig_nulldummy);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUBKEYTYPE__PUBKEYTYPE)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUBKEYTYPE__pubkeytype)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUBKEYTYPE), VERIFY_RESULT_PUBKEYTYPE);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUBKEYTYPE), verify_result_pubkeytype);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CLEANSTACK__CLEANSTACK)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CLEANSTACK__cleanstack)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CLEANSTACK), VERIFY_RESULT_CLEANSTACK);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CLEANSTACK), verify_result_cleanstack);
 }
 
 // Softfork safeness
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___DISCOURAGE_UPGRADABLE_NOPS___DISCOURAGE_UPGRADABLE_NOPS)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___DISCOURAGE_UPGRADABLE_NOPS___discourage_upgradable_nops)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS), VERIFY_RESULT_DISCOURAGE_UPGRADABLE_NOPS);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS), verify_result_discourage_upgradable_nops);
 }
 
 // Other
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__OP_RETURN__OP_RETURN)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__OP_RETURN__op_return)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_OP_RETURN), VERIFY_RESULT_OP_RETURN);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_OP_RETURN), verify_result_op_return);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__UNKNOWN_ERROR__UNKNOWN_ERROR)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__UNKNOWN_ERROR__unknown_error)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_UNKNOWN_ERROR), VERIFY_RESULT_UNKNOWN_ERROR);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_UNKNOWN_ERROR), verify_result_unknown_error);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERROR_COUNT__UNKNOWN_ERROR)
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERROR_COUNT__unknown_error)
 {
-    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_ERROR_COUNT), VERIFY_RESULT_UNKNOWN_ERROR);
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_ERROR_COUNT), verify_result_unknown_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
