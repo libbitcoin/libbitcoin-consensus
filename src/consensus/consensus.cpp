@@ -18,7 +18,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 #include <cstddef>
-#include <cstdint>
+#include <stdint.h>
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/export.hpp>
 #include <bitcoin/consensus/version.hpp>
@@ -62,9 +62,9 @@ private:
 namespace libbitcoin {
 namespace consensus {
 
-script_verification_result verify_script(const uint8_t* transaction,
-    size_t transactionSize, const uint8_t* publicKey, size_t publicKeySize,
-    uint32_t inputIndex, uint32_t flags, script_verification_info& code)
+int verify_script(const uint8_t* transaction, size_t transactionSize, 
+    const uint8_t* publicKey, size_t publicKeySize, uint32_t inputIndex,
+    uint32_t flags)
 {
     CTransaction tx;
     try 
@@ -74,26 +74,25 @@ script_verification_result verify_script(const uint8_t* transaction,
     }
     catch (const std::exception&)
     {
-        return script_verification_result::tx_deserialization_failed;
+        return script_tx_deserialization_failed;
     }
 
     if (inputIndex >= tx.vin.size())
-        return script_verification_result::invalid_tx_index;
+        return script_invalid_tx_index;
 
     if (tx.GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION) != transactionSize)
-        return script_verification_result::invalid_tx_length;
+        return script_invalid_tx_length;
 
     CScript script(publicKey, publicKey + publicKeySize);
     TransactionSignatureChecker checker(&tx, inputIndex);
     const CScript& signature = tx.vin[inputIndex].scriptSig;
 
-    ScriptError error = ScriptError::SCRIPT_ERR_VERIFY;
-    bool verified = VerifyScript(signature, script, flags, checker, &error);
-    code = static_cast<script_verification_info>(error);
+    ScriptError error;
+    if (!VerifyScript(signature, script, flags, checker, &error))
+        return script_unverified;
 
-    return verified ?
-        script_verification_result::verified :
-        script_verification_result::unverified;
+    // TODO: return error.
+    return script_verified;
 }
 
 } // namespace consensus

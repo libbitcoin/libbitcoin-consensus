@@ -19,7 +19,7 @@
  */
 //#include "script.hpp"
 
-#include <cstdint>
+#include <stdint.h>
 #include <vector>
 #include <bitcoin/consensus.hpp>
 #include <boost/test/unit_test.hpp>
@@ -41,14 +41,15 @@ static unsigned from_hex(const char c)
 
 static bool decode_base16_private(uint8_t* out, size_t out_size, const char* in)
 {
-    if (!std::all_of(in, in + 2 * out_size, isxdigit))
-        return false;
-
     for (size_t i = 0; i < out_size; ++i)
     {
+        if (!isxdigit(in[0]) || !isxdigit(in[1]))
+            return false;
+
         out[i] = (from_hex(in[0]) << 4) + from_hex(in[1]);
         in += 2;
     }
+
     return true;
 }
 
@@ -80,13 +81,12 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__zero__verified)
     BOOST_REQUIRE(decode_base16(txdata, tx));
     const size_t txlen = txdata.size();
 
-    script_verification_info code;
-    const int flags = script_verification_flags::verify_bip16 | script_verification_flags::verify_bip66;
-    script_verification_result result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags, code);
+    const int flags = verify_bip16 | verify_bip66;
+    const int result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags);
 
     // FAIL
-    BOOST_REQUIRE_EQUAL(result, script_verification_result::unverified);
-    BOOST_REQUIRE_EQUAL(code, script_verification_info::SCRIPT_ERR_BAD_OPCODE);
+    BOOST_REQUIRE_EQUAL(result, script_unverified);
+    //BOOST_REQUIRE_EQUAL(code, SCRIPT_ERR_BAD_OPCODE);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__one__verified)
@@ -103,13 +103,12 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__one__verified)
     BOOST_REQUIRE(decode_base16(txdata, tx));
     const size_t txlen = txdata.size();
 
-    script_verification_info code;
-    const int flags = script_verification_flags::verify_bip16 | script_verification_flags::verify_bip66;
-    script_verification_result result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags, code);
+    const int flags = verify_bip16 | verify_bip66;
+    const int result = verify_script(&txdata[0], txlen, &pubkey[0], pubkeylen, index, flags);
 
     // FAIL
-    BOOST_REQUIRE_EQUAL(result, script_verification_result::unverified);
-    BOOST_REQUIRE_EQUAL(code, script_verification_info::SCRIPT_ERR_BAD_OPCODE);
+    BOOST_REQUIRE_EQUAL(result, script_unverified);
+    //BOOST_REQUIRE_EQUAL(code, SCRIPT_ERR_BAD_OPCODE);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
