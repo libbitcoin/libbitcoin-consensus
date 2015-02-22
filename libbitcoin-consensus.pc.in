@@ -19,7 +19,7 @@ Version: @PACKAGE_VERSION@
 Requires: 
 
 # Our own include directory and any other compiler flags we require.
-Cflags: -I${includedir} -std=c++11
+Cflags: -I${includedir} 
 
 # Our own lib and any we require that do not publish package configuration.
 Libs: -L${libdir} -lbitcoin-consensus  

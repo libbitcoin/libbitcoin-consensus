@@ -45,9 +45,6 @@ AC_PROG_LIBTOOL
 # Compute the canonical host-system type variable host, including host_os.
 AC_CANONICAL_HOST
 
-# Check for baseline language coverage in the compiler for the C++11 standard.
-AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
-
 # Enable silent rules option.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
@@ -157,12 +154,6 @@ AS_IF([test x$with_openssl = xyes],
 
 # Set flags.
 #==============================================================================
-# Require a c++11 compiler.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-std=c++11],
-        [CXXFLAGS="$CXXFLAGS -std=c++11"])])
-
 # Warn on all stuff.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
