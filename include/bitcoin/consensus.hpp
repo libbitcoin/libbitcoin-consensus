@@ -20,8 +20,9 @@
 #ifndef LIBBITCOIN_CONSENSUS_CONSENSUS_HPP
 #define LIBBITCOIN_CONSENSUS_CONSENSUS_HPP
 
-// Convenience header that includes everything
-// Not to be used internally. For API users.
+// Convenience header that includes everything.
+// API users should include *only* this header.
+// For API users only. Not to be used internally.
 
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/export.hpp>
