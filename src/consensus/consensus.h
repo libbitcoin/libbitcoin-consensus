@@ -23,9 +23,9 @@
 namespace libbitcoin {
 namespace consensus {
 
-// These functions are unpublished, yet in a header for test access.
-verify_result_type script_error_to_verify_result(ScriptError_t code);
-uint32_t verify_flags_to_script_flags(uint32_t flags);
+// These are not published in the public header but are exposed here for test.
+BCX_API verify_result_type script_error_to_verify_result(ScriptError_t code);
+BCX_API uint32_t verify_flags_to_script_flags(uint32_t flags);
 
 } // namespace consensus
 } // namespace libbitcoin
