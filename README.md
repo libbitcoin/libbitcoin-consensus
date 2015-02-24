@@ -24,7 +24,7 @@ libbitcoin-consensus is now installed in `/usr/local/`.
 
 # About
 
-This library includes the following 34 files considered to be bitcoin consensus-critical. These files are identical to those used in version 0.10.0 of the Satoshi client.
+This library includes the following 34 files considered to be bitcoin consensus-critical. These files are identical to those used in version 0.10.0 of the Satoshi client with one exception(*).
 
 ```
 src/amount.h
@@ -62,3 +62,5 @@ src/script/script.cpp
 src/script/script.h
 src/script/script_error.h
 ```
+
+(*) The file [pubkey.cpp](https://github.com/libbitcoin/libbitcoin-consensus/commit/a51db72eb66fc7286f87bd6bf2cd3fc202cceff6) has three changed lines in non-consensus code for support of experimental [libsecp256k1](https://github.com/bitcoin/secp256k1) builds against the current library.
