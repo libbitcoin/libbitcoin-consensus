@@ -14,23 +14,10 @@ pkgconfig_DATA = libbitcoin-consensus.pc
 ACLOCAL_AMFLAGS = -I m4
 
 #
-# headers
-#
-bitcoin_includedir = ${includedir}/bitcoin
-
-bitcoin_include_HEADERS = \
-    include/bitcoin/consensus.hpp
-
-bitcoin_consensus_includedir = ${includedir}/bitcoin/consensus
-bitcoin_consensus_include_HEADERS = \
-    include/bitcoin/consensus/define.hpp \
-    include/bitcoin/consensus/export.hpp \
-    include/bitcoin/consensus/version.hpp
-
-#
 # libraries
 #
-lib_LTLIBRARIES = src/libbitcoin-consensus.la
+lib_LTLIBRARIES = \
+    src/libbitcoin-consensus.la
 
 src_libbitcoin_consensus_la_CPPFLAGS = \
     -I${srcdir}/include \
@@ -39,11 +26,28 @@ src_libbitcoin_consensus_la_CPPFLAGS = \
 if WITH_SECP256K1
 src_libbitcoin_consensus_la_CPPFLAGS += \
     ${secp256k1_CFLAGS}
+    
+src_libbitcoin_consensus_la_LIBADD = \
+    ${secp256k1_LIBS}
 else
 src_libbitcoin_consensus_la_CPPFLAGS += \
     ${ssl_CFLAGS} \
     ${crypto_CFLAGS}
+    
+src_libbitcoin_consensus_la_LIBADD = \
+    ${ssl_LIBS} \
+    ${crypto_LIBS}
 endif
+
+bitcoin_includedir = ${includedir}/bitcoin
+bitcoin_include_HEADERS = \
+    include/bitcoin/consensus.hpp
+
+bitcoin_consensus_includedir = ${includedir}/bitcoin/consensus
+bitcoin_consensus_include_HEADERS = \
+    include/bitcoin/consensus/define.hpp \
+    include/bitcoin/consensus/export.hpp \
+    include/bitcoin/consensus/version.hpp
 
 src_libbitcoin_consensus_la_SOURCES = \
     src/consensus/consensus.cpp \
@@ -67,23 +71,16 @@ src_libbitcoin_consensus_la_SOURCES += \
     src/ecwrapper.cpp
 endif
 
-if WITH_SECP256K1
-src_libbitcoin_consensus_la_LIBADD = \
-    ${secp256k1_LIBS}
-else
-src_libbitcoin_consensus_la_LIBADD = \
-    ${ssl_LIBS} \
-    ${crypto_LIBS}
-endif
-
 #
 # tests
 #
 if WITH_TESTS
 
-TESTS = test/libbitcoin_consensus_test
+TESTS = \
+    test/libbitcoin_consensus_test
 
-check_PROGRAMS = test/libbitcoin_consensus_test
+check_PROGRAMS = \
+    test/libbitcoin_consensus_test
 
 test_libbitcoin_consensus_test_CPPFLAGS = \
     -I${srcdir}/include \
@@ -99,15 +96,6 @@ test_libbitcoin_consensus_test_CPPFLAGS += \
     ${crypto_CFLAGS}
 endif
 
-test_libbitcoin_consensus_test_SOURCES = \
-    test/main.cpp \
-    test/consensus__script_verify.cpp \
-    test/consensus__verify_flags_to_script_flags.cpp \
-    test/consensus__script_error_to_verify_result.cpp
-
-#TODO:
-#test/script.cpp
-
 test_libbitcoin_consensus_test_LDADD = \
     src/libbitcoin-consensus.la \
     -lboost_unit_test_framework
@@ -119,6 +107,12 @@ else
 test_libbitcoin_consensus_test_LDADD += \
     ${ssl_LIBS} \
     ${crypto_LIBS}
-endif   
+endif
+
+test_libbitcoin_consensus_test_SOURCES = \
+    test/main.cpp \
+    test/consensus__script_verify.cpp \
+    test/consensus__verify_flags_to_script_flags.cpp \
+    test/consensus__script_error_to_verify_result.cpp
     
 endif
