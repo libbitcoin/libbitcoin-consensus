@@ -236,6 +236,48 @@ AS_CASE([${CC}], [*gcc*],
     [AX_CHECK_COMPILE_FLAG([-fvisibility-inlines-hidden],
         [CXXFLAGS="$CXXFLAGS -fvisibility-inlines-hidden"])])
 
+AC_MSG_CHECKING(--with-bindings option)
+AC_ARG_WITH([bindings],
+    AS_HELP_STRING([--with-bindings],
+        [Compile with language bindings. @<:@default=yes@:>@]),
+    [with_bindings=$withval],
+    [with_bindings=yes])
+AC_MSG_RESULT([$with_bindings])
+AS_IF([test x$with_bindings != xno],
+    [
+        AX_PKG_SWIG(2.0.0)
+        SWIG_ENABLE_CXX
+
+        AC_MSG_CHECKING(--with-python option)
+        AC_ARG_WITH([python],
+            AS_HELP_STRING([--with-python],
+                [Compile python language bindings. @<:@default=yes@:>@]),
+            [with_python=$withval],
+            [with_python=yes])
+        AC_MSG_RESULT([$with_python])
+        AS_IF([test x$with_python != xno], 
+            [
+                AM_PATH_PYTHON(2.7)
+                SWIG_PYTHON
+            ])
+        AM_CONDITIONAL([WITH_PYTHON], [test x$with_python != xno])
+
+        AC_MSG_CHECKING(--with-java option)
+        AC_ARG_WITH([java],
+            AS_HELP_STRING([--with-java],
+                [Compile java language bindings. @<:@default=yes@:>@]),
+            [with_java=$withval],
+            [with_java=yes])
+        AC_MSG_RESULT([$with_java])
+        AS_IF([test x$with_java != xno], 
+            [
+                AX_CHECK_CLASSPATH
+                AX_PROG_JAVAC
+                AX_PROG_JAVA
+            ])
+        AM_CONDITIONAL([WITH_JAVA], [test x$with_java != xno])
+    ])
+AM_CONDITIONAL([WITH_BINDINGS], [test x$with_bindings != xno])
 
 # Process outputs into templates.
 #==============================================================================

@@ -13,6 +13,8 @@ pkgconfig_DATA = libbitcoin-consensus.pc
 #
 ACLOCAL_AMFLAGS = -I m4
 
+BUILT_SOURCES =
+
 #
 # libraries
 #
@@ -26,14 +28,14 @@ src_libbitcoin_consensus_la_CPPFLAGS = \
 if WITH_SECP256K1
 src_libbitcoin_consensus_la_CPPFLAGS += \
     ${secp256k1_CFLAGS}
-    
+
 src_libbitcoin_consensus_la_LIBADD = \
     ${secp256k1_LIBS}
 else
 src_libbitcoin_consensus_la_CPPFLAGS += \
     ${ssl_CFLAGS} \
     ${crypto_CFLAGS}
-    
+
 src_libbitcoin_consensus_la_LIBADD = \
     ${ssl_LIBS} \
     ${crypto_LIBS}
@@ -69,6 +71,49 @@ if WITH_SECP256K1
 else
 src_libbitcoin_consensus_la_SOURCES += \
     src/ecwrapper.cpp
+endif
+
+#
+# bindings
+#
+if WITH_BINDINGS
+SWIG_SOURCES = \
+    bindings/consensus.i \
+    include/bitcoin/consensus/define.hpp \
+    include/bitcoin/consensus/export.hpp \
+    include/bitcoin/consensus/version.hpp
+
+if WITH_JAVA
+endif
+
+if WITH_PYTHON
+BUILT_SOURCES += \
+    bindings/python/consensus_wrap.cpp \
+    bindings/python/consensus.py
+
+pkgpython_PYTHON = bindings/python/consensus.py
+
+pkgpyexec_LTLIBRARIES = bindings/python/_consensus.la
+
+bindings_python__consensus_la_SOURCES = \
+    bindings/python/consensus_wrap.cpp \
+    ${SWIG_SOURCES}
+
+bindings_python__consensus_la_CPPFLAGS = \
+    ${AX_SWIG_PYTHON_CPPFLAGS} \
+    -I${srcdir}/include
+
+bindings_python__consensus_la_LDFLAGS = \
+    -module
+
+bindings_python__consensus_la_LIBADD = \
+    ${builddir}/src/libbitcoin-consensus.la
+
+bindings/python/consensus_wrap.cpp bindings/python/consensus.py : ${SWIG_SOURCES}
+	${SWIG} ${AX_SWIG_PYTHON_OPT} -c++ -outdir bindings/python -o $@ $<
+
+endif
+
 endif
 
 #
@@ -114,5 +159,5 @@ test_libbitcoin_consensus_test_SOURCES = \
     test/consensus__script_verify.cpp \
     test/consensus__verify_flags_to_script_flags.cpp \
     test/consensus__script_error_to_verify_result.cpp
-    
+
 endif
