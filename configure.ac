@@ -271,9 +271,19 @@ AS_IF([test x$with_bindings != xno],
         AC_MSG_RESULT([$with_java])
         AS_IF([test x$with_java != xno], 
             [
+                AC_PROG_MKDIR_P
                 AX_CHECK_CLASSPATH
                 AX_PROG_JAVAC
                 AX_PROG_JAVA
+                AX_PROG_JAR
+                AX_JNI_INCLUDE_DIR
+
+                JNI_INCLUDES=
+                for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS; do
+                  JNI_INCLUDES="$JNI_INCLUDES -I$JNI_INCLUDE_DIR"
+                done
+
+                AC_SUBST([JNI_INCLUDES])
             ])
         AM_CONDITIONAL([WITH_JAVA], [test x$with_java != xno])
     ])
