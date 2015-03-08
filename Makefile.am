@@ -87,9 +87,6 @@ SWIG_SOURCES = \
 # java
 #
 if WITH_JAVA
-JAVA_PACKAGE_NAME=org.bitcoin.libconsensus
-JAVA_PACKAGE_PATH=org/bitcoin/libconsensus
-
 JAVA_BINDING_PATH=bindings/java
 
 JAVA_BINDING_BUILD_PATH=${JAVA_BINDING_PATH}/build
