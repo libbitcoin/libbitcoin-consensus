@@ -134,7 +134,7 @@ bindings_java_libbitcoin_consensus_jni_la_SOURCES = \
     ${SWIG_SOURCES}
 
 bindings_java_libbitcoin_consensus_jni_la_CPPFLAGS = \
-    ${JNI_INCLUDES} \
+    ${JNI_CFLAGS} \
     -I${srcdir}/include
 
 bindings_java_libbitcoin_consensus_jni_la_LIBADD = \

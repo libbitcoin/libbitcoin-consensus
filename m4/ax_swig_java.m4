@@ -7,7 +7,6 @@ AC_DEFUN([AX_SWIG_JAVA], [
         AC_SUBST([JAVA_PACKAGE_PATH])
 
         AC_PROG_MKDIR_P
-        AX_CHECK_CLASSPATH
         AX_PROG_JAVAC
         AX_PROG_JAVA
         AX_PROG_JAR
@@ -17,7 +16,7 @@ AC_DEFUN([AX_SWIG_JAVA], [
         JNI_LIBS=
 
         for JNI_INCLUDE_DIR in $JNI_INCLUDE_DIRS; do
-          JNI_INCLUDES="$JNI_INCLUDES -I$JNI_INCLUDE_DIR"
+          JNI_CFLAGS="$JNI_CFLAGS -I$JNI_INCLUDE_DIR"
         done
 
         AC_SUBST([JNI_CFLAGS])
