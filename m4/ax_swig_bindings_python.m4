@@ -1,0 +1,11 @@
+
+AC_DEFUN([AX_SWIG_BINDINGS_PYTHON], [
+    PYTHON_VERSION=
+
+    if test -n "$1" ; then
+        PYTHON_VERSION="$1"
+    fi
+
+    AM_PATH_PYTHON($PYTHON_VERSION)
+    SWIG_PYTHON
+])

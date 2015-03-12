@@ -87,75 +87,75 @@ SWIG_SOURCES = \
 # java
 #
 if WITH_JAVA
-JAVA_BINDING_PATH=bindings/java
+JAVA_BINDING_PATH_BASE=bindings/java
 
-JAVA_BINDING_BUILD_PATH=${JAVA_BINDING_PATH}/build
-JAVA_PACKAGE_BUILD_PATH=${JAVA_BINDING_BUILD_PATH}/${JAVA_PACKAGE_PATH}
+JAVA_BINDING_PATH_CPP=${JAVA_BINDING_PATH_BASE}/cpp
+JAVA_BINDING_PATH_CPP_SRC=${srcdir}/${JAVA_BINDING_PATH_CPP}
 
-JAVA_BINDING_SRC_PATH=${JAVA_BINDING_PATH}/src
-JAVA_PACKAGE_SRC_PATH=${JAVA_BINDING_SRC_PATH}/${JAVA_PACKAGE_PATH}
+JAVA_BINDING_PATH_LANG=${JAVA_BINDING_PATH_BASE}/lang
+JAVA_BINDING_PATH_LANG_BUILD=${builddir}/${JAVA_BINDING_PATH_LANG}
+JAVA_BINDING_PATH_LANG_BUILD_PACKAGE=${JAVA_BINDING_PATH_LANG_BUILD}/${JAVA_PACKAGE_PATH}
+JAVA_BINDING_PATH_LANG_SRC=${srcdir}/${JAVA_BINDING_PATH_LANG}
+JAVA_BINDING_PATH_LANG_SRC_PACKAGE=${JAVA_BINDING_PATH_LANG_SRC}/${JAVA_PACKAGE_PATH}
 
 generated_java_sources = \
-    ${JAVA_PACKAGE_SRC_PATH}/consensusConstants.java \
-    ${JAVA_PACKAGE_SRC_PATH}/consensus.java \
-    ${JAVA_PACKAGE_SRC_PATH}/consensusJNI.java \
-    ${JAVA_PACKAGE_SRC_PATH}/SWIGTYPE_p_uint32_t.java \
-    ${JAVA_PACKAGE_SRC_PATH}/SWIGTYPE_p_uint8_t.java \
-    ${JAVA_PACKAGE_SRC_PATH}/verify_flags.java \
-    ${JAVA_PACKAGE_SRC_PATH}/verify_result.java
+    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/consensusConstants.java \
+    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/consensus.java \
+    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/consensusJNI.java \
+    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/SWIGTYPE_p_uint32_t.java \
+    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/SWIGTYPE_p_uint8_t.java \
+    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/verify_flags.java \
+    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/verify_result.java
 
 generated_java_classes = \
-    ${JAVA_PACKAGE_BUILD_PATH}/consensusConstants.class \
-    ${JAVA_PACKAGE_BUILD_PATH}/consensus.class \
-    ${JAVA_PACKAGE_BUILD_PATH}/consensusJNI.class \
-    ${JAVA_PACKAGE_BUILD_PATH}/SWIGTYPE_p_uint32_t.class \
-    ${JAVA_PACKAGE_BUILD_PATH}/SWIGTYPE_p_uint8_t.class \
-    ${JAVA_PACKAGE_BUILD_PATH}/verify_flags.class \
-    ${JAVA_PACKAGE_BUILD_PATH}/verify_result.class
+    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/consensusConstants.class \
+    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/consensus.class \
+    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/consensusJNI.class \
+    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/SWIGTYPE_p_uint32_t.class \
+    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/SWIGTYPE_p_uint8_t.class \
+    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/verify_flags.class \
+    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/verify_result.class
 
 generated_java_wrapper = \
-    bindings/java/consensus_wrap.cpp
-
-BUILT_SOURCES += \
-    ${generated_java_wrapper} \
-    ${generated_java_sources}
+    ${JAVA_BINDING_PATH_CPP_SRC}/consensus_wrap.cpp
 
 # language specific
 classes_jarfile_name=libbitcoin-consensus.jar
-classes_jarfile = ${JAVA_BINDING_PATH}/${classes_jarfile_name}
+classes_jarfile = ${JAVA_BINDING_PATH_BASE}/${classes_jarfile_name}
 sources_jarfile_name=libbitcoin-consensus-sources.jar
-sources_jarfile = ${JAVA_BINDING_PATH}/${sources_jarfile_name}
+sources_jarfile = ${JAVA_BINDING_PATH_BASE}/${sources_jarfile_name}
 
 # c++ wrapper library
-lib_LTLIBRARIES += bindings/java/libbitcoin-consensus_jni.la
+lib_LTLIBRARIES += bindings/java/cpp/libbitcoin-consensus_jni.la
 
-bindings_java_libbitcoin_consensus_jni_la_SOURCES = \
-    bindings/java/consensus_wrap.cpp \
+bindings_java_cpp_libbitcoin_consensus_jni_la_SOURCES = \
+    bindings/java/cpp/consensus_wrap.cpp \
     ${SWIG_SOURCES}
 
-bindings_java_libbitcoin_consensus_jni_la_CPPFLAGS = \
-    ${JNI_CFLAGS} \
+bindings_java_cpp_libbitcoin_consensus_jni_la_CPPFLAGS = ${JNI_CFLAGS} \
     -I${srcdir}/include
 
-bindings_java_libbitcoin_consensus_jni_la_LIBADD = \
+bindings_java_cpp_libbitcoin_consensus_jni_la_LIBADD = ${JNI_LIBS} \
     ${builddir}/src/libbitcoin-consensus.la
 
 # custom build rules
 ${classes_jarfile}: ${generated_java_sources}
-	${MKDIR_P} ${JAVA_PACKAGE_BUILD_PATH}
-	${JAVAC} -cp ${JAVA_PACKAGE_BUILD_PATH} -d ${JAVA_BINDING_BUILD_PATH} ${generated_java_sources}
-	${JAR} cf ${JARFLAGS} ${builddir}/${classes_jarfile} -C ${JAVA_BINDING_BUILD_PATH} .
+	${MKDIR_P} ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}
+	${JAVAC} -cp ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE} -d ${JAVA_BINDING_PATH_LANG_BUILD} ${generated_java_sources}
+	${JAR} cf ${JARFLAGS} ${builddir}/${classes_jarfile} -C ${JAVA_BINDING_PATH_LANG_BUILD} .
 
 ${sources_jarfile}: ${generated_java_sources}
-	${JAR} cf ${JARFLAGS} ${builddir}/${sources_jarfile} -C ${JAVA_BINDING_PATH} src
+	${JAR} cf ${JARFLAGS} ${builddir}/${sources_jarfile} -C ${JAVA_BINDING_PATH_LANG_SRC} .
 
 ${generated_java_wrapper}: ${SWIG_SOURCES}
-	${MKDIR_P} ${JAVA_PACKAGE_SRC_PATH}
-	${SWIG} -Wall -java -c++ -package ${JAVA_PACKAGE_NAME} -outdir ${JAVA_PACKAGE_SRC_PATH} -o $@ $<
+	${MKDIR_P} ${JAVA_BINDING_PATH_CPP_SRC}
+	${MKDIR_P} ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}
+	${SWIG} -Wall -java -c++ -package ${JAVA_PACKAGE_NAME} -outdir ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE} -o $@ $<
 
 ${generated_java_sources}: ${SWIG_SOURCES}
-	${MKDIR_P} ${JAVA_PACKAGE_SRC_PATH}
-	${SWIG} -Wall -java -c++ -package ${JAVA_PACKAGE_NAME} -outdir ${JAVA_PACKAGE_SRC_PATH} -o ${generated_java_wrapper} $<
+	${MKDIR_P} ${JAVA_BINDING_PATH_CPP_SRC}
+	${MKDIR_P} ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}
+	${SWIG} -Wall -java -c++ -package ${JAVA_PACKAGE_NAME} -outdir ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE} -o ${generated_java_wrapper} $<
 
 # proxy to include jar generation on `make all`
 all-local: ${sources_jarfile} ${classes_jarfile}
@@ -187,35 +187,50 @@ endif
 # python
 #
 if WITH_PYTHON
-generated_python_sources= \
-    bindings/python/consensus_wrap.cpp \
-    bindings/python/consensus.py
+PYTHON_BINDING_PATH_BASE=bindings/python
 
-BUILT_SOURCES += ${generated_python_sources}
+PYTHON_BINDING_PATH_CPP=${PYTHON_BINDING_PATH_BASE}/cpp
+PYTHON_BINDING_PATH_CPP_SRC=${srcdir}/${PYTHON_BINDING_PATH_CPP}
+
+PYTHON_BINDING_PATH_LANG=${PYTHON_BINDING_PATH_BASE}/lang
+PYTHON_BINDING_PATH_LANG_SRC=${srcdir}/${PYTHON_BINDING_PATH_LANG}
+
+generated_python_sources = \
+    ${PYTHON_BINDING_PATH_LANG_SRC}/consensus.py
+
+generated_python_wrapper= \
+    ${PYTHON_BINDING_PATH_CPP_SRC}/consensus_wrap.cpp
 
 # language specific
-pkgpython_PYTHON = bindings/python/consensus.py
+pkgpython_PYTHON = ${generated_python_sources}
 
 # c++ wrapper library
-pkgpyexec_LTLIBRARIES = bindings/python/_consensus.la
+pkgpyexec_LTLIBRARIES = bindings/python/cpp/_consensus.la
 
-bindings_python__consensus_la_SOURCES = \
-    bindings/python/consensus_wrap.cpp \
+bindings_python_cpp__consensus_la_SOURCES = \
+    bindings/python/cpp/consensus_wrap.cpp \
     ${SWIG_SOURCES}
 
-bindings_python__consensus_la_CPPFLAGS = \
+bindings_python_cpp__consensus_la_CPPFLAGS = \
     ${AX_SWIG_PYTHON_CPPFLAGS} \
     -I${srcdir}/include
 
-bindings_python__consensus_la_LDFLAGS = \
+bindings_python_cpp__consensus_la_LDFLAGS = \
     -module
 
-bindings_python__consensus_la_LIBADD = \
+bindings_python_cpp__consensus_la_LIBADD = \
     ${builddir}/src/libbitcoin-consensus.la
 
 # custom build rules
-bindings/python/consensus_wrap.cpp bindings/python/consensus.py : ${SWIG_SOURCES}
-	${SWIG} -Wall ${AX_SWIG_PYTHON_OPT} -c++ -outdir bindings/python -o $@ $<
+${generated_python_wrapper}: ${SWIG_SOURCES}
+	${MKDIR_P} ${PYTHON_BINDING_PATH_CPP_SRC}
+	${MKDIR_P} ${PYTHON_BINDING_PATH_LANG_SRC}
+	${SWIG} -Wall -python -c++ -outdir ${PYTHON_BINDING_PATH_LANG_SRC} -o $@ $<
+
+${generated_python_sources}: ${SWIG_SOURCES}
+	${MKDIR_P} ${PYTHON_BINDING_PATH_CPP_SRC}
+	${MKDIR_P} ${PYTHON_BINDING_PATH_LANG_SRC}
+	${SWIG} -Wall -python -c++ -outdir ${PYTHON_BINDING_PATH_LANG_SRC} -o ${generated_python_wrapper} $<
 
 endif
 

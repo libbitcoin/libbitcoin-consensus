@@ -257,8 +257,7 @@ AS_IF([test x$with_bindings != xno],
         AC_MSG_RESULT([$with_python])
         AS_IF([test x$with_python != xno], 
             [
-                AM_PATH_PYTHON(2.7)
-                SWIG_PYTHON
+                AX_SWIG_BINDINGS_PYTHON(2.7)
             ])
         AM_CONDITIONAL([WITH_PYTHON], [test x$with_python != xno])
 
@@ -271,7 +270,7 @@ AS_IF([test x$with_bindings != xno],
         AC_MSG_RESULT([$with_java])
         AS_IF([test x$with_java != xno], 
             [
-                AX_SWIG_JAVA([org.bitcoin.libconsensus])
+                AX_SWIG_BINDINGS_JAVA([org.bitcoin.libconsensus])
             ])
         AM_CONDITIONAL([WITH_JAVA], [test x$with_java != xno])
     ])
