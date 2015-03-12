@@ -63,6 +63,11 @@ install:
     # Download and install packages for linux/gcc/dynamic.
     - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then sudo apt-get -qq install libssl-dev; fi
 
+    # Download and install SWIG for linux.
+    - if [[ $LINUX           ]]; then sudo apt-get install -qq swig; fi
+
+    # Download and install SWIG for OSX (How?).
+
 script:
 
     # Download and build libbitcoin-consensus and all dependencies.
