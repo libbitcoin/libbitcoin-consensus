@@ -57,16 +57,25 @@ install:
     - if [[ $LINUX && $CLANG ]]; then sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.4 50; fi
     - if [[ $LINUX && $CLANG ]]; then sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.4 50; fi
 
+    # Download and install packages for osx/clang/static.
+    - if [[ $OSX   && $CLANG && $STATIC  ]]; then brew install swig; fi
+
+    # Download and install packages for linux/clang/static.
+    - if [[ $LINUX && $CLANG && $STATIC  ]]; then sudo apt-get -qq install swig; fi
+
+    # Download and install packages for linux/gcc/static.
+    - if [[ $LINUX && $GCC   && $STATIC  ]]; then sudo apt-get -qq install swig; fi
+
+    # Download and install packages for osx/clang/dynamic.
+    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew install swig; fi
+
     # Download and install packages for linux/clang/dynamic.
+    - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then sudo apt-get -qq install swig; fi
     - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then sudo apt-get -qq install boost1.54; fi
 
     # Download and install packages for linux/gcc/dynamic.
+    - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then sudo apt-get -qq install swig; fi
     - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then sudo apt-get -qq install libssl-dev; fi
-
-    # Download and install SWIG for linux.
-    - if [[ $LINUX           ]]; then sudo apt-get install -qq swig; fi
-
-    # Download and install SWIG for OSX (How?).
 
 script:
 
@@ -76,4 +85,4 @@ script:
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then ./install.sh --without-openssl --with-secp256k1 --disable-ndebug --disable-shared --build-boost --prefix=$HOME/my-prefix --build-dir=my-build CXXFLAGS='-Os -s'; fi
     - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then ./install.sh --without-openssl --with-secp256k1; fi
     - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then sudo CXX=$CXX CC=$CC ./install.sh --without-openssl --with-secp256k1 --disable-ndebug --disable-static CXXFLAGS='-Os -stdlib=libstdc++' LDLIBS='-lstdc++'; fi
-    - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then sudo CXX=$CXX CC=$CC ./install.sh --with-openssl --disable-static --build-boost CXXFLAGS='-Os -s'; fi
+    - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then sudo CXX=$CXX CC=$CC ./install.sh --with-openssl --without-secp256k1 --disable-static --build-boost CXXFLAGS='-Os -s'; fi
