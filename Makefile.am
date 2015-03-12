@@ -164,9 +164,7 @@ java_binaries = \
 
 CLEANFILES = \
     ${java_binaries} \
-    ${generated_java_classes} \
-    ${generated_java_sources} \
-    ${generated_java_wrapper}
+    ${generated_java_classes}
 
 # installation
 jardir=${datadir}/java
