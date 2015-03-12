@@ -245,7 +245,7 @@ AC_ARG_WITH([bindings],
 AC_MSG_RESULT([$with_bindings])
 AS_IF([test x$with_bindings != xno],
     [
-        AX_PKG_SWIG(2.0.0)
+        AX_PKG_SWIG(2.0.0, [], [AC_MSG_ERROR([SWIG not found.])])
         SWIG_ENABLE_CXX
 
         AC_MSG_CHECKING(--with-python option)

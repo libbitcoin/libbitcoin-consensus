@@ -147,12 +147,12 @@ ${sources_jarfile}: ${generated_java_sources}
 ${generated_java_wrapper}: ${SWIG_SOURCES}
 	${MKDIR_P} ${JAVA_BINDING_PATH_CPP_SRC}
 	${MKDIR_P} ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}
-	${SWIG} -Wall -java -c++ -package ${JAVA_BINDING_PACKAGE_NAME} -outdir ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE} -o $@ $<
+	${SWIG} ${SWIG_JAVA_ARGS} -outdir ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE} -o $@ $<
 
 ${generated_java_sources}: ${SWIG_SOURCES}
 	${MKDIR_P} ${JAVA_BINDING_PATH_CPP_SRC}
 	${MKDIR_P} ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}
-	${SWIG} -Wall -java -c++ -package ${JAVA_BINDING_PACKAGE_NAME} -outdir ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE} -o ${generated_java_wrapper} $<
+	${SWIG} ${SWIG_JAVA_ARGS} -outdir ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE} -o ${generated_java_wrapper} $<
 
 # proxy to include jar generation on `make all`
 all-local: ${sources_jarfile} ${classes_jarfile}
@@ -214,12 +214,12 @@ bindings_python_cpp__consensus_la_LIBADD = ${PYTHON_BINDING_LIBS} \
 ${generated_python_wrapper}: ${SWIG_SOURCES}
 	${MKDIR_P} ${PYTHON_BINDING_PATH_CPP_SRC}
 	${MKDIR_P} ${PYTHON_BINDING_PATH_LANG_SRC}
-	${SWIG} -Wall -python -c++ -outdir ${PYTHON_BINDING_PATH_LANG_SRC} -o $@ $<
+	${SWIG} ${SWIG_PYTHON_ARGS} -outdir ${PYTHON_BINDING_PATH_LANG_SRC} -o $@ $<
 
 ${generated_python_sources}: ${SWIG_SOURCES}
 	${MKDIR_P} ${PYTHON_BINDING_PATH_CPP_SRC}
 	${MKDIR_P} ${PYTHON_BINDING_PATH_LANG_SRC}
-	${SWIG} -Wall -python -c++ -outdir ${PYTHON_BINDING_PATH_LANG_SRC} -o ${generated_python_wrapper} $<
+	${SWIG} ${SWIG_PYTHON_ARGS} -outdir ${PYTHON_BINDING_PATH_LANG_SRC} -o ${generated_python_wrapper} $<
 
 endif
 
