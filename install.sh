@@ -32,8 +32,8 @@ BUILD_DIR="build-libbitcoin-consensus"
 
 # Boost archives for gcc.
 #------------------------------------------------------------------------------
-BOOST_URL_GCC="http://sourceforge.net/projects/boost/files/boost/1.49.0/boost_1_49_0.tar.bz2/download"
-BOOST_ARCHIVE_GCC="boost_1_49_0.tar.bz2"
+BOOST_URL_GCC="http://sourceforge.net/projects/boost/files/boost/1.50.0/boost_1_50_0.tar.bz2/download"
+BOOST_ARCHIVE_GCC="boost_1_50_0.tar.bz2"
 
 # Boost archives for clang.
 #------------------------------------------------------------------------------
@@ -172,7 +172,6 @@ echo "  with_pkgconfigdir: $with_pkgconfigdir"
 BOOST_OPTIONS_GCC=\
 "threading=multi "\
 "variant=release "\
-"--disable-icu "\
 "--with-system "\
 "--with-test "\
 "-d0 "\
@@ -188,7 +187,6 @@ BOOST_OPTIONS_CLANG=\
 "linkflags=-stdlib=${boost_stdlib} "\
 "threading=multi "\
 "variant=release "\
-"--disable-icu "\
 "--with-system "\
 "--with-test "\
 "-d0 "\
@@ -345,7 +343,7 @@ build_from_tarball_boost()
 
     # Build and install (note that "$@" is not from script args).
     ./bootstrap.sh
-    ./b2 install -j $JOBS "$@"
+    ./b2 install boost.locale.icu=off -j $JOBS "$@"
 
     pop_directory
 }

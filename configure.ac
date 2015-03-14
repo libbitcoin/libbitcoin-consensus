@@ -27,7 +27,7 @@ AC_CONFIG_MACRO_DIR([m4])
 # specifically: AUTHORS, COPYING, INSTALL, NEWS, README and ChangeLog.
 AM_INIT_AUTOMAKE([subdir-objects])
 
-# Enable C and Posix extensions that may be disabled on certain platforms.
+# Enable C and POSIX extensions that may be disabled on certain platforms.
 AC_USE_SYSTEM_EXTENSIONS
 
 # Enable the archiver.
@@ -44,6 +44,9 @@ AC_PROG_LIBTOOL
 
 # Compute the canonical host-system type variable host, including host_os.
 AC_CANONICAL_HOST
+
+# Enable directory creation macro.
+AC_PROG_MKDIR_P
 
 # Enable silent rules option.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
@@ -62,9 +65,9 @@ AC_ARG_VAR([PKG_CONFIG_PATH], "Additional directories for package discovery.")
 #==============================================================================
 # Implement --with-pkgconfigdir and output ${pkgconfigdir}.
 #------------------------------------------------------------------------------
-AC_MSG_CHECKING(--with-pkgconfigdir option)
+AC_MSG_CHECKING([--with-pkgconfigdir option])
 AC_ARG_WITH([pkgconfigdir],
-    AS_HELP_STRING([--with-pkgconfigdir=PATH],
+    AS_HELP_STRING([--with-pkgconfigdir=DIR],
         [Path to pkgconfig directory. @<:@default=${libdir}/pkgconfig@:>@]),
     [pkgconfigdir=$withval],
     [pkgconfigdir=${libdir}/pkgconfig])
@@ -73,7 +76,7 @@ AC_SUBST([pkgconfigdir])
 
 # Implement --with-tests and declare WITH_TESTS.
 #------------------------------------------------------------------------------
-AC_MSG_CHECKING(--with-tests option)
+AC_MSG_CHECKING([--with-tests option])
 AC_ARG_WITH([tests],
     AS_HELP_STRING([--with-tests],
         [Compile with unit tests. @<:@default=yes@:>@]),
@@ -84,7 +87,7 @@ AM_CONDITIONAL([WITH_TESTS], [test x$with_tests != xno])
 
 # Implement --with-openssl.
 #------------------------------------------------------------------------------
-AC_MSG_CHECKING(--with-openssl option)
+AC_MSG_CHECKING([--with-openssl option])
 AC_ARG_WITH([openssl],
     AS_HELP_STRING([--with-openssl],
         [Require OpenSSL dependency. @<:@default=yes@:>@]),
@@ -94,62 +97,126 @@ AC_MSG_RESULT([$with_openssl])
 
 # Implement --with-secp256k1 and define USE_SECP256K1 and declare WITH_SECP256K1.
 #------------------------------------------------------------------------------
-AC_MSG_CHECKING(--with-secp256k1 option)
+AC_MSG_CHECKING([--with-secp256k1 option])
 AC_ARG_WITH([secp256k1],
     AS_HELP_STRING([--with-secp256k1],
-        [Compile with Secp256k1 instead of OpenSSL. @<:@default=no@:>@]),
+        [Compile with secp256k1 instead of OpenSSL. @<:@default=no@:>@]),
     [with_secp256k1=$withval],
     [with_secp256k1=no])
 AC_MSG_RESULT([$with_secp256k1])
-AS_IF([test x$with_secp256k1 != xno], AC_DEFINE([USE_SECP256K1]))
+AS_CASE([${with_secp256k1}], [yes], AC_DEFINE([USE_SECP256K1]))
 AM_CONDITIONAL([WITH_SECP256K1], [test x$with_secp256k1 != xno])
 
-# Implement --enable-ndebug option and define NDEBUG.
+# Implement --with-java and declare WITH_JAVA.
 #------------------------------------------------------------------------------
-AC_MSG_CHECKING(--enable-ndebug option)
+AC_MSG_CHECKING([--with-java option])
+AC_ARG_WITH([java],
+    AS_HELP_STRING([--with-java],
+        [Compile with Java bindings. @<:@default=no@:>@]),
+    [with_java=$withval],
+    [with_java=no])
+AC_MSG_RESULT([$with_java])
+AM_CONDITIONAL([WITH_JAVA], [test x$with_java != xno])
+
+# Implement --with-python and declare WITH_PYTHON.
+#------------------------------------------------------------------------------
+AC_MSG_CHECKING([--with-python option])
+AC_ARG_WITH([python],
+    AS_HELP_STRING([--with-python],
+        [Compile with Python bindings. @<:@default=no@:>@]),
+    [with_python=$withval],
+    [with_python=no])
+AC_MSG_RESULT([$with_python])
+AM_CONDITIONAL([WITH_PYTHON], [test x$with_python != xno])
+
+# Implement --enable-ndebug and define NDEBUG.
+#------------------------------------------------------------------------------
+AC_MSG_CHECKING([--enable-ndebug option])
 AC_ARG_ENABLE([ndebug],
     AS_HELP_STRING([--enable-ndebug],
         [Compile without debug assertions. @<:@default=yes@:>@]),
     [enable_ndebug=$enableval],
     [enable_ndebug=yes])
 AC_MSG_RESULT([$enable_ndebug])
-AS_IF([test x$enable_ndebug != xno], AC_DEFINE([NDEBUG]))
+AS_CASE([${enable_ndebug}], [yes], AC_DEFINE([NDEBUG]))
 
-# Inherit --enable-shared option and define BOOST_TEST_DYN_LINK.
+# Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
 #------------------------------------------------------------------------------
-AS_IF([test x$enable_shared != xno], AC_DEFINE([BOOST_TEST_DYN_LINK]))
+AS_CASE([${enable_shared}], [yes], AC_DEFINE([BOOST_TEST_DYN_LINK]))
 
 
 # Check dependencies.
 #==============================================================================
-# Require Boost of at least version 1.49.0 if in gcc.
+# Require Boost of at least version 1.50.0 if in gcc and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*gcc*],
-    [AX_BOOST_BASE([1.49.0], [], [AC_MSG_ERROR(
-        [Boost 1.49.0 or later is required but was not found.])])])
+    [AX_BOOST_BASE([1.50.0],
+        [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
+         AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
+         AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
+         AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
+        [AC_MSG_ERROR([Boost 1.50.0 or later is required but was not found.])])])
 
-# Require Boost of at least version 1.54.0 if in clang.
+# Require Boost of at least version 1.54.0 if in clang and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*clang*],
-    [AX_BOOST_BASE([1.54.0], [], [AC_MSG_ERROR(
-        [Boost 1.54.0 or later is required but was not found.])])])
+    [AX_BOOST_BASE([1.54.0],
+        [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
+         AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
+         AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
+         AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
+        [AC_MSG_ERROR([Boost 1.54.0 or later is required but was not found.])])])
 
-AS_IF([test x$with_tests = xyes], [AX_BOOST_UNIT_TEST_FRAMEWORK])
+AS_CASE([${with_tests}], [yes],
+    [AX_BOOST_UNIT_TEST_FRAMEWORK
+     AC_SUBST([boost_unit_test_framework_LIBS], [${BOOST_UNIT_TEST_FRAMEWORK_LIB}])
+     AC_MSG_NOTICE([boost_unit_test_framework_LIBS : ${boost_unit_test_framework_LIBS}])],
+    [AC_SUBST([boost_unit_test_framework_LIBS], [])])
 
-# Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CFLAGS} and ${secp256k1_LIBS}.
+# Require crypto of at least version 1.0.1 and output ${crypto_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
-AS_IF([test x$with_secp256k1 = xyes],
-    [PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1])])
+AS_CASE([${with_openssl}], [yes],
+    [PKG_CHECK_MODULES([crypto], [libcrypto >= 1.0.1])
+     AC_SUBST([crypto_PKG], ['libcrypto >= 1.0.1'])
+     AC_SUBST([crypto_CPPFLAGS], [${crypto_CFLAGS}])
+     AC_MSG_NOTICE([crypto_CPPFLAGS : ${crypto_CPPFLAGS}])
+     AC_MSG_NOTICE([crypto_LIBS : ${crypto_LIBS}])],
+    [AC_SUBST([crypto_PKG], [])])
 
-# Require ssl of at least version 1.0.1 and output ${ssl_CFLAGS} and ${ssl_LIBS}.
+# Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
-AS_IF([test x$with_openssl = xyes],
-    [PKG_CHECK_MODULES([ssl], [libssl >= 1.0.1])])
+AS_CASE([${with_secp256k1}], [yes],
+    [PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1])
+     AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.0.1'])
+     AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
+     AC_MSG_NOTICE([secp256k1_CPPFLAGS : ${secp256k1_CPPFLAGS}])
+     AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])],
+    [AC_SUBST([secp256k1_PKG], [])])
+    
+# Require swig of at least version 2.0.0 and declare WITH_SWIG.
+#------------------------------------------------------------------------------
+AS_CASE([${with_java}], [yes],
+    [AX_PKG_SWIG([2.0.0], [],
+        [AC_MSG_ERROR([SWIG 2.0.0 or later is required but was not found.])])])
 
-# Require crypto of at least version 1.0.1 and output ${crypto_CFLAGS} and ${crypto_LIBS}.
+# Require swig of at least version 2.0.0 and declare WITH_SWIG.
 #------------------------------------------------------------------------------
-AS_IF([test x$with_openssl = xyes],
-    [PKG_CHECK_MODULES([crypto], [libcrypto >= 1.0.1])])
+AS_CASE([${with_python}], [yes],
+    [AX_PKG_SWIG([2.0.0], [],
+        [AC_MSG_ERROR([SWIG 2.0.0 or later is required but was not found.])])])
+
+# Require java and define ${java_CPPFLAGS}.
+#------------------------------------------------------------------------------
+AS_CASE([${with_java}], [yes],
+    [AX_JAVA_DEVEL
+     AC_SUBST([java_CPPFLAGS], [${JAVA_CPPFLAGS}])])
+
+# Require python of at least version 2.7 and define ${python_CPPFLAGS}.
+#------------------------------------------------------------------------------
+AS_CASE([${with_python}], [yes],
+    [AM_PATH_PYTHON([2.7],
+        [AX_PYTHON_DEVEL
+         AC_SUBST([python_CPPFLAGS], [${PYTHON_CPPFLAGS}])])]) 
 
 
 # Set flags.
@@ -158,21 +225,21 @@ AS_IF([test x$with_openssl = xyes],
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wall],
-        [CXXFLAGS="$CXXFLAGS -Wall"])])
+        [CFLAGS="$CFLAGS -Wall"])])
 
 # Warn on extra stuff.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wextra],
-        [CXXFLAGS="$CXXFLAGS -Wextra"])])
+        [CFLAGS="$CFLAGS -Wextra"])])
 
 # Be really annoying.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wpedantic],
-        [CXXFLAGS="$CXXFLAGS -Wpedantic"],
+        [CFLAGS="$CFLAGS -Wpedantic"],
         [AX_CHECK_COMPILE_FLAG([-pedantic],
-            [CXXFLAGS="$CXXFLAGS -pedantic"])])])
+            [CFLAGS="$CFLAGS -pedantic"])])])
 
 # Conform to style.
 #------------------------------------------------------------------------------
@@ -198,31 +265,71 @@ AS_CASE([${CC}], [*gcc*],
     [AX_CHECK_COMPILE_FLAG([-Wno-unused-local-typedefs],
         [CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])])
 
+# Clean up consensus warnings.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-unused-variable],
+        [CFLAGS="$CFLAGS -Wno-unused-variable"])])
+
+# Clean up consensus warnings.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-unused-parameter],
+        [CFLAGS="$CFLAGS -Wno-unused-parameter"])])
+
+# Clean up consensus warnings. Enabled in gcc only.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*gcc*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-pedantic],
+        [CFLAGS="$CFLAGS -Wno-pedantic"])])
+
 # Clean up consensus warnings. Enabled in gcc only.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*gcc*],
     [AX_CHECK_COMPILE_FLAG([-Wno-long-long],
-        [CXXFLAGS="$CXXFLAGS -Wno-long-long"])])
+        [CFLAGS="$CFLAGS -Wno-long-long"])])
 
-# Clean up consensus warnings Enabled in clang only.
+# Clean up consensus warnings. Enabled in clang only.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*clang*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-self-assign],
+        [CFLAGS="$CFLAGS -Wno-self-assign"])])
+
+# Clean up consensus warnings. Enabled in clang only.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*clang*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-vla-extension],
+        [CFLAGS="$CFLAGS -Wno-vla-extension"])])
+
+# Clean up consensus warnings. Enabled in clang only.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*clang*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-c99-extensions],
+        [CFLAGS="$CFLAGS -Wno-c99-extensions"])])
+
+# Clean up consensus warnings. Enabled in clang only.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*clang*],
     [AX_CHECK_COMPILE_FLAG([-Wno-c++11-long-long],
         [CXXFLAGS="$CXXFLAGS -Wno-c++11-long-long"])])
 
+# Clean up consensus warnings. Enabled in clang only.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*clang*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-c++11-extensions],
+        [CXXFLAGS="$CXXFLAGS -Wno-c++11-extensions"])])
+
 # Protect stack.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-fstack-protector],
-        [AX_CHECK_LINK_FLAG([-fstack-protector],
-            [CXXFLAGS="$CXXFLAGS -fstack-protector"])])])
+    [AX_CHECK_LINK_FLAG([-fstack-protector],
+        [LDFLAGS="$LDFLAGS -fstack-protector"])])
 
 # Protect stack comprehensively.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-fstack-protector-all],
-        [AX_CHECK_LINK_FLAG([-fstack-protector-all],
-            [CXXFLAGS="$CXXFLAGS -fstack-protector-all"])])])
+    [AX_CHECK_LINK_FLAG([-fstack-protector-all],
+        [LDFLAGS="$LDFLAGS -fstack-protector-all"])])
 
 # Hide internal functions from external libs. Enabled in gcc only.
 #------------------------------------------------------------------------------
@@ -236,45 +343,6 @@ AS_CASE([${CC}], [*gcc*],
     [AX_CHECK_COMPILE_FLAG([-fvisibility-inlines-hidden],
         [CXXFLAGS="$CXXFLAGS -fvisibility-inlines-hidden"])])
 
-AC_MSG_CHECKING(--with-bindings option)
-AC_ARG_WITH([bindings],
-    AS_HELP_STRING([--with-bindings],
-        [Compile with language bindings. @<:@default=yes@:>@]),
-    [with_bindings=$withval],
-    [with_bindings=yes])
-AC_MSG_RESULT([$with_bindings])
-AS_IF([test x$with_bindings != xno],
-    [
-        AX_PKG_SWIG(2.0.0, [], [AC_MSG_ERROR([SWIG not found.])])
-        SWIG_ENABLE_CXX
-
-        AC_MSG_CHECKING(--with-python option)
-        AC_ARG_WITH([python],
-            AS_HELP_STRING([--with-python],
-                [Compile python language bindings. @<:@default=yes@:>@]),
-            [with_python=$withval],
-            [with_python=yes])
-        AC_MSG_RESULT([$with_python])
-        AS_IF([test x$with_python != xno], 
-            [
-                AX_SWIG_BINDINGS_PYTHON(2.7)
-            ])
-        AM_CONDITIONAL([WITH_PYTHON], [test x$with_python != xno])
-
-        AC_MSG_CHECKING(--with-java option)
-        AC_ARG_WITH([java],
-            AS_HELP_STRING([--with-java],
-                [Compile java language bindings. @<:@default=yes@:>@]),
-            [with_java=$withval],
-            [with_java=yes])
-        AC_MSG_RESULT([$with_java])
-        AS_IF([test x$with_java != xno], 
-            [
-                AX_SWIG_BINDINGS_JAVA([org.bitcoin.libconsensus])
-            ])
-        AM_CONDITIONAL([WITH_JAVA], [test x$with_java != xno])
-    ])
-AM_CONDITIONAL([WITH_BINDINGS], [test x$with_bindings != xno])
 
 # Process outputs into templates.
 #==============================================================================
