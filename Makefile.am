@@ -122,16 +122,17 @@ generated_java_classes = \
 # generated single paths
 generated_java_wrapper = ${srcdir}/bindings/java/cpp/consensus_wrap.cpp
 java_binding_package = libbitcoin-consensus
-java_binding_path_cpp_src=${srcdir}/bindings/java/cpp
-java_binding_path_lang_build=${builddir}/bindings/java/lang
-java_binding_path_lang_build_package=${builddir}/bindings/java/lang/org/libbitcoin/consensus
-java_binding_path_lang_src=${srcdir}/bindings/java/lang
-java_binding_path_lang_src_package=${srcdir}/bindings/java/lang/org/libbitcoin/consensus
+java_binding_package_name = org.libbitcoin.consensus
+java_binding_path_cpp_src = ${srcdir}/bindings/java/cpp
+java_binding_path_lang_build = ${builddir}/bindings/java/lang
+java_binding_path_lang_build_package = ${builddir}/bindings/java/lang/org/libbitcoin/consensus
+java_binding_path_lang_src = ${srcdir}/bindings/java/lang
+java_binding_path_lang_src_package = ${srcdir}/bindings/java/lang/org/libbitcoin/consensus
 java_classes_jarfile = bindings/java/libbitcoin-consensus.jar
 java_sources_jarfile = bindings/java/libbitcoin-consensus.jar
 
 # static build template
-swig_java_args = -c++ -java -package org.libbitcoin.consensus
+swig_java_args = -c++ -java -package ${java_binding_package_name}
 ${java_classes_jarfile}: ${generated_java_sources}
 	${MKDIR_P} ${java_binding_path_lang_build_package}
 	${JAVAC} -cp ${java_binding_path_lang_build_package} -d ${java_binding_path_lang_build} ${generated_java_sources}
