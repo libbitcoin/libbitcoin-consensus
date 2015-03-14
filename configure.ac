@@ -193,30 +193,32 @@ AS_CASE([${with_secp256k1}], [yes],
      AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])],
     [AC_SUBST([secp256k1_PKG], [])])
     
-# Require swig of at least version 2.0.0 and declare WITH_SWIG.
+# Require swig of at least version 2.0.0 and output ${SWIG}.
 #------------------------------------------------------------------------------
 AS_CASE([${with_java}], [yes],
     [AX_PKG_SWIG([2.0.0], [],
         [AC_MSG_ERROR([SWIG 2.0.0 or later is required but was not found.])])])
 
-# Require swig of at least version 2.0.0 and declare WITH_SWIG.
+# Require swig of at least version 2.0.0 and output ${SWIG}.
 #------------------------------------------------------------------------------
 AS_CASE([${with_python}], [yes],
     [AX_PKG_SWIG([2.0.0], [],
         [AC_MSG_ERROR([SWIG 2.0.0 or later is required but was not found.])])])
 
-# Require java and define ${java_CPPFLAGS}.
+# Require java and output ${JAR}, ${JAVAC}, ${JARFLAGS} and ${java_CPPFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${with_java}], [yes],
     [AX_JAVA_DEVEL
-     AC_SUBST([java_CPPFLAGS], [${JAVA_CPPFLAGS}])])
+     AC_SUBST([java_CPPFLAGS], [${JAVA_CPPFLAGS}])
+     AC_MSG_NOTICE([java_CPPFLAGS : ${java_CPPFLAGS}])])
 
-# Require python of at least version 2.7 and define ${python_CPPFLAGS}.
+# Require python of at least version 2.7 and output ${python_CPPFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${with_python}], [yes],
     [AM_PATH_PYTHON([2.7],
         [AX_PYTHON_DEVEL
-         AC_SUBST([python_CPPFLAGS], [${PYTHON_CPPFLAGS}])])]) 
+         AC_SUBST([python_CPPFLAGS], [${PYTHON_CPPFLAGS}])
+         AC_MSG_NOTICE([python_CPPFLAGS : ${python_CPPFLAGS}])])]) 
 
 
 # Set flags.
