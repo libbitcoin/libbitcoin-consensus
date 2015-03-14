@@ -1,57 +1,45 @@
+###############################################################################
+#  Copyright (c) 2014-2015 libbitcoin-consensus developers (see COPYING).
 #
-# documentation
+#         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
-doc_DATA = README INSTALL COPYING
+###############################################################################
 
-#
-# pkg-config
-#
-pkgconfig_DATA = libbitcoin-consensus.pc
-
-#
+# Standard declarations.
+#==============================================================================
 # look for macros in the m4 subdirectory
-#
 ACLOCAL_AMFLAGS = -I m4
 
-BUILT_SOURCES =
 
-#
-# libraries
-#
-lib_LTLIBRARIES = \
-    src/libbitcoin-consensus.la
+# Automake products.
+#==============================================================================
+# files => ${pkgconfigdir}
+#------------------------------------------------------------------------------
+pkgconfig_DATA = \
+    libbitcoin-consensus.pc
 
-src_libbitcoin_consensus_la_CPPFLAGS = \
-    -I${srcdir}/include \
-    -I${srcdir}/src
+# files => ${docdir}
+#------------------------------------------------------------------------------
+doc_DATA = \
+    AUTHORS \
+    COPYING \
+    ChangeLog \
+    INSTALL \
+    NEWS \
+    README
 
-if WITH_SECP256K1
-src_libbitcoin_consensus_la_CPPFLAGS += \
-    ${secp256k1_CFLAGS}
-
-src_libbitcoin_consensus_la_LIBADD = \
-    ${secp256k1_LIBS}
-else
-src_libbitcoin_consensus_la_CPPFLAGS += \
-    ${ssl_CFLAGS} \
-    ${crypto_CFLAGS}
-
-src_libbitcoin_consensus_la_LIBADD = \
-    ${ssl_LIBS} \
-    ${crypto_LIBS}
-endif
-
-bitcoin_includedir = ${includedir}/bitcoin
-bitcoin_include_HEADERS = \
-    include/bitcoin/consensus.hpp
-
-bitcoin_consensus_includedir = ${includedir}/bitcoin/consensus
-bitcoin_consensus_include_HEADERS = \
-    include/bitcoin/consensus/define.hpp \
-    include/bitcoin/consensus/export.hpp \
-    include/bitcoin/consensus/version.hpp
-
+# src/libbitcoin-consensus.la => ${libdir}
+#------------------------------------------------------------------------------
+lib_LTLIBRARIES = src/libbitcoin-consensus.la
+src_libbitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
+src_libbitcoin_consensus_la_LIBADD = ${crypto_LIBS} ${secp256k1_LIBS}
 src_libbitcoin_consensus_la_SOURCES = \
+    src/eccryptoverify.cpp \
+    src/ecwrapper.cpp \
+    src/hash.cpp \
+    src/pubkey.cpp \
+    src/uint256.cpp \
+    src/utilstrencodings.cpp \
     src/consensus/consensus.cpp \
     src/crypto/hmac_sha512.cpp \
     src/crypto/ripemd160.cpp \
@@ -60,213 +48,158 @@ src_libbitcoin_consensus_la_SOURCES = \
     src/crypto/sha512.cpp \
     src/primitives/transaction.cpp \
     src/script/interpreter.cpp \
-    src/script/script.cpp \
-    src/eccryptoverify.cpp \
-    src/hash.cpp \
-    src/pubkey.cpp \
-    src/uint256.cpp \
-    src/utilstrencodings.cpp
+    src/script/script.cpp
 
-if WITH_SECP256K1
-else
-src_libbitcoin_consensus_la_SOURCES += \
-    src/ecwrapper.cpp
-endif
+# local: test/libbitcoin_consensus_test
+#------------------------------------------------------------------------------
+if WITH_TESTS
 
-#
-# bindings
-#
-if WITH_BINDINGS
-SWIG_SOURCES = \
+# Execute 'test/libbitcoin_consensus_test' as a test.
+TESTS = test/libbitcoin_consensus_test
+
+check_PROGRAMS = test/libbitcoin_consensus_test
+test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
+test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${crypto_LIBS} ${secp256k1_LIBS} ${boost_unit_test_framework_LIBS}
+test_libbitcoin_consensus_test_SOURCES = \
+    test/consensus__script_error_to_verify_result.cpp \
+    test/consensus__script_verify.cpp \
+    test/consensus__verify_flags_to_script_flags.cpp \
+    test/main.cpp
+
+endif WITH_TESTS
+
+# files => ${includedir}/bitcoin
+#------------------------------------------------------------------------------
+include_bitcoindir = ${includedir}/bitcoin
+include_bitcoin_HEADERS = \
+    include/bitcoin/consensus.hpp
+
+include_bitcoin_consensusdir = ${includedir}/bitcoin/consensus
+include_bitcoin_consensus_HEADERS = \
+    include/bitcoin/consensus/define.hpp \
+    include/bitcoin/consensus/export.hpp \
+    include/bitcoin/consensus/version.hpp
+    
+# local: swig
+#------------------------------------------------------------------------------
+swigdir =
+nodist_swig_HEADERS = \
     bindings/consensus.i \
     include/bitcoin/consensus/define.hpp \
     include/bitcoin/consensus/export.hpp \
     include/bitcoin/consensus/version.hpp
 
-#
-# java
-#
+# java bindings
+#------------------------------------------------------------------------------
 if WITH_JAVA
-JAVA_BINDING_PATH_CPP_SRC=${srcdir}/${JAVA_BINDING_PATH_CPP}
-
-JAVA_BINDING_PATH_LANG_BUILD=${builddir}/${JAVA_BINDING_PATH_LANG}
-JAVA_BINDING_PATH_LANG_BUILD_PACKAGE=${JAVA_BINDING_PATH_LANG_BUILD}/${JAVA_BINDING_PACKAGE_PATH}
-JAVA_BINDING_PATH_LANG_SRC=${srcdir}/${JAVA_BINDING_PATH_LANG}
-JAVA_BINDING_PATH_LANG_SRC_PACKAGE=${JAVA_BINDING_PATH_LANG_SRC}/${JAVA_BINDING_PACKAGE_PATH}
-
-generated_java_sources = \
-    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/consensusConstants.java \
-    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/consensus.java \
-    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/consensusJNI.java \
-    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/SWIGTYPE_p_uint32_t.java \
-    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/SWIGTYPE_p_uint8_t.java \
-    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/verify_flags.java \
-    ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}/verify_result.java
-
-generated_java_classes = \
-    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/consensusConstants.class \
-    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/consensus.class \
-    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/consensusJNI.class \
-    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/SWIGTYPE_p_uint32_t.class \
-    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/SWIGTYPE_p_uint8_t.class \
-    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/verify_flags.class \
-    ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}/verify_result.class
-
-generated_java_wrapper = \
-    ${JAVA_BINDING_PATH_CPP_SRC}/consensus_wrap.cpp
-
-# language specific
-classes_jarfile_name=libbitcoin-consensus.jar
-classes_jarfile = ${JAVA_BINDING_PATH_BASE}/${classes_jarfile_name}
-sources_jarfile_name=libbitcoin-consensus-sources.jar
-sources_jarfile = ${JAVA_BINDING_PATH_BASE}/${sources_jarfile_name}
 
 # c++ wrapper library
 lib_LTLIBRARIES += bindings/java/cpp/libbitcoin-consensus_jni.la
-
+bindings_java_cpp_libbitcoin_consensus_jni_la_CPPFLAGS = -I${srcdir}/include ${java_CPPFLAGS}
+bindings_java_cpp_libbitcoin_consensus_jni_la_LIBADD = src/libbitcoin-consensus.la
 bindings_java_cpp_libbitcoin_consensus_jni_la_SOURCES = \
-    bindings/java/cpp/consensus_wrap.cpp \
-    ${SWIG_SOURCES}
+    bindings/java/cpp/consensus_wrap.cpp
 
-bindings_java_cpp_libbitcoin_consensus_jni_la_CPPFLAGS = ${JAVA_BINDING_CFLAGS} \
-    -I${srcdir}/include
+# generated directories
+generated_java_sources = \
+    ${srcdir}/bindings/java/lang/org/libbitcoin/consensus/consensusConstants.java \
+    ${srcdir}/bindings/java/lang/org/libbitcoin/consensus/consensus.java \
+    ${srcdir}/bindings/java/lang/org/libbitcoin/consensus/consensusJNI.java \
+    ${srcdir}/bindings/java/lang/org/libbitcoin/consensus/SWIGTYPE_p_uint32_t.java \
+    ${srcdir}/bindings/java/lang/org/libbitcoin/consensus/SWIGTYPE_p_uint8_t.java \
+    ${srcdir}/bindings/java/lang/org/libbitcoin/consensus/verify_flags.java \
+    ${srcdir}/bindings/java/lang/org/libbitcoin/consensus/verify_result.java
+    
+generated_java_classes = \
+    ${builddir}/bindings/java/lang/org/libbitcoin/consensus/consensusConstants.class \
+    ${builddir}/bindings/java/lang/org/libbitcoin/consensus/consensus.class \
+    ${builddir}/bindings/java/lang/org/libbitcoin/consensus/consensusJNI.class \
+    ${builddir}/bindings/java/lang/org/libbitcoin/consensus/SWIGTYPE_p_uint32_t.class \
+    ${builddir}/bindings/java/lang/org/libbitcoin/consensus/SWIGTYPE_p_uint8_t.class \
+    ${builddir}/bindings/java/lang/org/libbitcoin/consensus/verify_flags.class \
+    ${builddir}/bindings/java/lang/org/libbitcoin/consensus/verify_result.class
 
-bindings_java_cpp_libbitcoin_consensus_jni_la_LIBADD = ${JAVA_BINDING_LIBS} \
-    ${builddir}/src/libbitcoin-consensus.la
+# generated single paths
+generated_java_wrapper = ${srcdir}/bindings/java/cpp/consensus_wrap.cpp
+java_binding_package = libbitcoin-consensus
+java_binding_path_cpp_src=${srcdir}/bindings/java/cpp
+java_binding_path_lang_build=${builddir}/bindings/java/lang
+java_binding_path_lang_build_package=${builddir}/bindings/java/lang/org/libbitcoin/consensus
+java_binding_path_lang_src=${srcdir}/bindings/java/lang
+java_binding_path_lang_src_package=${srcdir}/bindings/java/lang/org/libbitcoin/consensus
+java_classes_jarfile = bindings/java/libbitcoin-consensus.jar
+java_sources_jarfile = bindings/java/libbitcoin-consensus.jar
 
-# custom build rules
-${classes_jarfile}: ${generated_java_sources}
-	${MKDIR_P} ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}
-	${JAVAC} -cp ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE} -d ${JAVA_BINDING_PATH_LANG_BUILD} ${generated_java_sources}
-	${JAR} cf ${JARFLAGS} ${builddir}/${classes_jarfile} -C ${JAVA_BINDING_PATH_LANG_BUILD} .
-
-${sources_jarfile}: ${generated_java_sources}
-	${MKDIR_P} ${JAVA_BINDING_PATH_LANG_BUILD_PACKAGE}
-	${JAR} cf ${JARFLAGS} ${builddir}/${sources_jarfile} -C ${JAVA_BINDING_PATH_LANG_SRC} .
-
-${generated_java_wrapper}: ${SWIG_SOURCES}
-	${MKDIR_P} ${JAVA_BINDING_PATH_CPP_SRC}
-	${MKDIR_P} ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}
-	${SWIG} ${SWIG_JAVA_ARGS} -outdir ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE} -o $@ $<
-
-${generated_java_sources}: ${SWIG_SOURCES}
-	${MKDIR_P} ${JAVA_BINDING_PATH_CPP_SRC}
-	${MKDIR_P} ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE}
-	${SWIG} ${SWIG_JAVA_ARGS} -outdir ${JAVA_BINDING_PATH_LANG_SRC_PACKAGE} -o ${generated_java_wrapper} $<
+# static build template
+swig_java_args = -c++ -java -package org.libbitcoin.consensus
+${java_classes_jarfile}: ${generated_java_sources}
+	${MKDIR_P} ${java_binding_path_lang_build_package}
+	${JAVAC} -cp ${java_binding_path_lang_build_package} -d ${java_binding_path_lang_build} ${generated_java_sources}
+	${JAR} cf ${JARFLAGS} ${builddir}/${java_classes_jarfile} -C ${java_binding_path_lang_build} .
+${java_sources_jarfile}: ${generated_java_sources}
+	${MKDIR_P} ${java_binding_path_lang_build_package}
+	${JAR} cf ${JARFLAGS} ${builddir}/${java_sources_jarfile} -C ${java_binding_path_lang_src} .
+${generated_java_wrapper}: ${nodist_swig_HEADERS}
+	${MKDIR_P} ${java_binding_path_cpp_src}
+	${MKDIR_P} ${java_binding_path_lang_src_package}
+	${SWIG} ${swig_java_args} -outdir ${java_binding_path_lang_src_package} -o $@ $<
+${generated_java_sources}: ${nodist_swig_HEADERS}
+	${MKDIR_P} ${java_binding_path_cpp_src}
+	${MKDIR_P} ${java_binding_path_lang_src_package}
+	${SWIG} ${swig_java_args} -outdir ${java_binding_path_lang_src_package} -o ${generated_java_wrapper} $<
 
 # proxy to include jar generation on `make all`
-all-local: ${sources_jarfile} ${classes_jarfile}
+all-local: ${java_sources_jarfile} ${java_classes_jarfile}
 
 # cleanup
 java_binaries = \
-    ${builddir}/${classes_jarfile} \
-    ${builddir}/${sources_jarfile}
+    ${builddir}/${java_classes_jarfile} \
+    ${builddir}/${java_sources_jarfile}
 
 CLEANFILES = \
     ${java_binaries} \
     ${generated_java_classes}
 
 # installation
-jardir=${datadir}/java
+jardir = ${datadir}/java
 
 install-data-local:
 	${MKDIR_P} "${DESTDIR}${jardir}"
-	${INSTALL_DATA} ${classes_jarfile} "${DESTDIR}${jardir}"
+	${INSTALL_DATA} ${java_classes_jarfile} "${DESTDIR}${jardir}"
 
 uninstall-local:
 	rm -f "${DESTDIR}${jardir}/${classes_jarfile_name}"
 
-endif
+endif WITH_JAVA
 
-#
-# python
-#
+# python bindings
+#------------------------------------------------------------------------------
 if WITH_PYTHON
-PYTHON_BINDING_PATH_CPP_SRC=${srcdir}/${PYTHON_BINDING_PATH_CPP}
-PYTHON_BINDING_PATH_LANG_SRC=${srcdir}/${PYTHON_BINDING_PATH_LANG}
-
-generated_python_sources = \
-    ${PYTHON_BINDING_PATH_LANG_SRC}/consensus.py
-
-generated_python_wrapper= \
-    ${PYTHON_BINDING_PATH_CPP_SRC}/consensus_wrap.cpp
-
-# language specific
-pkgpython_PYTHON = ${generated_python_sources}
 
 # c++ wrapper library
 pkgpyexec_LTLIBRARIES = bindings/python/cpp/_consensus.la
-
+bindings_python_cpp__consensus_la_CPPFLAGS = -I${srcdir}/include ${python_CPPFLAGS} 
+bindings_python_cpp__consensus_la_LDFLAGS = -module 
+bindings_python_cpp__consensus_la_LIBADD = src/libbitcoin-consensus.la
 bindings_python_cpp__consensus_la_SOURCES = \
-    bindings/python/cpp/consensus_wrap.cpp \
-    ${SWIG_SOURCES}
+    bindings/python/cpp/consensus_wrap.cpp
 
-bindings_python_cpp__consensus_la_CPPFLAGS = ${PYTHON_BINDING_CFLAGS} \
-    -I${srcdir}/include
+# generated single paths
+python_binding_path_cpp_src = ${srcdir}/bindings/python/cpp
+python_binding_path_lang_src = ${srcdir}/bindings/python/lang
+generated_python_sources = ${srcdir}/bindings/python/lang/consensus.py
+generated_python_wrapper = ${srcdir}/bindings/python/cpp/consensus_wrap.cpp
 
-bindings_python_cpp__consensus_la_LDFLAGS = \
-    -module
+# static build template
+swig_python_args = -c++ -python
+pkgpython_PYTHON = ${generated_python_sources}
+${generated_python_wrapper}: ${nodist_swig_HEADERS}
+	${MKDIR_P} ${python_binding_path_cpp_src}
+	${MKDIR_P} ${python_binding_path_lang_src}
+	${SWIG} ${swig_python_args} -outdir ${python_binding_path_lang_src} -o $@ $<
+${generated_python_sources}: ${nodist_swig_HEADERS}
+	${MKDIR_P} ${python_binding_path_cpp_src}
+	${MKDIR_P} ${python_binding_path_lang_src}
+	${SWIG} ${swig_python_args} -outdir ${python_binding_path_lang_src} -o ${generated_python_wrapper} $<
 
-bindings_python_cpp__consensus_la_LIBADD = ${PYTHON_BINDING_LIBS} \
-    ${builddir}/src/libbitcoin-consensus.la
-
-# custom build rules
-${generated_python_wrapper}: ${SWIG_SOURCES}
-	${MKDIR_P} ${PYTHON_BINDING_PATH_CPP_SRC}
-	${MKDIR_P} ${PYTHON_BINDING_PATH_LANG_SRC}
-	${SWIG} ${SWIG_PYTHON_ARGS} -outdir ${PYTHON_BINDING_PATH_LANG_SRC} -o $@ $<
-
-${generated_python_sources}: ${SWIG_SOURCES}
-	${MKDIR_P} ${PYTHON_BINDING_PATH_CPP_SRC}
-	${MKDIR_P} ${PYTHON_BINDING_PATH_LANG_SRC}
-	${SWIG} ${SWIG_PYTHON_ARGS} -outdir ${PYTHON_BINDING_PATH_LANG_SRC} -o ${generated_python_wrapper} $<
-
-endif
-
-endif
-
-#
-# tests
-#
-if WITH_TESTS
-
-TESTS = \
-    test/libbitcoin_consensus_test
-
-check_PROGRAMS = \
-    test/libbitcoin_consensus_test
-
-test_libbitcoin_consensus_test_CPPFLAGS = \
-    -I${srcdir}/include \
-    -I${srcdir}/src \
-    -I${srcdir}/test
-
-if WITH_SECP256K1
-test_libbitcoin_consensus_test_CPPFLAGS += \
-    ${secp256k1_CFLAGS}
-else
-test_libbitcoin_consensus_test_CPPFLAGS += \
-    ${ssl_CFLAGS} \
-    ${crypto_CFLAGS}
-endif
-
-test_libbitcoin_consensus_test_LDADD = \
-    src/libbitcoin-consensus.la \
-    -lboost_unit_test_framework
-    
-if WITH_SECP256K1
-test_libbitcoin_consensus_test_LDADD += \
-    ${secp256k1_LIBS}
-else
-test_libbitcoin_consensus_test_LDADD += \
-    ${ssl_LIBS} \
-    ${crypto_LIBS}
-endif
-
-test_libbitcoin_consensus_test_SOURCES = \
-    test/main.cpp \
-    test/consensus__script_verify.cpp \
-    test/consensus__verify_flags_to_script_flags.cpp \
-    test/consensus__script_error_to_verify_result.cpp
-
-endif
+endif WITH_PYTHON
