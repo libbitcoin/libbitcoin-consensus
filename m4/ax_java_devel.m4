@@ -13,4 +13,5 @@ AC_DEFUN([AX_JAVA_DEVEL], [
     done
 
     AC_SUBST([JAVA_CPPFLAGS])
+    AC_SUBST([javadir], ["${datadir}/java"])
 ])
