@@ -112,7 +112,7 @@ AM_CONDITIONAL([WITH_SECP256K1], [test x$with_secp256k1 != xno])
 AC_MSG_CHECKING([--with-java option])
 AC_ARG_WITH([java],
     AS_HELP_STRING([--with-java],
-        [Compile with Java bindings. @<:@default=no@:>@]),
+        [Compile the Java bindings. @<:@default=no@:>@]),
     [with_java=$withval],
     [with_java=no])
 AC_MSG_RESULT([$with_java])
@@ -123,7 +123,7 @@ AM_CONDITIONAL([WITH_JAVA], [test x$with_java != xno])
 AC_MSG_CHECKING([--with-python option])
 AC_ARG_WITH([python],
     AS_HELP_STRING([--with-python],
-        [Compile with Python bindings. @<:@default=no@:>@]),
+        [Compile the Python bindings. @<:@default=no@:>@]),
     [with_python=$withval],
     [with_python=no])
 AC_MSG_RESULT([$with_python])
@@ -192,33 +192,21 @@ AS_CASE([${with_secp256k1}], [yes],
      AC_MSG_NOTICE([secp256k1_CPPFLAGS : ${secp256k1_CPPFLAGS}])
      AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])],
     [AC_SUBST([secp256k1_PKG], [])])
-    
-# Require swig of at least version 2.0.0 and output ${SWIG}.
-#------------------------------------------------------------------------------
-AS_CASE([${with_java}], [yes],
-    [AX_PKG_SWIG([2.0.0], [],
-        [AC_MSG_ERROR([SWIG 2.0.0 or later is required but was not found.])])])
 
-# Require swig of at least version 2.0.0 and output ${SWIG}.
-#------------------------------------------------------------------------------
-AS_CASE([${with_python}], [yes],
-    [AX_PKG_SWIG([2.0.0], [],
-        [AC_MSG_ERROR([SWIG 2.0.0 or later is required but was not found.])])])
-
-# Require java and output ${JAR}, ${JAVAC}, ${JARFLAGS} and ${java_CPPFLAGS}.
+# Require java if --with_java and output ${JAR/JAVAC/javadir} and ${java_CPPFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${with_java}], [yes],
     [AX_JAVA_DEVEL
      AC_SUBST([java_CPPFLAGS], [${JAVA_CPPFLAGS}])
      AC_MSG_NOTICE([java_CPPFLAGS : ${java_CPPFLAGS}])])
 
-# Require python of at least version 2.7 and output ${python_CPPFLAGS}.
+# Require python of at least version 2.7 if --with_python and output ${python_CPPFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${with_python}], [yes],
     [AM_PATH_PYTHON([2.7],
         [AX_PYTHON_DEVEL
          AC_SUBST([python_CPPFLAGS], [${PYTHON_CPPFLAGS}])
-         AC_MSG_NOTICE([python_CPPFLAGS : ${python_CPPFLAGS}])])]) 
+         AC_MSG_NOTICE([python_CPPFLAGS : ${python_CPPFLAGS}])])])
 
 
 # Set flags.
