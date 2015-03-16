@@ -92,17 +92,36 @@ bindings_java_wrap_libbitcoin_consensus_jni_la_SOURCES = \
 
 endif WITH_JAVA
 
-# files => ${javadir}
+# local: ${java_builddir}, see ax_java_devel.m4.
 #------------------------------------------------------------------------------
 if WITH_JAVA
 
-noinst_JAVA = \
+dist_noinst_JAVA = \
     bindings/java/proxy/org/libbitcoin/consensus/consensus.java \
     bindings/java/proxy/org/libbitcoin/consensus/consensusConstants.java \
     bindings/java/proxy/org/libbitcoin/consensus/consensusJNI.java \
     bindings/java/proxy/org/libbitcoin/consensus/SWIGTYPE_p_unsigned_char.java \
     bindings/java/proxy/org/libbitcoin/consensus/verify_flags.java \
     bindings/java/proxy/org/libbitcoin/consensus/verify_result.java
+
+CLEANFILES = ${java_builddir}/*.class
+
+distclean-local:
+	rm -rf ${java_builddir} ${jar_builddir}
+
+endif WITH_JAVA
+
+# .jar => ${jardir}, see ax_java_devel.m4.
+#------------------------------------------------------------------------------
+if WITH_JAVA
+
+nodist_jarexec_DATA = \
+    ${jar_builddir}/org.libbitcoin.consensus-${VERSION}.jar
+
+${nodist_jarexec_DATA}: classnoinst.stamp
+	${JAR} cf ${JARFLAGS} ${nodist_jarexec_DATA} -C ${java_builddir} .
+
+CLEANFILES += ${jar_builddir}/*.jar
 
 endif WITH_JAVA
 

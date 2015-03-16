@@ -45,9 +45,6 @@ AC_PROG_LIBTOOL
 # Compute the canonical host-system type variable host, including host_os.
 AC_CANONICAL_HOST
 
-# Enable directory creation macro.
-AC_PROG_MKDIR_P
-
 # Enable silent rules option.
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
