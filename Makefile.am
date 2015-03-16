@@ -80,15 +80,15 @@ include_bitcoin_consensus_HEADERS = \
     include/bitcoin/consensus/export.hpp \
     include/bitcoin/consensus/version.hpp
 
-# bindings/java/cpp/libbitcoin-consensus-jni.la => ${libdir}
+# bindings/java/wrap/libbitcoin-consensus-jni.la => ${libdir}
 #------------------------------------------------------------------------------
 if WITH_JAVA
 
-lib_LTLIBRARIES += bindings/java/cpp/libbitcoin-consensus-jni.la
-bindings_java_cpp_libbitcoin_consensus_jni_la_CPPFLAGS = -I${srcdir}/include ${java_CPPFLAGS}
-bindings_java_cpp_libbitcoin_consensus_jni_la_LIBADD = src/libbitcoin-consensus.la
-bindings_java_cpp_libbitcoin_consensus_jni_la_SOURCES = \
-    bindings/java/cpp/consensus_wrap.cpp
+lib_LTLIBRARIES += bindings/java/wrap/libbitcoin-consensus-jni.la
+bindings_java_wrap_libbitcoin_consensus_jni_la_CPPFLAGS = -I${srcdir}/include ${java_CPPFLAGS}
+bindings_java_wrap_libbitcoin_consensus_jni_la_LIBADD = src/libbitcoin-consensus.la
+bindings_java_wrap_libbitcoin_consensus_jni_la_SOURCES = \
+    bindings/java/wrap/consensus.cpp
 
 endif WITH_JAVA
 
@@ -97,26 +97,25 @@ endif WITH_JAVA
 if WITH_JAVA
 
 noinst_JAVA = \
-    bindings/java/lang/org/libbitcoin/consensus/consensus.java \
-    bindings/java/lang/org/libbitcoin/consensus/consensusConstants.java \
-    bindings/java/lang/org/libbitcoin/consensus/consensusJNI.java \
-    bindings/java/lang/org/libbitcoin/consensus/SWIGTYPE_p_uint32_t.java \
-    bindings/java/lang/org/libbitcoin/consensus/SWIGTYPE_p_uint8_t.java \
-    bindings/java/lang/org/libbitcoin/consensus/verify_flags.java \
-    bindings/java/lang/org/libbitcoin/consensus/verify_result.java
+    bindings/java/proxy/org/libbitcoin/consensus/consensus.java \
+    bindings/java/proxy/org/libbitcoin/consensus/consensusConstants.java \
+    bindings/java/proxy/org/libbitcoin/consensus/consensusJNI.java \
+    bindings/java/proxy/org/libbitcoin/consensus/SWIGTYPE_p_unsigned_char.java \
+    bindings/java/proxy/org/libbitcoin/consensus/verify_flags.java \
+    bindings/java/proxy/org/libbitcoin/consensus/verify_result.java
 
 endif WITH_JAVA
 
-# bindings/python/cpp/_bitcoin-consensus.la => ${pkgpyexecdir}
+# bindings/python/wrap/_bitcoin-consensus.la => ${pkgpyexecdir}
 #------------------------------------------------------------------------------
 if WITH_PYTHON
 
-pkgpyexec_LTLIBRARIES = bindings/python/cpp/_bitcoin-consensus.la
-bindings_python_cpp__bitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include ${python_CPPFLAGS}
-bindings_python_cpp__bitcoin_consensus_la_LDFLAGS = -module
-bindings_python_cpp__bitcoin_consensus_la_LIBADD = src/libbitcoin-consensus.la
-bindings_python_cpp__bitcoin_consensus_la_SOURCES = \
-    bindings/python/cpp/consensus_wrap.cpp
+pkgpyexec_LTLIBRARIES = bindings/python/wrap/_bitcoin-consensus.la
+bindings_python_wrap__bitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include ${python_CPPFLAGS}
+bindings_python_wrap__bitcoin_consensus_la_LDFLAGS = -module
+bindings_python_wrap__bitcoin_consensus_la_LIBADD = src/libbitcoin-consensus.la
+bindings_python_wrap__bitcoin_consensus_la_SOURCES = \
+    bindings/python/wrap/consensus.cpp
 
 endif WITH_PYTHON
 
@@ -125,7 +124,7 @@ endif WITH_PYTHON
 if WITH_PYTHON
 
 pkgpython_PYTHON = \
-    bindings/python/lang/consensus.py
+    bindings/python/proxy/consensus.py
 
 endif WITH_PYTHON
 
