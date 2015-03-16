@@ -25,7 +25,7 @@ namespace consensus {
 
 // These are not published in the public header but are exposed here for test.
 BCX_API verify_result_type script_error_to_verify_result(ScriptError_t code);
-BCX_API uint32_t verify_flags_to_script_flags(uint32_t flags);
+BCX_API unsigned int verify_flags_to_script_flags(unsigned int flags);
 
 } // namespace consensus
 } // namespace libbitcoin

@@ -21,7 +21,6 @@
 #define LIBBITCOIN_CONSENSUS_EXPORT_HPP
 
 #include <cstddef>
-#include <stdint.h>
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/version.hpp>
 
@@ -193,9 +192,10 @@ typedef enum verify_flags_type
  * @param[in]  flags               Verification constraint flags.
  * @returns                        A script verification result code.
  */
- BCX_API verify_result_type verify_script(const uint8_t* transaction,
-    size_t transaction_size, const uint8_t* prevout_script,
-    size_t prevout_script_size, uint32_t tx_input_index, uint32_t flags);
+ BCX_API verify_result_type verify_script(const unsigned char* transaction,
+    size_t transaction_size, const unsigned char* prevout_script,
+    size_t prevout_script_size, unsigned int tx_input_index, 
+    unsigned int flags);
 
 } // namespace consensus
 } // namespace libbitcoin

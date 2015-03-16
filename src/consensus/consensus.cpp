@@ -20,7 +20,6 @@
 #include "consensus/consensus.h"
 
 #include <cstddef>
-#include <stdint.h>
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/export.hpp>
 #include <bitcoin/consensus/version.hpp>
@@ -33,7 +32,7 @@
 class TxInputStream
 {
 public:
-    TxInputStream(const uint8_t* transaction, size_t transaction_size)
+    TxInputStream(const unsigned char* transaction, size_t transaction_size)
         : source(transaction), remaining(transaction_size)
     {
     }
@@ -56,7 +55,7 @@ public:
     }
 
 private:
-    const uint8_t* source;
+    const unsigned char* source;
     size_t remaining;
 };
 
@@ -149,9 +148,9 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
 // This function is not published (but non-static for testability).
-uint32_t verify_flags_to_script_flags(uint32_t flags)
+unsigned int verify_flags_to_script_flags(unsigned int flags)
 {
-    uint32_t script_flags = SCRIPT_VERIFY_NONE;
+    unsigned int script_flags = SCRIPT_VERIFY_NONE;
 
     if ((flags & verify_flags_p2sh) != 0)
         script_flags |= SCRIPT_VERIFY_P2SH;
@@ -176,9 +175,10 @@ uint32_t verify_flags_to_script_flags(uint32_t flags)
 }
 
 // This function is published. The implementation exposes no satoshi internals.
-verify_result_type verify_script(const uint8_t* transaction, 
-    size_t transaction_size, const uint8_t* prevout_script, 
-    size_t prevout_script_size, uint32_t tx_input_index, uint32_t flags)
+verify_result_type verify_script(const unsigned char* transaction, 
+    size_t transaction_size, const unsigned char* prevout_script, 
+    size_t prevout_script_size, unsigned int tx_input_index, 
+    unsigned int flags)
 {
     CTransaction tx;
     try 
@@ -199,7 +199,7 @@ verify_result_type verify_script(const uint8_t* transaction,
 
     ScriptError_t error;
     TransactionSignatureChecker checker(&tx, tx_input_index);
-    const uint32_t script_flags = verify_flags_to_script_flags(flags);
+    const unsigned int script_flags = verify_flags_to_script_flags(flags);
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
     const CScript& input_script = tx.vin[tx_input_index].scriptSig;
 
