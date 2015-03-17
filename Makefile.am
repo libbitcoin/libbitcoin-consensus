@@ -13,17 +13,6 @@ ACLOCAL_AMFLAGS = -I m4
 
 # Automake products.
 #==============================================================================
-# Initialize all conditionally reused variables.
-#------------------------------------------------------------------------------
-TESTS =
-CLEANFILES =
-bin_PROGRAMS =
-check_PROGRAMS =
-noinst_PROGRAMS =
-lib_LTLIBRARIES =
-noinst_LTLIBRARIES =
-pkgpyexec_LTLIBRARIES =
-
 # files => ${pkgconfigdir}
 #------------------------------------------------------------------------------
 pkgconfig_DATA = \
@@ -41,7 +30,7 @@ doc_DATA = \
 
 # src/libbitcoin-consensus.la => ${libdir}
 #------------------------------------------------------------------------------
-lib_LTLIBRARIES += src/libbitcoin-consensus.la
+lib_LTLIBRARIES = src/libbitcoin-consensus.la
 src_libbitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
 src_libbitcoin_consensus_la_LIBADD = ${crypto_LIBS} ${secp256k1_LIBS}
 src_libbitcoin_consensus_la_SOURCES = \
@@ -66,9 +55,9 @@ src_libbitcoin_consensus_la_SOURCES = \
 if WITH_TESTS
 
 # Execute 'test/libbitcoin_consensus_test' as a test.
-TESTS += test/libbitcoin_consensus_test
+TESTS = test/libbitcoin_consensus_test
 
-check_PROGRAMS += test/libbitcoin_consensus_test
+check_PROGRAMS = test/libbitcoin_consensus_test
 test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
 test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${crypto_LIBS} ${secp256k1_LIBS} ${boost_unit_test_framework_LIBS}
 test_libbitcoin_consensus_test_SOURCES = \
@@ -115,7 +104,7 @@ dist_noinst_JAVA = \
     bindings/java/proxy/org/libbitcoin/consensus/verify_flags.java \
     bindings/java/proxy/org/libbitcoin/consensus/verify_result.java
 
-CLEANFILES += ${java_builddir}/*.class
+CLEANFILES = ${java_builddir}/*.class
 
 distclean-local:
 	rm -rf ${java_builddir} ${jar_builddir}
@@ -140,7 +129,7 @@ endif WITH_JAVA
 #------------------------------------------------------------------------------
 if WITH_PYTHON
 
-pkgpyexec_LTLIBRARIES += bindings/python/wrap/_bitcoin-consensus.la
+pkgpyexec_LTLIBRARIES = bindings/python/wrap/_bitcoin-consensus.la
 bindings_python_wrap__bitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include ${python_CPPFLAGS}
 bindings_python_wrap__bitcoin_consensus_la_LDFLAGS = -module
 bindings_python_wrap__bitcoin_consensus_la_LIBADD = src/libbitcoin-consensus.la
