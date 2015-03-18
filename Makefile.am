@@ -34,21 +34,42 @@ lib_LTLIBRARIES = src/libbitcoin-consensus.la
 src_libbitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
 src_libbitcoin_consensus_la_LIBADD = ${crypto_LIBS} ${secp256k1_LIBS}
 src_libbitcoin_consensus_la_SOURCES = \
+    src/amount.h \
     src/eccryptoverify.cpp \
+    src/eccryptoverify.h \
     src/ecwrapper.cpp \
+    src/ecwrapper.h \
     src/hash.cpp \
+    src/hash.h \
     src/pubkey.cpp \
+    src/pubkey.h \
+    src/serialize.h \
+    src/tinyformat.h \
     src/uint256.cpp \
+    src/uint256.h \
     src/utilstrencodings.cpp \
+    src/utilstrencodings.h \
+    src/version.h \
     src/consensus/consensus.cpp \
+    src/consensus/consensus.h \
+    src/crypto/common.h \
     src/crypto/hmac_sha512.cpp \
+    src/crypto/hmac_sha512.h \
     src/crypto/ripemd160.cpp \
+    src/crypto/ripemd160.h \
     src/crypto/sha1.cpp \
+    src/crypto/sha1.h \
     src/crypto/sha256.cpp \
+    src/crypto/sha256.h \
     src/crypto/sha512.cpp \
+    src/crypto/sha512.h \
     src/primitives/transaction.cpp \
+    src/primitives/transaction.h \
     src/script/interpreter.cpp \
-    src/script/script.cpp
+    src/script/interpreter.h \
+    src/script/script.cpp \
+    src/script/script.h \
+    src/script/script_error.h
 
 # local: test/libbitcoin_consensus_test
 #------------------------------------------------------------------------------
@@ -64,7 +85,8 @@ test_libbitcoin_consensus_test_SOURCES = \
     test/consensus__script_error_to_verify_result.cpp \
     test/consensus__script_verify.cpp \
     test/consensus__verify_flags_to_script_flags.cpp \
-    test/main.cpp
+    test/main.cpp \
+    test/script.hpp
 
 endif WITH_TESTS
 
@@ -107,7 +129,7 @@ dist_noinst_JAVA = \
 CLEANFILES = ${java_builddir}/*.class
 
 distclean-local:
-	rm -rf ${java_builddir} ${jar_builddir}
+	-rm -rf ${java_builddir} ${jar_builddir}
 
 endif WITH_JAVA
 
