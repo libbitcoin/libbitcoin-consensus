@@ -80,7 +80,7 @@ TESTS = test/libbitcoin_consensus_test
 
 check_PROGRAMS = test/libbitcoin_consensus_test
 test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
-test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${crypto_LIBS} ${secp256k1_LIBS} ${boost_unit_test_framework_LIBS}
+test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${boost_unit_test_framework_LIBS} ${crypto_LIBS} ${secp256k1_LIBS}
 test_libbitcoin_consensus_test_SOURCES = \
     test/consensus__script_error_to_verify_result.cpp \
     test/consensus__script_verify.cpp \
@@ -107,8 +107,8 @@ include_bitcoin_consensus_HEADERS = \
 if WITH_JAVA
 
 lib_LTLIBRARIES += bindings/java/wrap/libbitcoin-consensus-jni.la
-bindings_java_wrap_libbitcoin_consensus_jni_la_CPPFLAGS = -I${srcdir}/include ${java_CPPFLAGS}
-bindings_java_wrap_libbitcoin_consensus_jni_la_LIBADD = src/libbitcoin-consensus.la
+bindings_java_wrap_libbitcoin_consensus_jni_la_CPPFLAGS = -I${srcdir}/include ${java_CPPFLAGS} ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
+bindings_java_wrap_libbitcoin_consensus_jni_la_LIBADD = src/libbitcoin-consensus.la ${crypto_LIBS} ${secp256k1_LIBS}
 bindings_java_wrap_libbitcoin_consensus_jni_la_SOURCES = \
     bindings/java/wrap/consensus.cpp
 
@@ -152,9 +152,9 @@ endif WITH_JAVA
 if WITH_PYTHON
 
 pkgpyexec_LTLIBRARIES = bindings/python/wrap/_bitcoin-consensus.la
-bindings_python_wrap__bitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include ${python_CPPFLAGS}
+bindings_python_wrap__bitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include ${python_CPPFLAGS} ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
 bindings_python_wrap__bitcoin_consensus_la_LDFLAGS = -module
-bindings_python_wrap__bitcoin_consensus_la_LIBADD = src/libbitcoin-consensus.la
+bindings_python_wrap__bitcoin_consensus_la_LIBADD = src/libbitcoin-consensus.la ${crypto_LIBS} ${secp256k1_LIBS}
 bindings_python_wrap__bitcoin_consensus_la_SOURCES = \
     bindings/python/wrap/consensus.cpp
 
