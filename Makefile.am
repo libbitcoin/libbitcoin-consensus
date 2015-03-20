@@ -118,10 +118,10 @@ endif WITH_JAVA
 if WITH_JAVA
 
 dist_noinst_JAVA = \
+    bindings/java/proxy/org/libbitcoin/consensus/SWIGTYPE_p_unsigned_char.java \
     bindings/java/proxy/org/libbitcoin/consensus/consensus.java \
     bindings/java/proxy/org/libbitcoin/consensus/consensusConstants.java \
     bindings/java/proxy/org/libbitcoin/consensus/consensusJNI.java \
-    bindings/java/proxy/org/libbitcoin/consensus/SWIGTYPE_p_unsigned_char.java \
     bindings/java/proxy/org/libbitcoin/consensus/verify_flags.java \
     bindings/java/proxy/org/libbitcoin/consensus/verify_result.java
 
