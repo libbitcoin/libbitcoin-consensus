@@ -75,8 +75,7 @@ src_libbitcoin_consensus_la_SOURCES = \
 #------------------------------------------------------------------------------
 if WITH_TESTS
 
-# Execute 'test/libbitcoin_consensus_test' as a test.
-TESTS = test/libbitcoin_consensus_test
+TESTS = libbitcoin_consensus_test_runner.sh
 
 check_PROGRAMS = test/libbitcoin_consensus_test
 test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
