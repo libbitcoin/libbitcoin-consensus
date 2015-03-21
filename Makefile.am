@@ -5,13 +5,14 @@
 #
 ###############################################################################
 
-# Standard declarations.
+# Automake settings.
 #==============================================================================
-# look for macros in the m4 subdirectory
+# Look for macros in the m4 subdirectory.
+#------------------------------------------------------------------------------
 ACLOCAL_AMFLAGS = -I m4
 
 
-# Automake products.
+# Distribution, build and install products.
 #==============================================================================
 # files => ${pkgconfigdir}
 #------------------------------------------------------------------------------
@@ -167,4 +168,21 @@ pkgpython_PYTHON = \
     bindings/python/proxy/consensus.py
 
 endif WITH_PYTHON
+
+
+# Custom make targets.
+#==============================================================================
+# make target: java
+#------------------------------------------------------------------------------
+target_java = \
+    bindings/java/wrap/libbitcoin-consensus-jni.la
+
+java: ${target_java}
+
+# make target: python
+#------------------------------------------------------------------------------
+target_python = \
+    bindings/python/wrap/_bitcoin-consensus.la
+
+python: ${target_python}
 
