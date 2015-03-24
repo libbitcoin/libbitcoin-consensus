@@ -16,6 +16,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions Condition="'$(Option-secp256k1)' == 'true'">USE_SECP256K1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Linkage-libbitcoin-consensus)' == 'static' Or '$(Linkage-libbitcoin-consensus)' == 'ltcg'">BCX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -45,6 +46,10 @@
   </Target>
 
   <!-- Messages -->
+  
+  <Target Name="libbitcoin-consensus-option-info" BeforeTargets="PrepareForBuild">
+    <Message Text="Option-secp256k1  : $(Option-secp256k1)" Importance="high"/>
+  </Target>  
   
   <Target Name="libbitcoin-consensus-info" BeforeTargets="AfterBuild" Condition="'$(Linkage-libbitcoin-consensus)' == 'dynamic'">
     <Message Text="Copying libbitcoin-consensus.dll -&gt; $(TargetDir)libbitcoin-consensus.dll" Importance="high"/>
