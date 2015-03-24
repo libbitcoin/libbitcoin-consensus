@@ -5,13 +5,14 @@
 #
 ###############################################################################
 
-# Standard declarations.
+# Automake settings.
 #==============================================================================
-# look for macros in the m4 subdirectory
+# Look for macros in the m4 subdirectory.
+#------------------------------------------------------------------------------
 ACLOCAL_AMFLAGS = -I m4
 
 
-# Automake products.
+# Distribution, build and install products.
 #==============================================================================
 # files => ${pkgconfigdir}
 #------------------------------------------------------------------------------
@@ -78,7 +79,8 @@ if WITH_TESTS
 TESTS = libbitcoin_consensus_test_runner.sh
 
 check_PROGRAMS = test/libbitcoin_consensus_test
-test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
+test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${boost_CPPFLAGS} ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
+test_libbitcoin_consensus_test_LDFLAGS = ${boost_LDFLAGS}
 test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${boost_unit_test_framework_LIBS} ${crypto_LIBS} ${secp256k1_LIBS}
 test_libbitcoin_consensus_test_SOURCES = \
     test/consensus__script_error_to_verify_result.cpp \
@@ -167,4 +169,21 @@ pkgpython_PYTHON = \
     bindings/python/proxy/consensus.py
 
 endif WITH_PYTHON
+
+
+# Custom make targets.
+#==============================================================================
+# make target: java
+#------------------------------------------------------------------------------
+target_java = \
+    bindings/java/wrap/libbitcoin-consensus-jni.la
+
+java: ${target_java}
+
+# make target: python
+#------------------------------------------------------------------------------
+target_python = \
+    bindings/python/wrap/_bitcoin-consensus.la
+
+python: ${target_python}
 

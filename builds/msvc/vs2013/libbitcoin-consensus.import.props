@@ -16,33 +16,40 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Linkage-libbitcoin-consensus)' == 'static' Or '$(Linkage-libbitcoin-consensus)' == 'ltcg'">BCX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>      
+      <PreprocessorDefinitions Condition="'$(Option-secp256k1)' == 'true'">USE_SECP256K1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Linkage-libbitcoin-consensus)' == 'static' Or '$(Linkage-libbitcoin-consensus)' == 'ltcg'">BCX_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
+      <!-- $(PlatformToolset) is hard wired to v120 to allow for linkage by PlatformToolset=CTP_Nov2013 callers. -->
       <AdditionalDependencies Condition="'$(Linkage-libbitcoin-consensus)' != ''">libbitcoin-consensus.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories Condition="$(Configuration.IndexOf('Debug')) != -1">$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Debug\$(PlatformToolset)\$(Linkage-libbitcoin-consensus)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalLibraryDirectories Condition="$(Configuration.IndexOf('Release')) != -1">$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Release\$(PlatformToolset)\$(Linkage-libbitcoin-consensus)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>   
+      <AdditionalLibraryDirectories Condition="$(Configuration.IndexOf('Debug')) != -1">$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Debug\v120\$(Linkage-libbitcoin-consensus)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="$(Configuration.IndexOf('Release')) != -1">$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Release\v120\$(Linkage-libbitcoin-consensus)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>   
     </Link>
   </ItemDefinitionGroup>
 
   <!-- Copy -->
 
+  <!-- $(PlatformToolset) is hard wired to v120 to allow for linkage by PlatformToolset=CTP_Nov2013 callers. -->
   <Target Name="Linkage-libbitcoin-consensus-dynamic" AfterTargets="AfterBuild" Condition="'$(Linkage-libbitcoin-consensus)' == 'dynamic'">
     <Copy Condition="$(Configuration.IndexOf('Debug')) != -1"
-          SourceFiles="$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Debug\$(PlatformToolset)\dynamic\libbitcoin-consensus.dll"
+          SourceFiles="$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Debug\v120\dynamic\libbitcoin-consensus.dll"
           DestinationFiles="$(TargetDir)libbitcoin-consensus.dll"
           SkipUnchangedFiles="true" />
     <Copy Condition="$(Configuration.IndexOf('Debug')) != -1"
-          SourceFiles="$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Debug\$(PlatformToolset)\dynamic\libbitcoin-consensus.pdb"
+          SourceFiles="$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Debug\v120\dynamic\libbitcoin-consensus.pdb"
           DestinationFiles="$(TargetDir)libbitcoin-consensus.pdb"
           SkipUnchangedFiles="true" />
     <Copy Condition="$(Configuration.IndexOf('Release')) != -1"
-          SourceFiles="$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Release\$(PlatformToolset)\dynamic\libbitcoin-consensus.dll"
+          SourceFiles="$(ProjectDir)..\..\..\..\..\libbitcoin-consensus\bin\$(PlatformName)\Release\v120\dynamic\libbitcoin-consensus.dll"
           DestinationFiles="$(TargetDir)libbitcoin-consensus.dll"
           SkipUnchangedFiles="true" />
   </Target>
 
   <!-- Messages -->
+  
+  <Target Name="libbitcoin-consensus-option-info" BeforeTargets="PrepareForBuild">
+    <Message Text="Option-secp256k1  : $(Option-secp256k1)" Importance="high"/>
+  </Target>  
   
   <Target Name="libbitcoin-consensus-info" BeforeTargets="AfterBuild" Condition="'$(Linkage-libbitcoin-consensus)' == 'dynamic'">
     <Message Text="Copying libbitcoin-consensus.dll -&gt; $(TargetDir)libbitcoin-consensus.dll" Importance="high"/>
