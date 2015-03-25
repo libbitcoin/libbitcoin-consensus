@@ -105,6 +105,7 @@
     <ClInclude Include="..\..\..\..\src\consensus\consensus.h">
       <Filter>src\consensus</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\eccryptoverify.cpp">
@@ -152,5 +153,8 @@
     <ClCompile Include="..\..\..\..\src\consensus\consensus.cpp">
       <Filter>src\consensus</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\resource.rc" />
   </ItemGroup>
 </Project>

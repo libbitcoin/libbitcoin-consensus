@@ -98,6 +98,7 @@
     <ClInclude Include="..\..\..\..\src\uint256.h" />
     <ClInclude Include="..\..\..\..\src\utilstrencodings.h" />
     <ClInclude Include="..\..\..\..\src\version.h" />
+    <ClInclude Include="..\..\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\consensus\consensus.cpp" />
@@ -117,6 +118,9 @@
     <ClCompile Include="..\..\..\..\src\script\script.cpp" />
     <ClCompile Include="..\..\..\..\src\uint256.cpp" />
     <ClCompile Include="..\..\..\..\src\utilstrencodings.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionSettings">
