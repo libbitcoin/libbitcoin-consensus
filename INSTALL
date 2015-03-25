@@ -17,16 +17,13 @@ Debian/Ubuntu Instructions
 > Start Here! <
   ^^^^^^^^^^^
 
-  First install libbitcoin as per the INSTALL instructions then
-  follow the commands below.
-
   $ autoreconf -i
   $ ./configure
   $ make
   $ sudo make install
   $ sudo ldconfig
 
-libwallet is now installed in /usr/local/.
+libbitcoin-consensus is now installed in /usr/local/.
 
 Basic Installation
 ==================
