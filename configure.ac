@@ -333,5 +333,5 @@ AS_CASE([${CC}], [*gcc*],
 
 # Process outputs into templates.
 #==============================================================================
-AC_CONFIG_FILES([Makefile libbitcoin-consensus.pc ])
+AC_CONFIG_FILES([Makefile libbitcoin-consensus.pc])
 AC_OUTPUT
