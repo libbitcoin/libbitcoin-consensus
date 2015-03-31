@@ -79,6 +79,6 @@ src/script/script_error.h
 
 # Libbitcoin Integration
 
-Libbitcoin natively implements consensus checks that are redundant with `libbitcoin-consensus`. Libbitcoin includes a full bitcoin client and server SDK. This includes the full node implementation `libbitcoin-node`, which builds on `libbitcoin` and `libbitcoin-blockchain`.
+Libbitcoin natively implements consensus checks that are redundant with `libbitcoin-consensus`. Libbitcoin includes a full bitcoin client and server SDK. This includes the full node implementation [libbitcoin-node](https://github.com/libbitcoin/libbitcoin-node), which builds on [libbitcoin](https://github.com/libbitcoin/libbitcoin) and [libbitcoin-blockchain](https://github.com/libbitcoin/libbitcoin-blockchain).
 
 The `libbitcoin-blockchain` configuration now provides the `--with-consensus` option. This allows the developer to select either `libbitcoin` native or `libbitcoin-consensus` checks. The option now defaults to `yes` so that by default all `libbitcoin-node` and `libbitcoin-server` builds use the same consensus checks as a Satoshi node.
