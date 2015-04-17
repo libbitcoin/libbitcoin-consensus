@@ -192,7 +192,7 @@ typedef enum verify_flags_type
  * @param[in]  flags               Verification constraint flags.
  * @returns                        A script verification result code.
  */
- BCX_API verify_result_type verify_script(const unsigned char* transaction,
+ BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned int tx_input_index, 
     unsigned int flags);

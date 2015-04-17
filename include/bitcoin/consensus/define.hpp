@@ -24,36 +24,36 @@
 
 // Generic helper definitions for shared library support
 #if defined _MSC_VER || defined __CYGWIN__
-    #define BCX_HELPER_DLL_IMPORT __declspec(dllimport)
-    #define BCX_HELPER_DLL_EXPORT __declspec(dllexport)
-    #define BCX_HELPER_DLL_LOCAL
+    #define BCK_HELPER_DLL_IMPORT __declspec(dllimport)
+    #define BCK_HELPER_DLL_EXPORT __declspec(dllexport)
+    #define BCK_HELPER_DLL_LOCAL
 #else
     #if __GNUC__ >= 4
-        #define BCX_HELPER_DLL_IMPORT __attribute__ ((visibility ("default")))
-        #define BCX_HELPER_DLL_EXPORT __attribute__ ((visibility ("default")))
-        #define BCX_HELPER_DLL_LOCAL  __attribute__ ((visibility ("internal")))
+        #define BCK_HELPER_DLL_IMPORT __attribute__ ((visibility ("default")))
+        #define BCK_HELPER_DLL_EXPORT __attribute__ ((visibility ("default")))
+        #define BCK_HELPER_DLL_LOCAL  __attribute__ ((visibility ("internal")))
     #else
-        #define BCX_HELPER_DLL_IMPORT
-        #define BCX_HELPER_DLL_EXPORT
-        #define BCX_HELPER_DLL_LOCAL
+        #define BCK_HELPER_DLL_IMPORT
+        #define BCK_HELPER_DLL_EXPORT
+        #define BCK_HELPER_DLL_LOCAL
     #endif
 #endif
 
 // Now we use the generic helper definitions above to
-// define BCX_API and BCX_INTERNAL.
-// BCX_API is used for the public API symbols. It either DLL imports or
+// define BCK_API and BCK_INTERNAL.
+// BCK_API is used for the public API symbols. It either DLL imports or
 // DLL exports (or does nothing for static build)
-// BCX_INTERNAL is used for non-api symbols.
+// BCK_INTERNAL is used for non-api symbols.
 
-#if defined BCX_STATIC
-    #define BCX_API
-    #define BCX_INTERNAL
-#elif defined BCX_DLL
-    #define BCX_API      BCX_HELPER_DLL_EXPORT
-    #define BCX_INTERNAL BCX_HELPER_DLL_LOCAL
+#if defined BCK_STATIC
+    #define BCK_API
+    #define BCK_INTERNAL
+#elif defined BCK_DLL
+    #define BCK_API      BCK_HELPER_DLL_EXPORT
+    #define BCK_INTERNAL BCK_HELPER_DLL_LOCAL
 #else
-    #define BCX_API      BCX_HELPER_DLL_IMPORT
-    #define BCX_INTERNAL BCX_HELPER_DLL_LOCAL
+    #define BCK_API      BCK_HELPER_DLL_IMPORT
+    #define BCK_INTERNAL BCK_HELPER_DLL_LOCAL
 #endif
 
 #endif
