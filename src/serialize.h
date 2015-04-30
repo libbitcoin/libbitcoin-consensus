@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2014 The Bitcoin Core developers
+// Copyright (c) 2009-2014 The Bitcoin developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -249,7 +249,7 @@ uint64_t ReadCompactSize(Stream& is)
             throw std::ios_base::failure("non-canonical ReadCompactSize()");
     }
     if (nSizeRet > (uint64_t)MAX_SIZE)
-        throw std::ios_base::failure("ReadCompactSize(): size too large");
+        throw std::ios_base::failure("ReadCompactSize() : size too large");
     return nSizeRet;
 }
 

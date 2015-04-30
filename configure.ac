@@ -246,65 +246,11 @@ AS_CASE([${CC}], [*clang*],
     [AX_CHECK_COMPILE_FLAG([-Wno-deprecated-register],
         [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])])
 
-# Clean up boost 1.49 headers. Enabled in gcc only.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*gcc*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-unused-local-typedefs],
-        [CXXFLAGS="$CXXFLAGS -Wno-unused-local-typedefs"])])
-
-# Clean up consensus warnings.
+# Clean up consensus warnings from OpenSSL headers.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-unused-variable],
-        [CFLAGS="$CFLAGS -Wno-unused-variable"])])
-
-# Clean up consensus warnings.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-unused-parameter],
-        [CFLAGS="$CFLAGS -Wno-unused-parameter"])])
-
-# Clean up consensus warnings. Enabled in gcc only.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*gcc*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-pedantic],
-        [CFLAGS="$CFLAGS -Wno-pedantic"])])
-
-# Clean up consensus warnings. Enabled in gcc only.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*gcc*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-long-long],
-        [CFLAGS="$CFLAGS -Wno-long-long"])])
-
-# Clean up consensus warnings. Enabled in clang only.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*clang*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-self-assign],
-        [CFLAGS="$CFLAGS -Wno-self-assign"])])
-
-# Clean up consensus warnings. Enabled in clang only.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*clang*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-vla-extension],
-        [CFLAGS="$CFLAGS -Wno-vla-extension"])])
-
-# Clean up consensus warnings. Enabled in clang only.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*clang*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-c99-extensions],
-        [CFLAGS="$CFLAGS -Wno-c99-extensions"])])
-
-# Clean up consensus warnings. Enabled in clang only.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*clang*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-c++11-long-long],
-        [CXXFLAGS="$CXXFLAGS -Wno-c++11-long-long"])])
-
-# Clean up consensus warnings. Enabled in clang only.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*clang*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-c++11-extensions],
-        [CXXFLAGS="$CXXFLAGS -Wno-c++11-extensions"])])
+    [AX_CHECK_COMPILE_FLAG([-Wno-deprecated-declarations],
+        [CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"])])
 
 # Protect stack.
 #------------------------------------------------------------------------------
