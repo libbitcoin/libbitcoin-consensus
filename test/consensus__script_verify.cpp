@@ -127,14 +127,19 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__incorrect_pubkey_hash__equalverif
     BOOST_REQUIRE_EQUAL(result, verify_result_equalverify);
 }
 
-// Crashes secp256k1 in gcc/clang, okay in vc, okay with openssl.
-#if defined(_MSC_VER) || !defined(USE_SECP256K1)
 BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true)
 {
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
         CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
-#endif
+
+// TODO: create negative test vector.
+//BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid__false)
+//{
+//    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
+//        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
+//    BOOST_REQUIRE_EQUAL(result, verify_result_eval_false);
+//}
 
 BOOST_AUTO_TEST_SUITE_END()
