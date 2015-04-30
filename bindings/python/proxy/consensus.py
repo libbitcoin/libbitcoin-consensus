@@ -94,6 +94,15 @@ except AttributeError:
 _consensus.LIBBITCOIN_CONSENSUS_VERSION_swigconstant(_consensus)
 LIBBITCOIN_CONSENSUS_VERSION = _consensus.LIBBITCOIN_CONSENSUS_VERSION
 
+_consensus.LIBBITCOIN_CONSENSUS_MAJOR_VERSION_swigconstant(_consensus)
+LIBBITCOIN_CONSENSUS_MAJOR_VERSION = _consensus.LIBBITCOIN_CONSENSUS_MAJOR_VERSION
+
+_consensus.LIBBITCOIN_CONSENSUS_MINOR_VERSION_swigconstant(_consensus)
+LIBBITCOIN_CONSENSUS_MINOR_VERSION = _consensus.LIBBITCOIN_CONSENSUS_MINOR_VERSION
+
+_consensus.LIBBITCOIN_CONSENSUS_PATCH_VERSION_swigconstant(_consensus)
+LIBBITCOIN_CONSENSUS_PATCH_VERSION = _consensus.LIBBITCOIN_CONSENSUS_PATCH_VERSION
+
 _consensus.verify_result_eval_false_swigconstant(_consensus)
 verify_result_eval_false = _consensus.verify_result_eval_false
 

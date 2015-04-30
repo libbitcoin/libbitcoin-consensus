@@ -224,8 +224,44 @@ SWIGEXPORT jstring JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1VERSION_1get
   
   (void)jenv;
   (void)jcls;
-  result = (char *)("1.0.0");
+  result = (char *)("1.1.0");
   if (result) jresult = jenv->NewStringUTF((const char *)result);
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1MAJOR_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
+  jint jresult = 0 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  result = (int)(1);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1MINOR_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
+  jint jresult = 0 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  result = (int)(1);
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1PATCH_1VERSION_1get(JNIEnv *jenv, jclass jcls) {
+  jint jresult = 0 ;
+  int result;
+  
+  (void)jenv;
+  (void)jcls;
+  result = (int)(0);
+  jresult = (jint)result; 
   return jresult;
 }
 
