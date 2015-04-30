@@ -38,7 +38,7 @@ The java option installs the jar file `org.libbitcoin.consensus-${VERSION}.jar`a
 
 # About
 
-This library includes the following 34 files considered to be bitcoin consensus-critical. These files are identical to those used in version 0.10.0 of the Satoshi client with two exceptions. The file `pubkey.cpp` has [three changed lines](https://github.com/libbitcoin/libbitcoin-consensus/commit/a51db72eb66fc7286f87bd6bf2cd3fc202cceff6) in non-consensus code for support of experimental [libsecp256k1](https://github.com/bitcoin/secp256k1) builds against the current library. The file `ecwrapper.cpp` has [two lines added](https://github.com/libbitcoin/libbitcoin-consensus/commit/cc5629d71e846a828837d259904ff8bf369991e4) to exclude the entire file when `secp256k1` is in use.
+This library includes the following 34 files considered to be bitcoin consensus-critical. These files are identical to those used in version 0.10.1 of the Satoshi client with two exceptions. The file `pubkey.cpp` has conditionally-included sections for support of experimental [libsecp256k1](https://github.com/bitcoin/secp256k1) builds against the current library. The file `ecwrapper.cpp` has conditional exclusion of the entire file when `secp256k1` is in use. These changes are excluded in OpenSSL (consensus) builds.
 
 ```
 src/amount.h
