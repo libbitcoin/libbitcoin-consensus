@@ -246,7 +246,7 @@ AS_CASE([${CC}], [*clang*],
     [AX_CHECK_COMPILE_FLAG([-Wno-deprecated-register],
         [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])])
 
-# Clean up consensus warnings from OpenSSL headers.
+# Clean up consensus warnings from boost 1.55 and OpenSSL headers.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wno-deprecated-declarations],
