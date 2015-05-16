@@ -81,10 +81,10 @@ script:
 
     # Download and build libbitcoin-consensus and all dependencies.
     - if [[ $OSX   && $CLANG && $STATIC  ]]; then ./install.sh --without-openssl --with-secp256k1 --with-java --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix; fi
-    - if [[ $LINUX && $CLANG && $STATIC  ]]; then ./install.sh --with-python --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os -stdlib=libstdc++' CXXFLAGS='-Os -stdlib=libstdc++'; fi
+    - if [[ $LINUX && $CLANG && $STATIC  ]]; then ./install.sh --with-python --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os' LDLIBS='-lstdc++' CXXFLAGS='-Os -stdlib=libstdc++'; fi
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then ./install.sh --with-java --without-openssl --with-secp256k1 --disable-shared --build-boost --build-dir=my-build --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-g -O0 -static --coverage' CXXFLAGS='-g -O0 -static --coverage'; fi
     - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then ./install.sh --with-python --without-openssl --with-secp256k1; fi
-    - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then sudo CXX=$CXX CC=$CC ./install.sh --without-openssl --with-secp256k1 --disable-ndebug --disable-static CFLAGS='-Os -stdlib=libstdc++' CXXFLAGS='-Os -stdlib=libstdc++'; fi
+    - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then sudo CXX=$CXX CC=$CC ./install.sh --without-openssl --with-secp256k1 --disable-ndebug --disable-static CFLAGS='-Os' LDLIBS='-lstdc++' CXXFLAGS='-Os -stdlib=libstdc++'; fi
     - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then sudo CXX=$CXX CC=$CC ./install.sh --with-java --with-python --disable-static --build-boost CFLAGS='-Os -s' CXXFLAGS='-Os -s'; fi
 
 after_success:
