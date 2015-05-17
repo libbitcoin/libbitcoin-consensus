@@ -33,30 +33,30 @@ class TxInputStream
 {
 public:
     TxInputStream(const unsigned char* transaction, size_t transaction_size)
-        : source(transaction), remaining(transaction_size)
+        : source_(transaction), remaining_(transaction_size)
     {
     }
 
     TxInputStream& read(char* destination, size_t size)
     {
-        if (size > remaining)
+        if (size > remaining_)
             throw std::ios_base::failure("end of data");
 
         if (destination == NULL)
             throw std::ios_base::failure("bad destination buffer");
 
-        if (source == NULL)
+        if (source_ == NULL)
             throw std::ios_base::failure("bad source buffer");
 
-        memcpy(destination, source, size);
-        remaining -= size;
-        source += size;
+        memcpy(destination, source_, size);
+        remaining_ -= size;
+        source_ += size;
         return *this;
     }
 
 private:
-    const unsigned char* source;
-    size_t remaining;
+    const unsigned char* source_;
+    size_t remaining_;
 };
 
 namespace libbitcoin {
