@@ -16,17 +16,20 @@
     <Filter Include="include\bitcoin\consensus">
       <UniqueIdentifier>{7941946d-ec4e-428c-8938-6738ce134bf9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\crypto">
-      <UniqueIdentifier>{49ade34d-149b-4932-80a4-c90b4910b9e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\primitives">
-      <UniqueIdentifier>{d6170c23-0c80-48de-8376-81d7f5b9a27c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\script">
-      <UniqueIdentifier>{2ff9328c-b7af-4019-a468-810056437d23}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\consensus">
       <UniqueIdentifier>{34b36c91-43b0-41f5-bfe1-70348e414767}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\clone">
+      <UniqueIdentifier>{5f867d33-76b1-49b9-8608-03ae49aa5120}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\clone\crypto">
+      <UniqueIdentifier>{156ea162-5f87-4cba-982c-b07a97538748}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\clone\primitives">
+      <UniqueIdentifier>{479c8e36-5338-420c-ac34-a1da2e51c5a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\clone\script">
+      <UniqueIdentifier>{fa285d9b-dff2-426c-8541-d4425e18c276}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,66 +42,6 @@
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\define.hpp">
       <Filter>include\bitcoin\consensus</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\serialize.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\tinyformat.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\uint256.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\utilstrencodings.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\version.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\amount.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\eccryptoverify.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\ecwrapper.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\hash.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\pubkey.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\script\interpreter.h">
-      <Filter>src\script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\script\script.h">
-      <Filter>src\script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\script\script_error.h">
-      <Filter>src\script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\primitives\transaction.h">
-      <Filter>src\primitives</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\crypto\common.h">
-      <Filter>src\crypto</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\crypto\hmac_sha512.h">
-      <Filter>src\crypto</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\crypto\ripemd160.h">
-      <Filter>src\crypto</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\crypto\sha1.h">
-      <Filter>src\crypto</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\crypto\sha256.h">
-      <Filter>src\crypto</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\src\crypto\sha512.h">
-      <Filter>src\crypto</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\export.hpp">
       <Filter>include\bitcoin\consensus</Filter>
     </ClInclude>
@@ -106,52 +49,112 @@
       <Filter>src\consensus</Filter>
     </ClInclude>
     <ClInclude Include="..\..\resource.h" />
+    <ClInclude Include="..\..\..\..\src\clone\utilstrencodings.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\version.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\amount.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\eccryptoverify.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\ecwrapper.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\hash.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\pubkey.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\serialize.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\tinyformat.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\uint256.h">
+      <Filter>src\clone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\crypto\common.h">
+      <Filter>src\clone\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\crypto\hmac_sha512.h">
+      <Filter>src\clone\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\crypto\ripemd160.h">
+      <Filter>src\clone\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\crypto\sha1.h">
+      <Filter>src\clone\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\crypto\sha256.h">
+      <Filter>src\clone\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\crypto\sha512.h">
+      <Filter>src\clone\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\primitives\transaction.h">
+      <Filter>src\clone\primitives</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\script\script_error.h">
+      <Filter>src\clone\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\script\interpreter.h">
+      <Filter>src\clone\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\script\script.h">
+      <Filter>src\clone\script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\src\eccryptoverify.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\ecwrapper.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\hash.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\pubkey.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\uint256.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\utilstrencodings.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\script\interpreter.cpp">
-      <Filter>src\script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\script\script.cpp">
-      <Filter>src\script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\primitives\transaction.cpp">
-      <Filter>src\primitives</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\crypto\hmac_sha512.cpp">
-      <Filter>src\crypto</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\crypto\ripemd160.cpp">
-      <Filter>src\crypto</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\crypto\sha1.cpp">
-      <Filter>src\crypto</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\crypto\sha256.cpp">
-      <Filter>src\crypto</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\src\crypto\sha512.cpp">
-      <Filter>src\crypto</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\src\consensus\consensus.cpp">
       <Filter>src\consensus</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\eccryptoverify.cpp">
+      <Filter>src\clone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\ecwrapper.cpp">
+      <Filter>src\clone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\hash.cpp">
+      <Filter>src\clone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\pubkey.cpp">
+      <Filter>src\clone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\uint256.cpp">
+      <Filter>src\clone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\utilstrencodings.cpp">
+      <Filter>src\clone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\crypto\hmac_sha512.cpp">
+      <Filter>src\clone\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\crypto\ripemd160.cpp">
+      <Filter>src\clone\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\crypto\sha1.cpp">
+      <Filter>src\clone\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\crypto\sha256.cpp">
+      <Filter>src\clone\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\crypto\sha512.cpp">
+      <Filter>src\clone\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\primitives\transaction.cpp">
+      <Filter>src\clone\primitives</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\script\interpreter.cpp">
+      <Filter>src\clone\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\clone\script\script.cpp">
+      <Filter>src\clone\script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
