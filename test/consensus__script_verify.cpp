@@ -72,7 +72,7 @@ static bool decode_base16(data_chunk& out, const std::string& in)
 
 static verify_result test_verify(const std::string& transaction,
     const std::string& prevout_script, uint32_t tx_input_index=0,
-    uint32_t flags=(verify_flags_standard | verify_flags_mandatory),
+    uint32_t flags = (verify_flags_strictenc | verify_flags_p2sh),
     int32_t tx_size_hack=0)
 {
     data_chunk tx_data, prevout_script_data;
