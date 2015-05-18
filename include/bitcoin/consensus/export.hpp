@@ -107,7 +107,7 @@ typedef enum verify_flags_type
 
     /**
      * Passing a non-strict-DER signature to a checksig operation causes script
-     * failure (softfork safe, BIP62 rule 1)
+     * failure (softfork safe, BIP62 rule 1).
      */
     verify_flags_dersig = (1U << 2),
 
@@ -149,35 +149,7 @@ typedef enum verify_flags_type
      * a mandatory flag applied to scripts in a block. NOPs that are not
      * executed, e.g.  within an unexecuted IF ENDIF block, are *not* rejected.
      */
-    verify_flags_discourage_upgradable_nops = (1U << 7),
-
-    /**
-     * Require that only a single stack element remains after evaluation. This
-     * changes the success criterion from "At least one stack element must
-     * remain, and when interpreted as a boolean, it must be true" to "Exactly
-     * one stack element must remain, and when interpreted as a boolean, it
-     * must be true". (softfork safe, BIP62 rule 6)
-     * Note: verify_flags_cleanstack must be used with verify_flags_p2sh.
-     */
-    verify_flags_cleanstack = (1U << 8),
-
-    /**
-     * Mandatory script verification flags that all new blocks must comply with
-     * to be valid. (but old blocks may not comply with) Currently just P2SH, 
-     * but in the future other flags may be added, such as a soft-fork to 
-     * enforce strict DER encoding.
-     */
-    verify_flags_mandatory = verify_flags_p2sh,
-
-    /**
-     * Standard script verification flags that standard transactions will comply
-     * with. However scripts violating these flags may still be present in valid
-     * blocks and we must accept those blocks.
-     * Note: verify_flags_standard should be used with verify_flags_mandatory.
-     */
-    verify_flags_standard = verify_flags_dersig | verify_flags_strictenc |
-        verify_flags_minimaldata | verify_flags_nulldummy |
-        verify_flags_discourage_upgradable_nops | verify_flags_cleanstack
+    verify_flags_discourage_upgradable_nops = (1U << 7)
 } verify_flags;
 
 /**

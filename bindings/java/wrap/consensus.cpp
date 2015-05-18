@@ -386,42 +386,6 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1discourage_1upgradable_
 }
 
 
-SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1cleanstack_1get(JNIEnv *jenv, jclass jcls) {
-  jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
-  
-  (void)jenv;
-  (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_cleanstack;
-  jresult = (jint)result; 
-  return jresult;
-}
-
-
-SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1mandatory_1get(JNIEnv *jenv, jclass jcls) {
-  jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
-  
-  (void)jenv;
-  (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_mandatory;
-  jresult = (jint)result; 
-  return jresult;
-}
-
-
-SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1standard_1get(JNIEnv *jenv, jclass jcls) {
-  jint jresult = 0 ;
-  libbitcoin::consensus::verify_flags_type result;
-  
-  (void)jenv;
-  (void)jcls;
-  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_standard;
-  jresult = (jint)result; 
-  return jresult;
-}
-
-
 SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1script(JNIEnv *jenv, jclass jcls, jlong jarg1, jlong jarg2, jlong jarg3, jlong jarg4, jlong jarg5, jlong jarg6) {
   jint jresult = 0 ;
   unsigned char *arg1 = (unsigned char *) 0 ;
