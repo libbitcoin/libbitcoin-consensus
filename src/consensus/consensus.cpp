@@ -20,6 +20,8 @@
 #include "consensus/consensus.h"
 
 #include <cstddef>
+#include <iostream>
+#include <stdexcept>
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/export.hpp>
 #include <bitcoin/consensus/version.hpp>
@@ -41,12 +43,6 @@ public:
     {
         if (size > remaining_)
             throw std::ios_base::failure("end of data");
-
-        if (destination == NULL)
-            throw std::ios_base::failure("bad destination buffer");
-
-        if (source_ == NULL)
-            throw std::ios_base::failure("bad source buffer");
 
         memcpy(destination, source_, size);
         remaining_ -= size;
@@ -180,6 +176,12 @@ verify_result_type verify_script(const unsigned char* transaction,
     size_t prevout_script_size, unsigned int tx_input_index, 
     unsigned int flags)
 {
+    if (transaction == NULL)
+        throw std::invalid_argument("transaction");
+
+    if (prevout_script == NULL)
+        throw std::invalid_argument("prevout_script");
+
     CTransaction tx;
     try 
     {

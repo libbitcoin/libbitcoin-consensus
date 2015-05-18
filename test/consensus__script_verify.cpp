@@ -20,6 +20,7 @@
 //#include "script.hpp"
 
 #include <stdint.h>
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include <bitcoin/consensus.hpp>
@@ -90,6 +91,20 @@ static verify_result test_verify(const std::string& transaction,
     "01000000017d01943c40b7f3d8a00a2d62fa1d560bf739a2368c180615b0a7937c0e883e7c000000006b4830450221008f66d188c664a8088893ea4ddd9689024ea5593877753ecc1e9051ed58c15168022037109f0d06e6068b7447966f751de8474641ad2b15ec37f4a9d159b02af68174012103e208f5403383c77d5832a268c9f71480f6e7bfbdfa44904becacfad66163ea31ffffffff01c8af0000000000001976a91458b7a60f11a904feef35a639b6048de8dd4d9f1c88ac00000000"
 #define CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT \
     "76a914c564c740c6900b93afc9f1bdaef0a9d466adf6ee88ac"
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__null_tx__throws_)
+{
+    data_chunk prevout_script_data;
+    BOOST_REQUIRE(decode_base16(prevout_script_data, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
+    BOOST_REQUIRE_THROW(verify_script(NULL, 0, &prevout_script_data[0], prevout_script_data.size(), 0, 0), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__null_prevout_script__throws)
+{
+    data_chunk tx_data;
+    BOOST_REQUIRE(decode_base16(tx_data, CONSENSUS_SCRIPT_VERIFY_TX));
+    BOOST_REQUIRE_THROW(verify_script(&tx_data[0], tx_data.size(), NULL, 0, 0, 0), std::invalid_argument);
+}
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)
 {
