@@ -3771,39 +3771,6 @@ SWIGINTERN PyObject *verify_flags_discourage_upgradable_nops_swigconstant(PyObje
 }
 
 
-SWIGINTERN PyObject *verify_flags_cleanstack_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *module;
-  PyObject *d;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
-  d = PyModule_GetDict(module);
-  if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_cleanstack",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_cleanstack)));
-  return SWIG_Py_Void();
-}
-
-
-SWIGINTERN PyObject *verify_flags_mandatory_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *module;
-  PyObject *d;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
-  d = PyModule_GetDict(module);
-  if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_mandatory",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_mandatory)));
-  return SWIG_Py_Void();
-}
-
-
-SWIGINTERN PyObject *verify_flags_standard_swigconstant(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *module;
-  PyObject *d;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigconstant", &module)) return NULL;
-  d = PyModule_GetDict(module);
-  if (!d) return NULL;
-  SWIG_Python_SetConstant(d, "verify_flags_standard",SWIG_From_int(static_cast< int >(libbitcoin::consensus::verify_flags_standard)));
-  return SWIG_Py_Void();
-}
-
-
 SWIGINTERN PyObject *_wrap_verify_script(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   unsigned char *arg1 = (unsigned char *) 0 ;
@@ -3918,9 +3885,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"verify_flags_sigpushonly_swigconstant", verify_flags_sigpushonly_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"verify_flags_minimaldata_swigconstant", verify_flags_minimaldata_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"verify_flags_discourage_upgradable_nops_swigconstant", verify_flags_discourage_upgradable_nops_swigconstant, METH_VARARGS, NULL},
-	 { (char *)"verify_flags_cleanstack_swigconstant", verify_flags_cleanstack_swigconstant, METH_VARARGS, NULL},
-	 { (char *)"verify_flags_mandatory_swigconstant", verify_flags_mandatory_swigconstant, METH_VARARGS, NULL},
-	 { (char *)"verify_flags_standard_swigconstant", verify_flags_standard_swigconstant, METH_VARARGS, NULL},
 	 { (char *)"verify_script", _wrap_verify_script, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };

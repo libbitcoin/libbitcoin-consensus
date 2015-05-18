@@ -17,9 +17,6 @@ public final class verify_flags {
   public final static verify_flags verify_flags_sigpushonly = new verify_flags("verify_flags_sigpushonly", consensusJNI.verify_flags_sigpushonly_get());
   public final static verify_flags verify_flags_minimaldata = new verify_flags("verify_flags_minimaldata", consensusJNI.verify_flags_minimaldata_get());
   public final static verify_flags verify_flags_discourage_upgradable_nops = new verify_flags("verify_flags_discourage_upgradable_nops", consensusJNI.verify_flags_discourage_upgradable_nops_get());
-  public final static verify_flags verify_flags_cleanstack = new verify_flags("verify_flags_cleanstack", consensusJNI.verify_flags_cleanstack_get());
-  public final static verify_flags verify_flags_mandatory = new verify_flags("verify_flags_mandatory", consensusJNI.verify_flags_mandatory_get());
-  public final static verify_flags verify_flags_standard = new verify_flags("verify_flags_standard", consensusJNI.verify_flags_standard_get());
 
   public final int swigValue() {
     return swigValue;
@@ -55,7 +52,7 @@ public final class verify_flags {
     swigNext = this.swigValue+1;
   }
 
-  private static verify_flags[] swigValues = { verify_flags_none, verify_flags_p2sh, verify_flags_strictenc, verify_flags_dersig, verify_flags_low_s, verify_flags_nulldummy, verify_flags_sigpushonly, verify_flags_minimaldata, verify_flags_discourage_upgradable_nops, verify_flags_cleanstack, verify_flags_mandatory, verify_flags_standard };
+  private static verify_flags[] swigValues = { verify_flags_none, verify_flags_p2sh, verify_flags_strictenc, verify_flags_dersig, verify_flags_low_s, verify_flags_nulldummy, verify_flags_sigpushonly, verify_flags_minimaldata, verify_flags_discourage_upgradable_nops };
   private static int swigNext = 0;
   private final int swigValue;
   private final String swigName;

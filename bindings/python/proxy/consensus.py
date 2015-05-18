@@ -226,15 +226,6 @@ verify_flags_minimaldata = _consensus.verify_flags_minimaldata
 _consensus.verify_flags_discourage_upgradable_nops_swigconstant(_consensus)
 verify_flags_discourage_upgradable_nops = _consensus.verify_flags_discourage_upgradable_nops
 
-_consensus.verify_flags_cleanstack_swigconstant(_consensus)
-verify_flags_cleanstack = _consensus.verify_flags_cleanstack
-
-_consensus.verify_flags_mandatory_swigconstant(_consensus)
-verify_flags_mandatory = _consensus.verify_flags_mandatory
-
-_consensus.verify_flags_standard_swigconstant(_consensus)
-verify_flags_standard = _consensus.verify_flags_standard
-
 def verify_script(transaction, transaction_size, prevout_script, prevout_script_size, tx_input_index, flags):
     return _consensus.verify_script(transaction, transaction_size, prevout_script, prevout_script_size, tx_input_index, flags)
 verify_script = _consensus.verify_script
