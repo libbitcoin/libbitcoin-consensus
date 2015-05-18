@@ -164,8 +164,6 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_MINIMALDATA;
     if ((flags & verify_flags_discourage_upgradable_nops) != 0)
         script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS;
-    //if ((flags & verify_flags_cleanstack) != 0)
-    //    script_flags |= SCRIPT_VERIFY_CLEANSTACK;
 
     return script_flags;
 }
