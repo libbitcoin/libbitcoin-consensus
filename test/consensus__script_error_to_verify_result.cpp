@@ -164,10 +164,10 @@ BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__PUBKEYTYPE__pubke
     BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_PUBKEYTYPE), verify_result_pubkeytype);
 }
 
-//BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CLEANSTACK__cleanstack)
-//{
-//    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CLEANSTACK), verify_result_cleanstack);
-//}
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CLEANSTACK__cleanstack)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CLEANSTACK), verify_result_cleanstack);
+}
 
 // Softfork safeness
 
