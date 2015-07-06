@@ -31,6 +31,9 @@
     <Filter Include="src\clone\script">
       <UniqueIdentifier>{fa285d9b-dff2-426c-8541-d4425e18c276}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\clone\compat">
+      <UniqueIdentifier>{8588e299-60cf-43ac-967a-a941802b7e32}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus.hpp">
@@ -108,6 +111,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\clone\script\script.h">
       <Filter>src\clone\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\compat\endian.h">
+      <Filter>src\clone\compat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\compat\byteswap.h">
+      <Filter>src\clone\compat</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -51,6 +51,8 @@ src_libbitcoin_consensus_la_SOURCES = \
     src/clone/utilstrencodings.cpp \
     src/clone/utilstrencodings.h \
     src/clone/version.h \
+    src/clone/compat/byteswap.h \
+    src/clone/compat/endian.h \
     src/clone/crypto/common.h \
     src/clone/crypto/hmac_sha512.cpp \
     src/clone/crypto/hmac_sha512.h \
