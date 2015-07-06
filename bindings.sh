@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ###############################################################################
 #  Copyright (c) 2014-2015 libbitcoin-consensus developers (see COPYING).
 #
@@ -16,7 +16,7 @@ set -e
 echo Generating consensus bindings...
 
 # Do everything relative to this file location.
-pushd `cd "$( dirname "$0" )" && pwd`
+cd `dirname "$0"`
 
 # Clean and make required directories.
 rm -rf "bindings/java/wrap"
@@ -32,6 +32,3 @@ mkdir -p "bindings/python/proxy"
 # Generate bindings.
 swig -c++ -java -outdir "bindings/java/proxy/org/libbitcoin/consensus" -o "bindings/java/wrap/consensus.cpp" "bindings/consensus.swg"
 swig -c++ -python -outdir "bindings/python/proxy" -o "bindings/python/wrap/consensus.cpp" "bindings/consensus.swg"
-
-# Restore directory.
-popd

@@ -22,5 +22,6 @@ public class consensusJNI {
   public final static native int verify_flags_sigpushonly_get();
   public final static native int verify_flags_minimaldata_get();
   public final static native int verify_flags_discourage_upgradable_nops_get();
+  public final static native int verify_flags_cleanstack_get();
   public final static native int verify_script(long jarg1, long jarg2, long jarg3, long jarg4, long jarg5, long jarg6);
 }

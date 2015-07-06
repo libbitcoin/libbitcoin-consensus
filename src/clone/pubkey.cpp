@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2009-2014 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -93,17 +93,17 @@ bool CPubKey::Decompress() {
     return true;
 }
 
-bool CPubKey::Derive(CPubKey& pubkeyChild, unsigned char ccChild[32], unsigned int nChild, const unsigned char cc[32]) const {
+bool CPubKey::Derive(CPubKey& pubkeyChild, ChainCode &ccChild, unsigned int nChild, const ChainCode& cc) const {
     assert(IsValid());
     assert((nChild >> 31) == 0);
     assert(begin() + 33 == end());
     unsigned char out[64];
     BIP32Hash(cc, nChild, *begin(), begin()+1, out);
-    memcpy(ccChild, out+32, 32);
+    memcpy(ccChild.begin(), out + 32, 32);
 #ifdef USE_SECP256K1
     pubkeyChild = *this;
     secp256k1_context_t* ctx = secp256k1_context_create(SECP256K1_CONTEXT_VERIFY);
-    int ret = secp256k1_ec_pubkey_tweak_add(ctx, (unsigned char*)pubkeyChild.begin(), pubkeyChild.size(), out) !=0;
+    int ret = secp256k1_ec_pubkey_tweak_add(ctx, (unsigned char*)pubkeyChild.begin(), pubkeyChild.size(), out) != 0;
     secp256k1_context_destroy(ctx);
 #else
     CECKey key;
@@ -121,7 +121,7 @@ void CExtPubKey::Encode(unsigned char code[74]) const {
     memcpy(code+1, vchFingerprint, 4);
     code[5] = (nChild >> 24) & 0xFF; code[6] = (nChild >> 16) & 0xFF;
     code[7] = (nChild >>  8) & 0xFF; code[8] = (nChild >>  0) & 0xFF;
-    memcpy(code+9, vchChainCode, 32);
+    memcpy(code+9, chaincode.begin(), 32);
     assert(pubkey.size() == 33);
     memcpy(code+41, pubkey.begin(), 33);
 }
@@ -130,7 +130,7 @@ void CExtPubKey::Decode(const unsigned char code[74]) {
     nDepth = code[0];
     memcpy(vchFingerprint, code+1, 4);
     nChild = (code[5] << 24) | (code[6] << 16) | (code[7] << 8) | code[8];
-    memcpy(vchChainCode, code+9, 32);
+    memcpy(chaincode.begin(), code+9, 32);
     pubkey.Set(code+41, code+74);
 }
 
@@ -139,5 +139,5 @@ bool CExtPubKey::Derive(CExtPubKey &out, unsigned int nChild) const {
     CKeyID id = pubkey.GetID();
     memcpy(&out.vchFingerprint[0], &id, 4);
     out.nChild = nChild;
-    return pubkey.Derive(out.pubkey, out.vchChainCode, nChild, vchChainCode);
+    return pubkey.Derive(out.pubkey, out.chaincode, nChild, chaincode);
 }

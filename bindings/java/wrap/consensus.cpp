@@ -224,7 +224,7 @@ SWIGEXPORT jstring JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1VERSION_1get
   
   (void)jenv;
   (void)jcls;
-  result = (char *)("1.1.0");
+  result = (char *)("1.2.0");
   if (result) jresult = jenv->NewStringUTF((const char *)result);
   return jresult;
 }
@@ -248,7 +248,7 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_LIBBITCOIN_1CONSENSUS_1MINOR_1VERSION_
   
   (void)jenv;
   (void)jcls;
-  result = (int)(1);
+  result = (int)(2);
   jresult = (jint)result; 
   return jresult;
 }
@@ -381,6 +381,18 @@ SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1discourage_1upgradable_
   (void)jenv;
   (void)jcls;
   result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_discourage_upgradable_nops;
+  jresult = (jint)result; 
+  return jresult;
+}
+
+
+SWIGEXPORT jint JNICALL Java_consensusJNI_verify_1flags_1cleanstack_1get(JNIEnv *jenv, jclass jcls) {
+  jint jresult = 0 ;
+  libbitcoin::consensus::verify_flags_type result;
+  
+  (void)jenv;
+  (void)jcls;
+  result = (libbitcoin::consensus::verify_flags_type)libbitcoin::consensus::verify_flags_cleanstack;
   jresult = (jint)result; 
   return jresult;
 }

@@ -149,7 +149,17 @@ typedef enum verify_flags_type
      * a mandatory flag applied to scripts in a block. NOPs that are not
      * executed, e.g.  within an unexecuted IF ENDIF block, are *not* rejected.
      */
-    verify_flags_discourage_upgradable_nops = (1U << 7)
+    verify_flags_discourage_upgradable_nops = (1U << 7),
+
+    /**
+     * Require that only a single stack element remains after evaluation. This
+     * changes the success criterion from "At least one stack element must
+     * remain, and when interpreted as a boolean, it must be true" to "Exactly
+     * one stack element must remain, and when interpreted as a boolean, it
+     * must be true". (softfork safe, BIP62 rule 6)
+     * Note: verify_flags_cleanstack must be used with verify_flags_p2sh.
+     */
+    verify_flags_cleanstack = (1U << 8)
 } verify_flags;
 
 /**

@@ -66,7 +66,7 @@ if [[ $TRAVIS == true ]]; then
 elif [[ $OS == Linux ]]; then
     PARALLEL=`nproc`
 elif [[ $OS == Darwin ]]; then
-    PARALLEL=2 #TODO
+    PARALLEL=`sysctl -n hw.ncpu`
 else
     echo "Unsupported system: $OS"
     exit 1
@@ -335,7 +335,16 @@ make_tests()
 
     # Build and run unit tests relative to the primary directory.
     # VERBOSE=1 ensures test-suite.log output sent to console (gcc).
-    make_jobs $JOBS check VERBOSE=1
+    if ! make_jobs $JOBS check VERBOSE=1; then
+        if [ -e "test-suite.log" ]; then
+            echo "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+            echo "cat test-suite.log"
+            echo "------------------------------"
+            cat "test-suite.log"
+            echo ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        fi
+        exit 1
+    fi
 }
 
 pop_directory()
