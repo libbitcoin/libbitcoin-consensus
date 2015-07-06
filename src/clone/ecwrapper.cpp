@@ -2,6 +2,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#ifndef USE_SECP256K1
+
 #include "ecwrapper.h"
 
 #include "serialize.h"
@@ -193,3 +195,5 @@ bool CECKey::SanityCheck()
     // TODO Is there more EC functionality that could be missing?
     return true;
 }
+
+#endif
