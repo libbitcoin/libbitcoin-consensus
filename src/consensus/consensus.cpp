@@ -20,6 +20,8 @@
 #include "consensus/consensus.h"
 
 #include <cstddef>
+#include <iostream>
+#include <stdexcept>
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/export.hpp>
 #include <bitcoin/consensus/version.hpp>
@@ -33,30 +35,24 @@ class TxInputStream
 {
 public:
     TxInputStream(const unsigned char* transaction, size_t transaction_size)
-        : source(transaction), remaining(transaction_size)
+        : source_(transaction), remaining_(transaction_size)
     {
     }
 
     TxInputStream& read(char* destination, size_t size)
     {
-        if (size > remaining)
+        if (size > remaining_)
             throw std::ios_base::failure("end of data");
 
-        if (destination == NULL)
-            throw std::ios_base::failure("bad destination buffer");
-
-        if (source == NULL)
-            throw std::ios_base::failure("bad source buffer");
-
-        memcpy(destination, source, size);
-        remaining -= size;
-        source += size;
+        memcpy(destination, source_, size);
+        remaining_ -= size;
+        source_ += size;
         return *this;
     }
 
 private:
-    const unsigned char* source;
-    size_t remaining;
+    const unsigned char* source_;
+    size_t remaining_;
 };
 
 namespace libbitcoin {
@@ -128,8 +124,8 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
             return verify_result_sig_nulldummy;
         case SCRIPT_ERR_PUBKEYTYPE:
             return verify_result_pubkeytype;
-        //case SCRIPT_ERR_CLEANSTACK:
-        //    return verify_result_cleanstack;
+        case SCRIPT_ERR_CLEANSTACK:
+            return verify_result_cleanstack;
 
         // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
@@ -168,8 +164,8 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_MINIMALDATA;
     if ((flags & verify_flags_discourage_upgradable_nops) != 0)
         script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS;
-    //if ((flags & verify_flags_cleanstack) != 0)
-    //    script_flags |= SCRIPT_VERIFY_CLEANSTACK;
+    if ((flags & verify_flags_cleanstack) != 0)
+        script_flags |= SCRIPT_VERIFY_CLEANSTACK;
 
     return script_flags;
 }
@@ -180,6 +176,12 @@ verify_result_type verify_script(const unsigned char* transaction,
     size_t prevout_script_size, unsigned int tx_input_index, 
     unsigned int flags)
 {
+    if (transaction == NULL)
+        throw std::invalid_argument("transaction");
+
+    if (prevout_script == NULL)
+        throw std::invalid_argument("prevout_script");
+
     CTransaction tx;
     try 
     {

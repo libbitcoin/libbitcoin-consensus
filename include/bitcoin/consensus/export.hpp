@@ -107,7 +107,7 @@ typedef enum verify_flags_type
 
     /**
      * Passing a non-strict-DER signature to a checksig operation causes script
-     * failure (softfork safe, BIP62 rule 1)
+     * failure (softfork safe, BIP62 rule 1).
      */
     verify_flags_dersig = (1U << 2),
 
@@ -159,25 +159,7 @@ typedef enum verify_flags_type
      * must be true". (softfork safe, BIP62 rule 6)
      * Note: verify_flags_cleanstack must be used with verify_flags_p2sh.
      */
-    verify_flags_cleanstack = (1U << 8),
-
-    /**
-     * Mandatory script verification flags that all new blocks must comply with
-     * to be valid. (but old blocks may not comply with) Currently just P2SH, 
-     * but in the future other flags may be added, such as a soft-fork to 
-     * enforce strict DER encoding.
-     */
-    verify_flags_mandatory = verify_flags_p2sh,
-
-    /**
-     * Standard script verification flags that standard transactions will comply
-     * with. However scripts violating these flags may still be present in valid
-     * blocks and we must accept those blocks.
-     * Note: verify_flags_standard should be used with verify_flags_mandatory.
-     */
-    verify_flags_standard = verify_flags_dersig | verify_flags_strictenc |
-        verify_flags_minimaldata | verify_flags_nulldummy |
-        verify_flags_discourage_upgradable_nops | verify_flags_cleanstack
+    verify_flags_cleanstack = (1U << 8)
 } verify_flags;
 
 /**

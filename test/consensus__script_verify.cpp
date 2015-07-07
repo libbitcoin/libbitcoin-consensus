@@ -20,6 +20,7 @@
 //#include "script.hpp"
 
 #include <stdint.h>
+#include <stdexcept>
 #include <string>
 #include <vector>
 #include <bitcoin/consensus.hpp>
@@ -72,8 +73,7 @@ static bool decode_base16(data_chunk& out, const std::string& in)
 
 static verify_result test_verify(const std::string& transaction,
     const std::string& prevout_script, uint32_t tx_input_index=0,
-    uint32_t flags=(verify_flags_standard | verify_flags_mandatory),
-    int32_t tx_size_hack=0)
+    const uint32_t flags=verify_flags_p2sh, int32_t tx_size_hack=0)
 {
     data_chunk tx_data, prevout_script_data;
     BOOST_REQUIRE(decode_base16(tx_data, transaction));
@@ -91,6 +91,20 @@ static verify_result test_verify(const std::string& transaction,
 #define CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT \
     "76a914c564c740c6900b93afc9f1bdaef0a9d466adf6ee88ac"
 
+BOOST_AUTO_TEST_CASE(consensus__script_verify__null_tx__throws_)
+{
+    data_chunk prevout_script_data;
+    BOOST_REQUIRE(decode_base16(prevout_script_data, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
+    BOOST_REQUIRE_THROW(verify_script(NULL, 0, &prevout_script_data[0], prevout_script_data.size(), 0, 0), std::invalid_argument);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__null_prevout_script__throws)
+{
+    data_chunk tx_data;
+    BOOST_REQUIRE(decode_base16(tx_data, CONSENSUS_SCRIPT_VERIFY_TX));
+    BOOST_REQUIRE_THROW(verify_script(&tx_data[0], tx_data.size(), NULL, 0, 0, 0), std::invalid_argument);
+}
+
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)
 {
     const verify_result result = test_verify("42", "42");
@@ -99,46 +113,38 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_input__tx_input_invalid)
 {
-    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
-        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 1);
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 1);
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_input_invalid);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__undersized_tx__tx_invalid)
 {
-    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
-        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0,
-        verify_flags_standard | verify_flags_mandatory, -1);
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0, verify_flags_p2sh, -1);
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_invalid);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__oversized_tx__tx_size_invalid)
 {
-    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
-        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0,
-        verify_flags_standard | verify_flags_mandatory, +1);
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0, verify_flags_p2sh, +1);
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_size_invalid);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__incorrect_pubkey_hash__equalverify)
 {
-    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
-        "76a914c564c740c6900b93afc9f1bdaef0a9d466adf6ef88ac");
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, "76a914c564c740c6900b93afc9f1bdaef0a9d466adf6ef88ac");
     BOOST_REQUIRE_EQUAL(result, verify_result_equalverify);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__valid__true)
 {
-    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
-        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
+    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
 
 // TODO: create negative test vector.
 //BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid__false)
 //{
-//    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX,
-//        CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT);
+//    const verify_result result = test_verify(...);
 //    BOOST_REQUIRE_EQUAL(result, verify_result_eval_false);
 //}
 

@@ -32,45 +32,47 @@ doc_DATA = \
 # src/libbitcoin-consensus.la => ${libdir}
 #------------------------------------------------------------------------------
 lib_LTLIBRARIES = src/libbitcoin-consensus.la
-src_libbitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
+src_libbitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
 src_libbitcoin_consensus_la_LIBADD = ${crypto_LIBS} ${secp256k1_LIBS}
 src_libbitcoin_consensus_la_SOURCES = \
-    src/amount.h \
-    src/eccryptoverify.cpp \
-    src/eccryptoverify.h \
-    src/ecwrapper.cpp \
-    src/ecwrapper.h \
-    src/hash.cpp \
-    src/hash.h \
-    src/pubkey.cpp \
-    src/pubkey.h \
-    src/serialize.h \
-    src/tinyformat.h \
-    src/uint256.cpp \
-    src/uint256.h \
-    src/utilstrencodings.cpp \
-    src/utilstrencodings.h \
-    src/version.h \
+    src/clone/amount.h \
+    src/clone/eccryptoverify.cpp \
+    src/clone/eccryptoverify.h \
+    src/clone/ecwrapper.cpp \
+    src/clone/ecwrapper.h \
+    src/clone/hash.cpp \
+    src/clone/hash.h \
+    src/clone/pubkey.cpp \
+    src/clone/pubkey.h \
+    src/clone/serialize.h \
+    src/clone/tinyformat.h \
+    src/clone/uint256.cpp \
+    src/clone/uint256.h \
+    src/clone/utilstrencodings.cpp \
+    src/clone/utilstrencodings.h \
+    src/clone/version.h \
+    src/clone/compat/byteswap.h \
+    src/clone/compat/endian.h \
+    src/clone/crypto/common.h \
+    src/clone/crypto/hmac_sha512.cpp \
+    src/clone/crypto/hmac_sha512.h \
+    src/clone/crypto/ripemd160.cpp \
+    src/clone/crypto/ripemd160.h \
+    src/clone/crypto/sha1.cpp \
+    src/clone/crypto/sha1.h \
+    src/clone/crypto/sha256.cpp \
+    src/clone/crypto/sha256.h \
+    src/clone/crypto/sha512.cpp \
+    src/clone/crypto/sha512.h \
+    src/clone/primitives/transaction.cpp \
+    src/clone/primitives/transaction.h \
+    src/clone/script/interpreter.cpp \
+    src/clone/script/interpreter.h \
+    src/clone/script/script.cpp \
+    src/clone/script/script.h \
+    src/clone/script/script_error.h \
     src/consensus/consensus.cpp \
-    src/consensus/consensus.h \
-    src/crypto/common.h \
-    src/crypto/hmac_sha512.cpp \
-    src/crypto/hmac_sha512.h \
-    src/crypto/ripemd160.cpp \
-    src/crypto/ripemd160.h \
-    src/crypto/sha1.cpp \
-    src/crypto/sha1.h \
-    src/crypto/sha256.cpp \
-    src/crypto/sha256.h \
-    src/crypto/sha512.cpp \
-    src/crypto/sha512.h \
-    src/primitives/transaction.cpp \
-    src/primitives/transaction.h \
-    src/script/interpreter.cpp \
-    src/script/interpreter.h \
-    src/script/script.cpp \
-    src/script/script.h \
-    src/script/script_error.h
+    src/consensus/consensus.h
 
 # local: test/libbitcoin_consensus_test
 #------------------------------------------------------------------------------
@@ -79,7 +81,7 @@ if WITH_TESTS
 TESTS = libbitcoin_consensus_test_runner.sh
 
 check_PROGRAMS = test/libbitcoin_consensus_test
-test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src ${boost_CPPFLAGS} ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
+test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${boost_CPPFLAGS} ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
 test_libbitcoin_consensus_test_LDFLAGS = ${boost_LDFLAGS}
 test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${boost_unit_test_framework_LIBS} ${crypto_LIBS} ${secp256k1_LIBS}
 test_libbitcoin_consensus_test_SOURCES = \
