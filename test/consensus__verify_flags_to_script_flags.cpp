@@ -76,6 +76,11 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__discourage_upgrada
     BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_discourage_upgradable_nops), (uint32_t)SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS);
 }
 
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__cleanstack__CLEANSTACK)
+{
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_cleanstack), (uint32_t)SCRIPT_VERIFY_CLEANSTACK);
+}
+
 BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
 {
     const uint32_t all_verify_flags =
@@ -87,7 +92,8 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
         verify_flags_nulldummy |
         verify_flags_sigpushonly |
         verify_flags_minimaldata |
-        verify_flags_discourage_upgradable_nops;
+        verify_flags_discourage_upgradable_nops |
+        verify_flags_cleanstack;
 
     const uint32_t all_script_flags =
         SCRIPT_VERIFY_NONE |
@@ -98,7 +104,8 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
         SCRIPT_VERIFY_NULLDUMMY |
         SCRIPT_VERIFY_SIGPUSHONLY |
         SCRIPT_VERIFY_MINIMALDATA |
-        SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS;
+        SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS |
+        SCRIPT_VERIFY_CLEANSTACK;
 
     BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(all_verify_flags), all_script_flags);
 }

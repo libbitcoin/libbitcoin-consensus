@@ -11,7 +11,7 @@
 AC_PREREQ([2.65])
 
 # Process command-line arguments and perform initialization and verification.
-AC_INIT([libbitcoin-consensus], [1.1.0], [eric@voskuil.org])
+AC_INIT([libbitcoin-consensus], [1.2.0], [eric@voskuil.org])
 
 # Do compilation tests.
 AC_LANG(C++)
@@ -140,6 +140,225 @@ AS_CASE([${enable_ndebug}], [yes], AC_DEFINE([NDEBUG]))
 # Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
 #------------------------------------------------------------------------------
 AS_CASE([${enable_shared}], [yes], AC_DEFINE([BOOST_TEST_DYN_LINK]))
+
+
+# Set preprocessor defines.
+#==============================================================================
+# Conditionally define the preprocessor symbol HAVE_DECL_BSWAP_16.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([byteswap.h],
+    [AC_CHECK_DECLS([bswap_16], [], [],
+        [#if HAVE_BYTESWAP_H
+         #include <byteswap.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_BSWAP_32.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([byteswap.h],
+    [AC_CHECK_DECLS([bswap_32], [], [],
+        [#if HAVE_BYTESWAP_H
+         #include <byteswap.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_BSWAP_64.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([byteswap.h],
+    [AC_CHECK_DECLS([bswap_64], [], [],
+        [#if HAVE_BYTESWAP_H
+         #include <byteswap.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_LE16TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([le16toh], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_LE32TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([le32toh], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_LE64TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([le64toh], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOLE16.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([htole16], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOLE32.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([htole32], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOLE64.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([htole64], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_BE16TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([be16toh], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_BE32TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([be32toh], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_BE64TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([be64toh], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOBE16.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([htobe16], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOBE32.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([htobe32], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOBE64.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([endian.h],
+    [AC_CHECK_DECLS([htobe64], [], [],
+        [#if HAVE_ENDIAN_H
+         #include <endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_LE16TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([le16toh], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_LE32TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([le32toh], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_LE64TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([le64toh], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOLE16.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([htole16], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOLE32.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([htole32], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOLE64.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([htole64], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_BE16TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([be16toh], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_BE32TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([be32toh], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_BE64TOH.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([be64toh], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOBE16.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([htobe16], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOBE32.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([htobe32], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
+
+# Conditionally define the preprocessor symbol HAVE_DECL_HTOBE64.
+#------------------------------------------------------------------------------
+AC_CHECK_HEADERS([sys/endian.h],
+    [AC_CHECK_DECLS([htobe64], [], [],
+        [#if HAVE_SYS_ENDIAN_H
+         #include <sys/endian.h>
+         #endif])])
 
 
 # Check dependencies.
