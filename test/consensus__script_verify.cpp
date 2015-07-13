@@ -95,14 +95,14 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__null_tx__throws_)
 {
     data_chunk prevout_script_data;
     BOOST_REQUIRE(decode_base16(prevout_script_data, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
-    BOOST_REQUIRE_THROW(verify_script(NULL, 0, &prevout_script_data[0], prevout_script_data.size(), 0, 0), std::invalid_argument);
+    BOOST_REQUIRE_THROW(verify_script(NULL, 1, &prevout_script_data[0], prevout_script_data.size(), 0, 0), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__null_prevout_script__throws)
 {
     data_chunk tx_data;
     BOOST_REQUIRE(decode_base16(tx_data, CONSENSUS_SCRIPT_VERIFY_TX));
-    BOOST_REQUIRE_THROW(verify_script(&tx_data[0], tx_data.size(), NULL, 0, 0, 0), std::invalid_argument);
+    BOOST_REQUIRE_THROW(verify_script(&tx_data[0], tx_data.size(), NULL, 1, 0, 0), std::invalid_argument);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)

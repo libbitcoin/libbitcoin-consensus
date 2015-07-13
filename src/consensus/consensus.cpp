@@ -176,10 +176,10 @@ verify_result_type verify_script(const unsigned char* transaction,
     size_t prevout_script_size, unsigned int tx_input_index, 
     unsigned int flags)
 {
-    if (transaction == NULL)
+    if (transaction_size > 0 && transaction == NULL)
         throw std::invalid_argument("transaction");
 
-    if (prevout_script == NULL)
+    if (prevout_script_size > 0 && prevout_script == NULL)
         throw std::invalid_argument("prevout_script");
 
     CTransaction tx;
