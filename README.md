@@ -24,7 +24,9 @@ By default consensus has a dependency on openssl (libcrypto) and a test dependen
 
 ## Configure Options
 
-The `--with-secp256k1` option is experimental. When this option selected there is a dependency on [libsecp256k1](https://github.com/bitcoin/secp256k1) in place of openssl. The `--without-openssl` option may be used to concurrently eliminate the openssl dependency.
+The `--with-secp256k1` option is experimental. When this option selected there is a dependency on [libsecp256k1](https://github.com/bitcoin/secp256k1) in place of openssl. The `--without-openssl` option may be used concurrently to eliminate the openssl dependency.
+
+> The `--with-secp256k1` option is not yet optimized for production use within libbitcoin-consensus. Because static state is reinitialized on each signature verification, performance lags `--with-secp256k1` by about 10x. Libbitcoin's native consensus checks use libsecp256k1 (optimized) and achieve about 2x performance over libbitcoin-consensus `--without-secp256k1` and about 20x over libbitcoin-consensus `--with-secp256k1`
 
 There is a dependency on [boost test](http://www.boost.org/doc/libs/1_50_0/libs/test/doc/html/index.html) for `make check` builds (tests). The `--without-tests` option disables test builds and eliminates the boost dependency.
 
