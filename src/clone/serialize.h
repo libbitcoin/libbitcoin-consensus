@@ -73,7 +73,7 @@ inline const T* end_ptr(const std::vector<T,TAl>& v)
     return v.empty() ? NULL : (&v[0] + v.size());
 }
 
-/*
+/**
  * Lowest-level serialization and conversion.
  * @note Sizes of these types are verified in the tests
  */
@@ -183,7 +183,7 @@ enum
         SerializationOp(s, CSerActionUnserialize(), nType, nVersion);                \
     }
 
-/*
+/**
  * Basic Types
  */
 inline unsigned int GetSerializeSize(char a,      int, int=0) { return 1; }

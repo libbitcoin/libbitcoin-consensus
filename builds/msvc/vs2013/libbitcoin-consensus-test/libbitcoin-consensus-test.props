@@ -25,7 +25,7 @@
     </Link>
     <!-- We have a problem in configuration of boost test with dynamic lib. -->
     <PostBuildEvent Condition="'$(DefaultLinkage)' != 'dynamic'">
-      <Command>"$(TargetPath)" --run_test=* --random=1 --show_progress=no --result_code=no --detect_memory_leak=0 --report_level=no --build_info=yes</Command>
+      <Command>"$(TargetPath)" --run_test=* --show_progress=no --result_code=no --detect_memory_leak=0 --report_level=no --build_info=yes</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
 
