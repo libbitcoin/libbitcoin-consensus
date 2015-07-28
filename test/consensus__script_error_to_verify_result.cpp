@@ -22,7 +22,7 @@
 #include <boost/test/unit_test.hpp>
 
 // These give us test accesss to unpublished symbols.
-#include "consensus/consensus.h"
+#include "consensus/consensus.hpp"
 #include "script/script_error.h"
 
 using namespace libbitcoin::consensus;

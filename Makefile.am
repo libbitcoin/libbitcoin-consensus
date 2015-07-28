@@ -72,7 +72,9 @@ src_libbitcoin_consensus_la_SOURCES = \
     src/clone/script/script.h \
     src/clone/script/script_error.h \
     src/consensus/consensus.cpp \
-    src/consensus/consensus.h
+    src/consensus/consensus.hpp \
+    src/consensus/secp256k1_initializer.cpp \
+    src/consensus/secp256k1_initializer.hpp
 
 # local: test/libbitcoin_consensus_test
 #------------------------------------------------------------------------------
@@ -89,7 +91,8 @@ test_libbitcoin_consensus_test_SOURCES = \
     test/consensus__script_verify.cpp \
     test/consensus__verify_flags_to_script_flags.cpp \
     test/main.cpp \
-    test/script.hpp
+    test/script.hpp \
+    test/secp256k1_initializer.cpp
 
 endif WITH_TESTS
 

@@ -91,14 +91,14 @@ static verify_result test_verify(const std::string& transaction,
 #define CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT \
     "76a914c564c740c6900b93afc9f1bdaef0a9d466adf6ee88ac"
 
-BOOST_AUTO_TEST_CASE(consensus__script_verify__null_tx__throws_)
+BOOST_AUTO_TEST_CASE(consensus__script_verify__null_tx__throws_invalid_argument)
 {
     data_chunk prevout_script_data;
     BOOST_REQUIRE(decode_base16(prevout_script_data, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
     BOOST_REQUIRE_THROW(verify_script(NULL, 1, &prevout_script_data[0], prevout_script_data.size(), 0, 0), std::invalid_argument);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_verify__null_prevout_script__throws)
+BOOST_AUTO_TEST_CASE(consensus__script_verify__null_prevout_script__throws_invalid_argument)
 {
     data_chunk tx_data;
     BOOST_REQUIRE(decode_base16(tx_data, CONSENSUS_SCRIPT_VERIFY_TX));

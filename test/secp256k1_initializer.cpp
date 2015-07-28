@@ -11,21 +11,25 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-#include <bitcoin/consensus/export.hpp>
-#include "script/script_error.h"
+#ifdef USE_SECP256K1
 
-namespace libbitcoin {
-namespace consensus {
+#include <boost/test/unit_test.hpp>
+#include "consensus/secp256k1_initializer.hpp"
 
-// These are not published in the public header but are exposed here for test.
-BCK_API verify_result_type script_error_to_verify_result(ScriptError_t code);
-BCK_API unsigned int verify_flags_to_script_flags(unsigned int flags);
+BOOST_AUTO_TEST_SUITE(secp256k1_initializer)
 
-} // namespace consensus
-} // namespace libbitcoin
+BOOST_AUTO_TEST_CASE(secp256k1_initializer__get_context)
+{
+    const secp256k1_context_t* ctx = libbitcoin::consensus::secp256k1_initializer::secp256k1.context();
+    BOOST_REQUIRE(ctx != NULL);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+#endif
