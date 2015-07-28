@@ -99,7 +99,8 @@
     <ClInclude Include="..\..\..\..\src\clone\uint256.h" />
     <ClInclude Include="..\..\..\..\src\clone\utilstrencodings.h" />
     <ClInclude Include="..\..\..\..\src\clone\version.h" />
-    <ClInclude Include="..\..\..\..\src\consensus\consensus.h" />
+    <ClInclude Include="..\..\..\..\src\consensus\consensus.hpp" />
+    <ClInclude Include="..\..\..\..\src\consensus\secp256k1_initializer.hpp" />
     <ClInclude Include="..\..\resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +119,7 @@
     <ClCompile Include="..\..\..\..\src\clone\uint256.cpp" />
     <ClCompile Include="..\..\..\..\src\clone\utilstrencodings.cpp" />
     <ClCompile Include="..\..\..\..\src\consensus\consensus.cpp" />
+    <ClCompile Include="..\..\..\..\src\consensus\secp256k1_initializer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\resource.rc" />

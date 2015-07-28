@@ -48,9 +48,6 @@
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\export.hpp">
       <Filter>include\bitcoin\consensus</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\src\consensus\consensus.h">
-      <Filter>src\consensus</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\resource.h" />
     <ClInclude Include="..\..\..\..\src\clone\utilstrencodings.h">
       <Filter>src\clone</Filter>
@@ -118,6 +115,12 @@
     <ClInclude Include="..\..\..\..\src\clone\compat\byteswap.h">
       <Filter>src\clone\compat</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\consensus\consensus.hpp">
+      <Filter>src\consensus</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\consensus\secp256k1_initializer.hpp">
+      <Filter>src\consensus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\src\consensus\consensus.cpp">
@@ -164,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\src\clone\script\script.cpp">
       <Filter>src\clone\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\consensus\secp256k1_initializer.cpp">
+      <Filter>src\consensus</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
