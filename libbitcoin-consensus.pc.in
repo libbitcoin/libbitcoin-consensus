@@ -25,7 +25,7 @@ Version: @PACKAGE_VERSION@
 #==============================================================================
 # Dependencies that publish package configuration.
 #------------------------------------------------------------------------------
-Requires: @crypto_PKG@ @secp256k1_PKG@
+Requires: libsecp256k1 >= 0.0.1
 
 # Include directory and any other required compiler flags.
 #------------------------------------------------------------------------------

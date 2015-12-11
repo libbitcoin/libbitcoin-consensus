@@ -32,16 +32,13 @@ doc_DATA = \
 # src/libbitcoin-consensus.la => ${libdir}
 #------------------------------------------------------------------------------
 lib_LTLIBRARIES = src/libbitcoin-consensus.la
-src_libbitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
-src_libbitcoin_consensus_la_LIBADD = ${crypto_LIBS} ${secp256k1_LIBS}
+src_libbitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${secp256k1_CPPFLAGS}
+src_libbitcoin_consensus_la_LIBADD = ${secp256k1_LIBS}
 src_libbitcoin_consensus_la_SOURCES = \
     src/clone/amount.h \
-    src/clone/eccryptoverify.cpp \
-    src/clone/eccryptoverify.h \
-    src/clone/ecwrapper.cpp \
-    src/clone/ecwrapper.h \
     src/clone/hash.cpp \
     src/clone/hash.h \
+    src/clone/prevector.h \
     src/clone/pubkey.cpp \
     src/clone/pubkey.h \
     src/clone/serialize.h \
@@ -72,9 +69,7 @@ src_libbitcoin_consensus_la_SOURCES = \
     src/clone/script/script.h \
     src/clone/script/script_error.h \
     src/consensus/consensus.cpp \
-    src/consensus/consensus.hpp \
-    src/consensus/secp256k1_initializer.cpp \
-    src/consensus/secp256k1_initializer.hpp
+    src/consensus/consensus.hpp
 
 # local: test/libbitcoin_consensus_test
 #------------------------------------------------------------------------------
@@ -83,16 +78,15 @@ if WITH_TESTS
 TESTS = libbitcoin_consensus_test_runner.sh
 
 check_PROGRAMS = test/libbitcoin_consensus_test
-test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${boost_CPPFLAGS} ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
+test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${boost_CPPFLAGS} ${secp256k1_CPPFLAGS}
 test_libbitcoin_consensus_test_LDFLAGS = ${boost_LDFLAGS}
-test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${boost_unit_test_framework_LIBS} ${crypto_LIBS} ${secp256k1_LIBS}
+test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${boost_unit_test_framework_LIBS} ${secp256k1_LIBS}
 test_libbitcoin_consensus_test_SOURCES = \
     test/consensus__script_error_to_verify_result.cpp \
     test/consensus__script_verify.cpp \
     test/consensus__verify_flags_to_script_flags.cpp \
     test/main.cpp \
-    test/script.hpp \
-    test/secp256k1_initializer.cpp
+    test/script.hpp
 
 endif WITH_TESTS
 
@@ -113,8 +107,8 @@ include_bitcoin_consensus_HEADERS = \
 if WITH_JAVA
 
 lib_LTLIBRARIES += bindings/java/wrap/libbitcoin-consensus-jni.la
-bindings_java_wrap_libbitcoin_consensus_jni_la_CPPFLAGS = -I${srcdir}/include ${java_CPPFLAGS} ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
-bindings_java_wrap_libbitcoin_consensus_jni_la_LIBADD = src/libbitcoin-consensus.la ${crypto_LIBS} ${secp256k1_LIBS}
+bindings_java_wrap_libbitcoin_consensus_jni_la_CPPFLAGS = -I${srcdir}/include ${java_CPPFLAGS} ${secp256k1_CPPFLAGS}
+bindings_java_wrap_libbitcoin_consensus_jni_la_LIBADD = src/libbitcoin-consensus.la ${secp256k1_LIBS}
 bindings_java_wrap_libbitcoin_consensus_jni_la_SOURCES = \
     bindings/java/wrap/consensus.cpp
 
@@ -158,9 +152,9 @@ endif WITH_JAVA
 if WITH_PYTHON
 
 pkgpyexec_LTLIBRARIES = bindings/python/wrap/_bitcoin-consensus.la
-bindings_python_wrap__bitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include ${python_CPPFLAGS} ${crypto_CPPFLAGS} ${secp256k1_CPPFLAGS}
+bindings_python_wrap__bitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include ${python_CPPFLAGS} ${secp256k1_CPPFLAGS}
 bindings_python_wrap__bitcoin_consensus_la_LDFLAGS = -module
-bindings_python_wrap__bitcoin_consensus_la_LIBADD = src/libbitcoin-consensus.la ${crypto_LIBS} ${secp256k1_LIBS}
+bindings_python_wrap__bitcoin_consensus_la_LIBADD = src/libbitcoin-consensus.la ${secp256k1_LIBS}
 bindings_python_wrap__bitcoin_consensus_la_SOURCES = \
     bindings/python/wrap/consensus.cpp
 

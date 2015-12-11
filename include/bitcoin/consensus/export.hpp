@@ -78,7 +78,11 @@ typedef enum verify_result_type
     // augmention codes for tx deserialization
     verify_result_tx_invalid,
     verify_result_tx_size_invalid,
-    verify_result_tx_input_invalid
+    verify_result_tx_input_invalid,
+
+    // BIP65 errors
+    verify_result_negative_locktime,
+    verify_result_unsatisfied_locktime
 } verify_result;
 
 /**
@@ -141,7 +145,7 @@ typedef enum verify_flags_type
     verify_flags_minimaldata = (1U << 6),
 
     /**
-     * Discourage use of NOPs reserved for upgrades (NOP1-10)
+     * Discourage use of NOPs reserved for upgrades (NOP1,3-10)
      * Provided so that nodes can avoid accepting or mining transactions
      * containing executed NOP's whose meaning may change after a soft-fork,
      * thus rendering the script invalid; with this flag set executing
@@ -159,7 +163,12 @@ typedef enum verify_flags_type
      * must be true". (softfork safe, BIP62 rule 6)
      * Note: verify_flags_cleanstack must be used with verify_flags_p2sh.
      */
-    verify_flags_cleanstack = (1U << 8)
+    verify_flags_cleanstack = (1U << 8),
+
+    /**
+     * Verify CHECKLOCKTIMEVERIFY, see BIP65 for details.
+     */
+    verify_flags_checklocktimeverify = (1U << 9)
 } verify_flags;
 
 /**

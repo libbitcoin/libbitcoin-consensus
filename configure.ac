@@ -13,7 +13,7 @@
 AC_PREREQ([2.65])
 
 # Process command-line arguments and perform initialization and verification.
-AC_INIT([libbitcoin-consensus], [1.2.0], [eric@voskuil.org])
+AC_INIT([libbitcoin-consensus], [1.3.0], [eric@voskuil.org])
 
 # Do compilation tests.
 AC_LANG(C++)
@@ -83,28 +83,6 @@ AC_ARG_WITH([tests],
     [with_tests=yes])
 AC_MSG_RESULT([$with_tests])
 AM_CONDITIONAL([WITH_TESTS], [test x$with_tests != xno])
-
-# Implement --with-openssl.
-#------------------------------------------------------------------------------
-AC_MSG_CHECKING([--with-openssl option])
-AC_ARG_WITH([openssl],
-    AS_HELP_STRING([--with-openssl],
-        [Require OpenSSL dependency. @<:@default=yes@:>@]),
-    [with_openssl=$withval],
-    [with_openssl=yes])
-AC_MSG_RESULT([$with_openssl])
-
-# Implement --with-secp256k1 and define USE_SECP256K1 and declare WITH_SECP256K1.
-#------------------------------------------------------------------------------
-AC_MSG_CHECKING([--with-secp256k1 option])
-AC_ARG_WITH([secp256k1],
-    AS_HELP_STRING([--with-secp256k1],
-        [Compile with secp256k1 instead of OpenSSL. @<:@default=no@:>@]),
-    [with_secp256k1=$withval],
-    [with_secp256k1=no])
-AC_MSG_RESULT([$with_secp256k1])
-AS_CASE([${with_secp256k1}], [yes], AC_DEFINE([USE_SECP256K1]))
-AM_CONDITIONAL([WITH_SECP256K1], [test x$with_secp256k1 != xno])
 
 # Implement --with-java and declare WITH_JAVA.
 #------------------------------------------------------------------------------
@@ -391,25 +369,13 @@ AS_CASE([${with_tests}], [yes],
      AC_MSG_NOTICE([boost_unit_test_framework_LIBS : ${boost_unit_test_framework_LIBS}])],
     [AC_SUBST([boost_unit_test_framework_LIBS], [])])
 
-# Require crypto of at least version 1.0.1 and output ${crypto_CPPFLAGS/LIBS/PKG}.
-#------------------------------------------------------------------------------
-AS_CASE([${with_openssl}], [yes],
-    [PKG_CHECK_MODULES([crypto], [libcrypto >= 1.0.1])
-     AC_SUBST([crypto_PKG], ['libcrypto >= 1.0.1'])
-     AC_SUBST([crypto_CPPFLAGS], [${crypto_CFLAGS}])
-     AC_MSG_NOTICE([crypto_CPPFLAGS : ${crypto_CPPFLAGS}])
-     AC_MSG_NOTICE([crypto_LIBS : ${crypto_LIBS}])],
-    [AC_SUBST([crypto_PKG], [])])
-
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
-AS_CASE([${with_secp256k1}], [yes],
-    [PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1])
-     AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.0.1'])
-     AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
-     AC_MSG_NOTICE([secp256k1_CPPFLAGS : ${secp256k1_CPPFLAGS}])
-     AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])],
-    [AC_SUBST([secp256k1_PKG], [])])
+PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1])
+AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.0.1'])
+AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
+AC_MSG_NOTICE([secp256k1_CPPFLAGS : ${secp256k1_CPPFLAGS}])
+AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])
 
 # Require java if --with_java and output ${JAR/JAVAC/javadir} and ${java_CPPFLAGS}.
 #------------------------------------------------------------------------------
@@ -466,12 +432,6 @@ AS_CASE([${CC}], [*clang*],
 AS_CASE([${CC}], [*clang*],
     [AX_CHECK_COMPILE_FLAG([-Wno-deprecated-register],
         [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])])
-
-# Clean up consensus warnings from boost 1.55 and OpenSSL headers.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-Wno-deprecated-declarations],
-        [CXXFLAGS="$CXXFLAGS -Wno-deprecated-declarations"])])
 
 # Protect stack.
 #------------------------------------------------------------------------------
