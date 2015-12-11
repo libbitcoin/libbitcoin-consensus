@@ -20,11 +20,27 @@
 #ifndef LIBBITCOIN_CONSENSUS_CONSENSUS_HPP
 #define LIBBITCOIN_CONSENSUS_CONSENSUS_HPP
 
+#include <cstddef>
+#include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/export.hpp>
+#include "pubkey.h"
 #include "script/script_error.h"
 
 namespace libbitcoin {
 namespace consensus {
+    
+// Helper class, not published. This is tested internal to verify_script.
+class BCK_API TxInputStream
+{
+public:
+    TxInputStream(const unsigned char* transaction, size_t transaction_size);
+    TxInputStream& read(char* destination, size_t size);
+
+private:
+    static ECCVerifyHandle secp256k1_context_;
+    const unsigned char* source_;
+    size_t remaining_;
+};
 
 // These are not published in the public header but are exposed here for test.
 BCK_API verify_result_type script_error_to_verify_result(ScriptError_t code);

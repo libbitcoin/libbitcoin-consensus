@@ -127,6 +127,18 @@ BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__UNBALANCED_CONDIT
     BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_UNBALANCED_CONDITIONAL), verify_result_unbalanced_conditional);
 }
 
+// BIP65
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__NEGATIVE_LOCKTIME__sig_hashtype)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_NEGATIVE_LOCKTIME), verify_result_negative_locktime);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__ERR_UNSATISFIED_LOCKTIME__err_sig_der)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_UNSATISFIED_LOCKTIME), verify_result_unsatisfied_locktime);
+}
+
 // BIP62
 
 BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_HASHTYPE__sig_hashtype)

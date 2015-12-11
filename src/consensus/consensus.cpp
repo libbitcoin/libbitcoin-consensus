@@ -22,41 +22,38 @@
 #include <cstddef>
 #include <iostream>
 #include <stdexcept>
+#include <string.h>
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/export.hpp>
 #include <bitcoin/consensus/version.hpp>
 #include "primitives/transaction.h"
+#include "pubkey.h"
 #include "script/interpreter.h"
 #include "script/script_error.h"
 #include "version.h"
 
-// Helper class, not published. This is tested internal to verify_script.
-class TxInputStream
-{
-public:
-    TxInputStream(const unsigned char* transaction, size_t transaction_size)
-        : source_(transaction), remaining_(transaction_size)
-    {
-    }
-
-    TxInputStream& read(char* destination, size_t size)
-    {
-        if (size > remaining_)
-            throw std::ios_base::failure("end of data");
-
-        memcpy(destination, source_, size);
-        remaining_ -= size;
-        source_ += size;
-        return *this;
-    }
-
-private:
-    const unsigned char* source_;
-    size_t remaining_;
-};
-
 namespace libbitcoin {
 namespace consensus {
+
+// Static initialization of libsecp256k1 initialization context. 
+ECCVerifyHandle TxInputStream::secp256k1_context_ = ECCVerifyHandle();
+
+TxInputStream::TxInputStream(const unsigned char* transaction,
+    size_t transaction_size)
+  : source_(transaction), remaining_(transaction_size)
+{
+}
+
+TxInputStream& TxInputStream::read(char* destination, size_t size)
+{
+    if (size > remaining_)
+        throw std::ios_base::failure("end of data");
+
+    memcpy(destination, source_, size);
+    remaining_ -= size;
+    source_ += size;
+    return *this;
+}
 
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
@@ -108,6 +105,12 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
             return verify_result_invalid_altstack_operation;
         case SCRIPT_ERR_UNBALANCED_CONDITIONAL:
             return verify_result_unbalanced_conditional;
+
+        // BIP65
+        case SCRIPT_ERR_NEGATIVE_LOCKTIME:
+            return verify_result_negative_locktime;
+        case SCRIPT_ERR_UNSATISFIED_LOCKTIME:
+            return verify_result_unsatisfied_locktime;
 
         // BIP62
         case SCRIPT_ERR_SIG_HASHTYPE:
@@ -166,6 +169,8 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS;
     if ((flags & verify_flags_cleanstack) != 0)
         script_flags |= SCRIPT_VERIFY_CLEANSTACK;
+    if ((flags & verify_flags_checklocktimeverify) != 0)
+        script_flags |= SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
 
     return script_flags;
 }
@@ -206,9 +211,7 @@ verify_result_type verify_script(const unsigned char* transaction,
     const CScript& input_script = tx.vin[tx_input_index].scriptSig;
 
     // See libbitcoin-blockchain : validate.cpp :
-    // if (!output_script.run(input.script, tx, current_input))...
-    // if (!output_script.run(input.script, current_tx, input_index,
-    //     bip16_enabled))...
+    // if (!output_script.run(input.script, current_tx, input_index, flags))...
     VerifyScript(input_script, output_script, script_flags, checker, &error);
 
     return script_error_to_verify_result(error);

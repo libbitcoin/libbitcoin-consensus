@@ -6,12 +6,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
-  
-  <!-- User Interface -->
-
-  <ItemGroup Label="BuildOptionsExtension">
-    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)$(ProjectName).xml" />
-  </ItemGroup>
 
   <!-- Configuration -->
 
@@ -21,7 +15,6 @@
       <DisableSpecificWarnings>4244;4267;4800;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnablePREfast>false</EnablePREfast>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0600;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PreprocessorDefinitions Condition="'$(Option-secp256k1)' == 'true'">USE_SECP256K1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(ConfigurationType)' == 'DynamicLibrary'">BCK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(ConfigurationType)' == 'StaticLibrary'">BCK_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
@@ -30,26 +23,18 @@
   <!-- Dependencies -->
   
   <PropertyGroup Condition="'$(DefaultLinkage)' == 'dynamic'">
-    <Linkage-openssl>dynamic</Linkage-openssl>
     <Linkage-secp256k1>dynamic</Linkage-secp256k1>
   </PropertyGroup>
   <PropertyGroup Condition="'$(DefaultLinkage)' == 'ltcg'">
-    <Linkage-openssl>static</Linkage-openssl>
     <Linkage-secp256k1>ltcg</Linkage-secp256k1>
   </PropertyGroup>
   <PropertyGroup Condition="'$(DefaultLinkage)' == 'static'">
-    <Linkage-openssl>static</Linkage-openssl>
     <Linkage-secp256k1>static</Linkage-secp256k1>
   </PropertyGroup>
 
   <!-- Messages -->
 
-  <Target Name="OptionInfo" BeforeTargets="PrepareForBuild">
-    <Message Text="Option-secp256k1  : $(Option-secp256k1)" Importance="high"/>
-  </Target>
-
   <Target Name="LinkageInfo" BeforeTargets="PrepareForBuild">
-    <Message Text="Linkage-openssl   : $(Linkage-openssl)" Importance="high"/>
     <Message Text="Linkage-secp256k1 : $(Linkage-secp256k1)" Importance="high"/>
   </Target>
 

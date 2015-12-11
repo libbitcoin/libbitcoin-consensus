@@ -7,8 +7,6 @@
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
 
-  <!-- User Interface -->
-
   <!-- Configuration -->
 
   <ItemDefinitionGroup>
@@ -36,17 +34,14 @@
   </ImportGroup>
   
   <PropertyGroup Condition="'$(DefaultLinkage)' == 'dynamic'">
-    <Linkage-openssl>dynamic</Linkage-openssl>
     <Linkage-secp256k1>dynamic</Linkage-secp256k1>
     <Linkage-libbitcoin-consensus>dynamic</Linkage-libbitcoin-consensus>
   </PropertyGroup>
   <PropertyGroup Condition="'$(DefaultLinkage)' == 'ltcg'">
-    <Linkage-openssl>static</Linkage-openssl>
     <Linkage-secp256k1>ltcg</Linkage-secp256k1>
     <Linkage-libbitcoin-consensus>ltcg</Linkage-libbitcoin-consensus>
   </PropertyGroup>
   <PropertyGroup Condition="'$(DefaultLinkage)' == 'static'">
-    <Linkage-openssl>static</Linkage-openssl>
     <Linkage-secp256k1>static</Linkage-secp256k1>
     <Linkage-libbitcoin-consensus>static</Linkage-libbitcoin-consensus>
   </PropertyGroup>
@@ -54,7 +49,6 @@
   <!-- Messages -->
 
   <Target Name="LinkageInfo" BeforeTargets="PrepareForBuild">
-    <Message Text="Linkage-openssl   : $(Linkage-openssl)" Importance="high"/>
     <Message Text="Linkage-secp256k1 : $(Linkage-secp256k1)" Importance="high"/>
     <Message Text="Linkage-_consensus: $(Linkage-libbitcoin-consensus)" Importance="high"/>
   </Target>
