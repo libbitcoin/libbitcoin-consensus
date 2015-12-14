@@ -20,11 +20,9 @@ $ sudo ldconfig
 
 ## Dependencies
 
-By default consensus has a dependency on openssl (libcrypto) and a test dependency on boost.
+This library has no dependencies, although the test cases have a boost dependency.
 
 ## Configure Options
-
-With the `--with-secp256k1` option selected there is a dependency on [libsecp256k1](https://github.com/bitcoin/secp256k1) in place of openssl. The `--without-openssl` option may be used concurrently to eliminate the openssl check during configure.
 
 There is a dependency on [boost test](http://www.boost.org/doc/libs/1_50_0/libs/test/doc/html/index.html) for `make check` builds (tests). The `--without-tests` option disables test builds and eliminates the boost check during configure.
 
@@ -40,16 +38,13 @@ The java option installs the jar file `org.libbitcoin.consensus-${VERSION}.jar`a
 
 # About
 
-This library includes the following 36 files considered to be bitcoin consensus-critical. These files are identical to those used in version 0.11.0 of the Satoshi client with two exceptions. The file `pubkey.cpp` has conditionally-included sections for support of experimental [libsecp256k1](https://github.com/bitcoin/secp256k1) builds against the current library. The file `ecwrapper.cpp` has conditional exclusion of the entire file when `secp256k1` is in use. These changes are excluded in OpenSSL (consensus) builds.
+This library includes the following 33 files considered to be bitcoin script consensus-critical. These files are identical to those used in version 0.12.0 of the Satoshi client with two exceptions.
 
 ```
 amount.h
-eccryptoverify.cpp
-eccryptoverify.h
-ecwrapper.cpp
-ecwrapper.h
 hash.cpp
 hash.h
+prevector.h
 pubkey.cpp
 pubkey.h
 serialize.h
@@ -85,4 +80,4 @@ script/script_error.h
 
 Libbitcoin natively implements consensus checks that are redundant with `libbitcoin-consensus`. Libbitcoin includes a full bitcoin client and server SDK. This includes the full node implementation [libbitcoin-node](https://github.com/libbitcoin/libbitcoin-node), which builds on [libbitcoin](https://github.com/libbitcoin/libbitcoin) and [libbitcoin-blockchain](https://github.com/libbitcoin/libbitcoin-blockchain).
 
-The `libbitcoin-blockchain` configuration now provides the `--with-consensus` option. This allows the developer to select either `libbitcoin` native or `libbitcoin-consensus` checks. The option now defaults to `yes` so that by default all `libbitcoin-node` and `libbitcoin-server` builds use the same consensus checks as a Satoshi node.
+The `libbitcoin-blockchain` configuration provides the `--with-consensus` option. This allows the developer to select either `libbitcoin` native or `libbitcoin-consensus` checks. The option defaults to `yes` so that by default all `libbitcoin-node` and `libbitcoin-server` builds use the same consensus checks as a Satoshi node.
