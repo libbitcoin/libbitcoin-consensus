@@ -17,10 +17,6 @@
       <PreprocessorDefinitions>_WIN32_WINNT=0x0600;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(DefaultLinkage)' == 'dynamic'">BOOST_TEST_DYN_LINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <!-- Suppress warnings from missing OpenSSL PDBs. -->
-    <Link Condition="'$(DebugOrRelease)' == 'debug'">
-      <AdditionalOptions>/OPT:NOLBR /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
-    </Link>
     <!-- We have a problem in configuration of boost test with dynamic lib, run tests after release builds. -->
     <PostBuildEvent Condition="'$(DefaultLinkage)' != 'dynamic' and '$(DebugOrRelease)' == 'release'">
       <Command>"$(TargetPath)" --run_test=* --show_progress=no --result_code=no --detect_memory_leak=0 --report_level=no --build_info=yes</Command>
