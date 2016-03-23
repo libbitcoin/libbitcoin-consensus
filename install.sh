@@ -112,6 +112,8 @@ for OPTION in "$@"; do
     case $OPTION in
         # Custom build options (in the form of --build-<option>).
         (--build-icu)      BUILD_ICU="yes";;
+        (--build-png)      BUILD_PNG="yes";;
+        (--build-qrencode) BUILD_QRENCODE="yes";;
         (--build-boost)    BUILD_BOOST="yes";;
         (--build-dir=*)    BUILD_DIR="${OPTION#*=}";;
         
@@ -120,6 +122,8 @@ for OPTION in "$@"; do
         (--disable-shared) DISABLE_SHARED="yes";;
         (--disable-static) DISABLE_STATIC="yes";;
         (--with-icu)       WITH_ICU="yes";;
+        (--with-png)       WITH_PNG="yes";;
+        (--with-qrencode)  WITH_QRENCODE="yes";;
     esac
 done
 echo "Build directory: $BUILD_DIR"
@@ -128,11 +132,27 @@ echo "Prefix directory: $PREFIX"
 # Warn on configurations that imply static/prefix isolation.
 #------------------------------------------------------------------------------
 if [[ $BUILD_ICU == yes ]]; then
-    if [[ !($PREFIX)]]; then    
+    if [[ !($PREFIX)]]; then
         echo "Warning: --prefix recommended when building ICU."
     fi
     if [[ !($DISABLE_SHARED) ]]; then
         echo "Warning: --disable-shared recommended when building ICU."
+    fi
+fi
+if [[ $BUILD_QRENCODE == yes ]]; then
+    if [[ !($PREFIX)]]; then
+        echo "Warning: --prefix recommended when building QRENCODE."
+    fi
+    if [[ !($DISABLE_SHARED) ]]; then
+        echo "Warning: --disable-shared recommended when building QRENCODE."
+    fi
+fi
+if [[ $BUILD_PNG == yes ]]; then
+    if [[ !($PREFIX)]]; then
+        echo "Warning: --prefix recommended when building PNG."
+    fi
+    if [[ !($DISABLE_SHARED) ]]; then
+        echo "Warning: --disable-shared recommended when building PNG."
     fi
 fi
 if [[ $BUILD_BOOST == yes ]]; then
@@ -147,7 +167,7 @@ fi
 # Purge custom options so they don't go to configure.
 #------------------------------------------------------------------------------
 CONFIGURE_OPTIONS=( "$@" )
-CUSTOM_OPTIONS=( "--build-icu" "--build-boost" "--build-dir=$BUILD_DIR" )
+CUSTOM_OPTIONS=( "--build-icu" "--build-boost" "--build-png" "--build-qrencode" "--build-dir=$BUILD_DIR")
 for CUSTOM_OPTION in "${CUSTOM_OPTIONS[@]}"; do
     CONFIGURE_OPTIONS=( "${CONFIGURE_OPTIONS[@]/$CUSTOM_OPTION}" )
 done
@@ -157,12 +177,18 @@ done
 if [[ $DISABLE_STATIC == yes ]]; then
     BOOST_LINK="link=shared"
     ICU_LINK="--enable-shared --disable-static"
+    PNG_LINK="--enable-shared --disable-static"
+    QRENCODE_LINK="--enable-shared --disable-static"
 elif [[ $DISABLE_SHARED == yes ]]; then
     BOOST_LINK="link=static"
     ICU_LINK="--disable-shared --enable-static"
+    PNG_LINK="--disable-shared --enable-static"
+    QRENCODE_LINK="--disable-shared --enable-static"
 else
     BOOST_LINK="link=static,shared"
     ICU_LINK="--enable-shared --enable-static"
+    PNG_LINK="--enable-shared --enable-static"
+    QRENCODE_LINK="--enable-shared --enable-static"
 fi
 
 # Incorporate the prefix.
@@ -390,33 +416,30 @@ push_directory()
 
 # Build functions.
 #==============================================================================
-build_from_tarball_icu()
+build_from_tarball()
 {
     local URL=$1
     local ARCHIVE=$2
-    local REPO=$3
+    local ARCHIVE_TYPE=$3
     local JOBS=$4
-    shift 4
-
-    if [[ !($BUILD_ICU) ]]; then
-        initialize_icu_packages
-        display_message "ICU build not enabled"
-        return
-    fi
+    local PUSH_DIR=$5
+    local LINK=$6
+    local STANDARD=$7
+    shift 7
 
     display_message "Download $ARCHIVE"
 
-    create_directory $REPO
-    push_directory $REPO
+    local EXTRACTED_DIR=`echo $ARCHIVE | sed "s/.tar.$ARCHIVE_TYPE//g"`
+
+    create_directory $EXTRACTED_DIR
+    push_directory $EXTRACTED_DIR
 
     # Extract the source locally.
     wget --output-document $ARCHIVE $URL
-    tar --extract --file $ARCHIVE --strip-components=1
-    push_directory "source"
+    tar --extract --file $ARCHIVE --$ARCHIVE_TYPE --strip-components=1
+    push_directory $PUSH_DIR
 
-    # Build and install.
-    # ICU is a typical GNU build except that it fails on unknown options.
-    configure_options $ICU_LINK $ICU_STANDARD ${prefix} "$@"
+    configure_options $LINK $STANDARD ${prefix} "$@"
     make_jobs $JOBS --silent
     make install
     configure_links
