@@ -68,6 +68,7 @@ install:
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then sudo apt-get -qq install swig; fi
 
     # Download and install packages for osx/clang/dynamic.
+    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew unlink boost; brew install boost; fi
     - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew unlink swig; brew install swig; fi
 
     # Download and install packages for linux/gcc/dynamic.
