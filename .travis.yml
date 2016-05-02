@@ -11,11 +11,11 @@ language:
 os:
     - osx
     - linux
-
+    
 compiler:
     - clang
     - gcc
-
+    
 env:
     - LINK=static
     - LINK=dynamic
@@ -68,8 +68,10 @@ install:
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then sudo apt-get -qq install swig; fi
 
     # Download and install packages for osx/clang/dynamic.
-    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew unlink boost; brew install boost; fi
     - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew unlink swig; brew install swig; fi
+
+    # Download and install packages for linux/clang/dynamic.
+    - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then sudo apt-get -qq install boost1.54; fi
 
     # Download and install packages for linux/gcc/dynamic.
     - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then sudo apt-get -qq install swig; fi
@@ -78,10 +80,10 @@ script:
 
     # Download and build libbitcoin-consensus and all dependencies.
     - if [[ $OSX   && $CLANG && $STATIC  ]]; then ./install.sh --with-java --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix; fi
-    - if [[ $LINUX && $CLANG && $STATIC  ]]; then ./install.sh --with-python --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os' CXXFLAGS='-Os'; fi
-    - if [[ $LINUX && $GCC   && $STATIC  ]]; then ./install.sh --with-java --disable-shared --build-boost --build-dir=my-build --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-O0 -g --coverage' CXXFLAGS='-O0 -g --coverage'; fi
+    - if [[ $LINUX && $CLANG && $STATIC  ]]; then ./install.sh --with-python --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os' LDLIBS='-lstdc++' CXXFLAGS='-Os -stdlib=libstdc++'; fi
+    - if [[ $LINUX && $GCC   && $STATIC  ]]; then ./install.sh --with-java --disable-shared --build-boost --build-dir=my-build --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-O0 -g -static --coverage' CXXFLAGS='-O0 -g -static --coverage'; fi
     - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then ./install.sh --with-python; fi
-    - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then sudo CXX=$CXX CC=$CC ./install.sh --build-boost --disable-ndebug --disable-static CFLAGS='-Os' CXXFLAGS='-Os'; fi
+    - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then sudo CXX=$CXX CC=$CC ./install.sh --disable-ndebug --disable-static CFLAGS='-Os' LDLIBS='-lstdc++' CXXFLAGS='-Os -stdlib=libstdc++'; fi
     - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then sudo CXX=$CXX CC=$CC ./install.sh --with-java --with-python --disable-static --build-boost CFLAGS='-Os -s' CXXFLAGS='-Os -s'; fi
 
 after_success:
@@ -96,6 +98,6 @@ after_success:
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then lcov --directory . --capture --output-file coverage.info; fi
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then lcov --remove coverage.info "/usr/*" "$TRAVIS_BUILD_DIR/my-prefix/*" "my-build/*" "test/*" "clone/*" --output-file coverage.info; fi
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then lcov --list coverage.info; fi
-
+    
     # Upload coverage info to coveralls service (--repo-token <private coveralls repo token>).
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then coveralls-lcov coverage.info; fi
