@@ -7,9 +7,7 @@
 
 # Standard declarations.
 #==============================================================================
-# Requires Automake 1.14 or newer.
-
-# Declare the required version of Autoconf.
+# Declare the required version of autoconf.
 AC_PREREQ([2.65])
 
 # Process command-line arguments and perform initialization and verification.
@@ -353,15 +351,15 @@ AS_CASE([${CC}], [*gcc*],
          AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
         [AC_MSG_ERROR([Boost 1.55.0 or later is required but was not found.])])])
 
-# Require Boost of at least version 1.56.0 if in clang and output ${boost_CPPFLAGS/LDFLAGS}.
+# Require Boost of at least version 1.54.0 if in clang and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*clang*],
-    [AX_BOOST_BASE([1.56.0],
+    [AX_BOOST_BASE([1.54.0],
         [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
          AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
          AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
          AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
-        [AC_MSG_ERROR([Boost 1.56.0 or later is required but was not found.])])])
+        [AC_MSG_ERROR([Boost 1.54.0 or later is required but was not found.])])])
 
 AS_CASE([${with_tests}], [yes],
     [AX_BOOST_UNIT_TEST_FRAMEWORK
@@ -426,6 +424,12 @@ AS_CASE([${CC}], [*],
 AS_CASE([${CC}], [*clang*],
     [AX_CHECK_COMPILE_FLAG([-Wno-mismatched-tags],
         [CXXFLAGS="$CXXFLAGS -Wno-mismatched-tags"])])
+
+# Clean up boost 1.54 headers. Enabled in clang only.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*clang*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-deprecated-register],
+        [CXXFLAGS="$CXXFLAGS -Wno-deprecated-register"])])
 
 # Protect stack.
 #------------------------------------------------------------------------------
