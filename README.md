@@ -24,7 +24,7 @@ This library has no dependencies, although the test cases have a boost dependenc
 
 ## Configure Options
 
-There is a dependency on [boost test](http://www.boost.org/doc/libs/1_50_0/libs/test/doc/html/index.html) for `make check` builds (tests). The `--without-tests` option disables test builds and eliminates the boost check during configure.
+There is a dependency on [boost test](http://www.boost.org/doc/libs/1_57_0/libs/test/doc/html/index.html) for `make check` builds (tests). The `--without-tests` option disables test builds and eliminates the boost check during configure.
 
 ## Supported Platforms
 
