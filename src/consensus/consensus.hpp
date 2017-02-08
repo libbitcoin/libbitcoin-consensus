@@ -26,6 +26,11 @@
 #include "pubkey.h"
 #include "script/script_error.h"
 
+// HACK: this symbol is not portable but is used in one place so hardwire here.
+#ifndef __func__
+#define __func__ "<unknown>"
+#endif
+
 namespace libbitcoin {
 namespace consensus {
     

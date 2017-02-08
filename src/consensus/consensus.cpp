@@ -205,14 +205,16 @@ verify_result_type verify_script(const unsigned char* transaction,
         return verify_result_tx_size_invalid;
 
     ScriptError_t error;
-    TransactionSignatureChecker checker(&tx, tx_input_index);
+    const CAmount amount = 0;
+    TransactionSignatureChecker checker(&tx, tx_input_index, amount);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
     const CScript& input_script = tx.vin[tx_input_index].scriptSig;
 
     // See libbitcoin-blockchain : validate.cpp :
     // if (!output_script.run(input.script, current_tx, input_index, flags))...
-    VerifyScript(input_script, output_script, script_flags, checker, &error);
+    const CScriptWitness* witness = nullptr;
+    VerifyScript(input_script, output_script, witness, script_flags, checker, &error);
 
     return script_error_to_verify_result(error);
 }
