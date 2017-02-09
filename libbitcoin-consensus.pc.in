@@ -16,7 +16,7 @@ includedir=@includedir@
 # Metadata
 #==============================================================================
 Name: libbitcoin-consensus
-Description: Libbitcoin Consensus Library
+Description: Bitcoin Consensus Library (optional)
 URL: https://github.com/libbitcoin/libbitcoin-consensus
 Version: @PACKAGE_VERSION@
 
