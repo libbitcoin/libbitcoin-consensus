@@ -38,7 +38,7 @@ The java option installs the jar file `org.libbitcoin.consensus-${VERSION}.jar`a
 
 # About
 
-This library includes the following 33 files considered to be bitcoin script consensus-critical. These files are identical to those used in version 0.12.0 of bitcoin-core.
+This library includes the following 33 files considered to be bitcoin script consensus-critical. These files are identical to those used in version 0.13.2 of bitcoin-core.
 
 ```
 amount.h
