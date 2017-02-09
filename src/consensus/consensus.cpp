@@ -1,21 +1,20 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
- * This file is part of libbitcoin-consensus.
+ * This file is part of libbitcoin.
  *
- * libbitcoin-consensus is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include "consensus/consensus.hpp"
 
@@ -35,7 +34,7 @@
 namespace libbitcoin {
 namespace consensus {
 
-// Static initialization of libsecp256k1 initialization context. 
+// Static initialization of libsecp256k1 initialization context.
 ECCVerifyHandle TxInputStream::secp256k1_context_ = ECCVerifyHandle();
 
 TxInputStream::TxInputStream(const unsigned char* transaction,
@@ -176,9 +175,9 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
 }
 
 // This function is published. The implementation exposes no satoshi internals.
-verify_result_type verify_script(const unsigned char* transaction, 
-    size_t transaction_size, const unsigned char* prevout_script, 
-    size_t prevout_script_size, unsigned int tx_input_index, 
+verify_result_type verify_script(const unsigned char* transaction,
+    size_t transaction_size, const unsigned char* prevout_script,
+    size_t prevout_script_size, unsigned int tx_input_index,
     unsigned int flags)
 {
     if (transaction_size > 0 && transaction == NULL)
@@ -188,7 +187,7 @@ verify_result_type verify_script(const unsigned char* transaction,
         throw std::invalid_argument("prevout_script");
 
     CTransaction tx;
-    try 
+    try
     {
         TxInputStream stream(transaction, transaction_size);
         Unserialize(stream, tx, SER_NETWORK, PROTOCOL_VERSION);

@@ -1,13 +1,12 @@
 /**
- * Copyright (c) 2011-2015 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2017 libbitcoin developers (see AUTHORS)
  *
- * This file is part of libbitcoin-consensus.
+ * This file is part of libbitcoin.
  *
- * libbitcoin-consensus is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Affero General Public License with
- * additional permissions to the one published by the Free Software
- * Foundation, either version 3 of the License, or (at your option)
- * any later version. For more information see LICENSE.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,7 +14,7 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef LIBBITCOIN_CONSENSUS_EXPORT_HPP
 #define LIBBITCOIN_CONSENSUS_EXPORT_HPP
@@ -28,7 +27,7 @@ namespace libbitcoin {
 namespace consensus {
 
 /**
- * Result values from calling verify_script. 
+ * Result values from calling verify_script.
  */
 typedef enum verify_result_type
 {
@@ -86,7 +85,7 @@ typedef enum verify_result_type
 } verify_result;
 
 /**
- * Flags to use when calling verify_script. 
+ * Flags to use when calling verify_script.
  */
 typedef enum verify_flags_type
 {
@@ -102,8 +101,8 @@ typedef enum verify_flags_type
 
     /**
      * Passing a non-strict-DER signature or one with undefined hashtype to a
-     * checksig operation causes script failure. Evaluating a pubkey that is 
-     * not (0x04 + 64 bytes) or (0x02 or 0x03 + 32 bytes) by checksig causes 
+     * checksig operation causes script failure. Evaluating a pubkey that is
+     * not (0x04 + 64 bytes) or (0x02 or 0x03 + 32 bytes) by checksig causes
      * script failure. (softfork safe, but not used or intended as a consensus
      * rule).
      */
@@ -178,14 +177,14 @@ typedef enum verify_flags_type
  * @param[in]  transaction_size    The byte length of the transaction.
  * @param[in]  prevout_script      The script public key to verify against.
  * @param[in]  prevout_script_size The byte length of the script public key.
- * @param[in]  tx_input_index      The zero-based index of the transaction 
+ * @param[in]  tx_input_index      The zero-based index of the transaction
  *                                 input with signature to be verified.
  * @param[in]  flags               Verification constraint flags.
  * @returns                        A script verification result code.
  */
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
-    size_t prevout_script_size, unsigned int tx_input_index, 
+    size_t prevout_script_size, unsigned int tx_input_index,
     unsigned int flags);
 
 } // namespace consensus
