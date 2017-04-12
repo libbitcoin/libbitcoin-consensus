@@ -127,8 +127,11 @@ namespace tfm = tinyformat;
 
 // Define for C++11 variadic templates which make the code shorter & more
 // general.  If you don't define this, C++11 support is autodetected below.
-#define TINYFORMAT_USE_VARIADIC_TEMPLATES
 
+// Unsupported in Visual Studio 2013 CTP compiler - ekv4/11/2017.
+#ifndef _MSC_VER
+#define TINYFORMAT_USE_VARIADIC_TEMPLATES
+#endif
 
 //------------------------------------------------------------------------------
 // Implementation details.
