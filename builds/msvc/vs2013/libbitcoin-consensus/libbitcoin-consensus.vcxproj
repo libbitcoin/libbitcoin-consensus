@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>CTP_Nov2013</PlatformToolset>
     <ProjectGuid>{6C521D95-00CE-4120-97D1-430E2870D738}</ProjectGuid>
     <ProjectName>libbitcoin-consensus</ProjectName>
   </PropertyGroup>

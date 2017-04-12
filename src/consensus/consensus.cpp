@@ -19,7 +19,9 @@
 #include "consensus/consensus.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string.h>
 #include <bitcoin/consensus/define.hpp>
@@ -34,25 +36,49 @@
 namespace libbitcoin {
 namespace consensus {
 
-// Static initialization of libsecp256k1 initialization context.
-ECCVerifyHandle TxInputStream::secp256k1_context_ = ECCVerifyHandle();
+// Initialize libsecp256k1 context.
+static auto secp256k1_context = ECCVerifyHandle();
 
-TxInputStream::TxInputStream(const unsigned char* transaction,
-    size_t transaction_size)
-  : source_(transaction), remaining_(transaction_size)
+// Helper class, not published. This is tested internal to verify_script.
+class transaction_istream
 {
-}
+public:
+    template<typename Type>
+    transaction_istream& operator>>(Type& instance)
+    {
+        ::Unserialize(*this, instance);
+        return *this;
+    }
 
-TxInputStream& TxInputStream::read(char* destination, size_t size)
-{
-    if (size > remaining_)
-        throw std::ios_base::failure("end of data");
+    transaction_istream(const uint8_t* transaction, size_t size)
+      : source_(transaction), remaining_(size)
+    {
+    }
 
-    memcpy(destination, source_, size);
-    remaining_ -= size;
-    source_ += size;
-    return *this;
-}
+    void read(char* destination, size_t size)
+    {
+        if (size > remaining_)
+            throw std::ios_base::failure("end of data");
+
+        memcpy(destination, source_, size);
+        remaining_ -= size;
+        source_ += size;
+    }
+
+    int GetType() const
+    {
+        return SER_NETWORK;
+    }
+
+    int GetVersion() const
+    {
+        return PROTOCOL_VERSION;
+    }
+
+private:
+    size_t remaining_;
+    const uint8_t* source_;
+};
 
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
@@ -186,29 +212,31 @@ verify_result_type verify_script(const unsigned char* transaction,
     if (prevout_script_size > 0 && prevout_script == NULL)
         throw std::invalid_argument("prevout_script");
 
-    CTransaction tx;
+    std::shared_ptr<CTransaction> tx;
+
     try
     {
-        TxInputStream stream(transaction, transaction_size);
-        Unserialize(stream, tx, SER_NETWORK, PROTOCOL_VERSION);
+        transaction_istream stream(transaction, transaction_size);
+        tx = std::make_shared<CTransaction>(deserialize, stream);
     }
     catch (const std::exception&)
     {
         return verify_result_tx_invalid;
     }
 
-    if (tx_input_index >= tx.vin.size())
+    if (tx_input_index >= tx->vin.size())
         return verify_result_tx_input_invalid;
 
-    if (tx.GetSerializeSize(SER_NETWORK, PROTOCOL_VERSION) != transaction_size)
+    if (GetSerializeSize(*tx, SER_NETWORK, PROTOCOL_VERSION) != transaction_size)
         return verify_result_tx_size_invalid;
 
     ScriptError_t error;
     const CAmount amount = 0;
-    TransactionSignatureChecker checker(&tx, tx_input_index, amount);
+    const auto& tx_ref = *tx;
+    TransactionSignatureChecker checker(&tx_ref, tx_input_index, amount);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
-    const CScript& input_script = tx.vin[tx_input_index].scriptSig;
+    const auto& input_script = tx->vin[tx_input_index].scriptSig;
 
     // See libbitcoin-blockchain : validate.cpp :
     // if (!output_script.run(input.script, current_tx, input_index, flags))...
