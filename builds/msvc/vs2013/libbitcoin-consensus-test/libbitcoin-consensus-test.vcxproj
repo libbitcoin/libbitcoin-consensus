@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ConfigurationType>Application</ConfigurationType>
     <NuGetPackageImportStamp>8cbd3e18</NuGetPackageImportStamp>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>CTP_Nov2013</PlatformToolset>
     <ProjectGuid>{D282EF8C-6217-483C-AC47-864B2FBA50FD}</ProjectGuid>
     <ProjectName>libbitcoin-consensus-test</ProjectName>
   </PropertyGroup>
