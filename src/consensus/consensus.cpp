@@ -131,7 +131,7 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
         case SCRIPT_ERR_UNBALANCED_CONDITIONAL:
             return verify_result_unbalanced_conditional;
 
-        // BIP65
+        // BIP65/BIP112 (shared codes)
         case SCRIPT_ERR_NEGATIVE_LOCKTIME:
             return verify_result_negative_locktime;
         case SCRIPT_ERR_UNSATISFIED_LOCKTIME:
@@ -196,6 +196,8 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_CLEANSTACK;
     if ((flags & verify_flags_checklocktimeverify) != 0)
         script_flags |= SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
+    if ((flags & verify_flags_checksequenceverify) != 0)
+        script_flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
 
     return script_flags;
 }
