@@ -80,9 +80,14 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__cleanstack__CLEANS
     BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_cleanstack), (uint32_t)SCRIPT_VERIFY_CLEANSTACK);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__cleanstack__CHECKLOCKTIMEVERIFY)
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__checklocktimeverify__CHECKLOCKTIMEVERIFY)
 {
     BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_checklocktimeverify), (uint32_t)SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__checksequenceverify__CHECKSEQUENCEVERIFY)
+{
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_checksequenceverify), (uint32_t)SCRIPT_VERIFY_CHECKSEQUENCEVERIFY);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
@@ -98,7 +103,8 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
         verify_flags_minimaldata |
         verify_flags_discourage_upgradable_nops |
         verify_flags_cleanstack |
-        verify_flags_checklocktimeverify;
+        verify_flags_checklocktimeverify |
+        verify_flags_checksequenceverify;
 
     const uint32_t all_script_flags =
         SCRIPT_VERIFY_NONE |
@@ -111,7 +117,8 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
         SCRIPT_VERIFY_MINIMALDATA |
         SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS |
         SCRIPT_VERIFY_CLEANSTACK |
-        SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
+        SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY |
+        SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
 
     BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(all_verify_flags), all_script_flags);
 }
