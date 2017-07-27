@@ -79,7 +79,7 @@ typedef enum verify_result_type
     verify_result_tx_size_invalid,
     verify_result_tx_input_invalid,
 
-    // BIP65 errors
+    // BIP65/BIP112 (shared codes)
     verify_result_negative_locktime,
     verify_result_unsatisfied_locktime
 } verify_result;
@@ -167,7 +167,12 @@ typedef enum verify_flags_type
     /**
      * Verify CHECKLOCKTIMEVERIFY, see BIP65 for details.
      */
-    verify_flags_checklocktimeverify = (1U << 9)
+    verify_flags_checklocktimeverify = (1U << 9),
+
+    /**
+     * Verify CHECKSEQUENCEVERIFY, see BIP112 for details.
+     */
+    verify_flags_checksequenceverify = (1U << 10)
 } verify_flags;
 
 /**
