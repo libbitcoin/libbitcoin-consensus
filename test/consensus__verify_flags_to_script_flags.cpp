@@ -90,6 +90,31 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__checksequenceverif
     BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_checksequenceverify), (uint32_t)SCRIPT_VERIFY_CHECKSEQUENCEVERIFY);
 }
 
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__witness__WITNESS)
+{
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_witness), (uint32_t)SCRIPT_VERIFY_WITNESS);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__discourage_upgradable_witness_program__DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM)
+{
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_discourage_upgradable_witness_program), (uint32_t)SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__minimal_if__MINIMALIF)
+{
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_minimal_if), (uint32_t)SCRIPT_VERIFY_MINIMALIF);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__null_fail__NULLFAIL)
+{
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_null_fail), (uint32_t)SCRIPT_VERIFY_NULLFAIL);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__witness_public_key_compressed__PUBKEYTYPE)
+{
+    BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(verify_flags_witness_public_key_compressed), (uint32_t)SCRIPT_VERIFY_WITNESS_PUBKEYTYPE);
+}
+
 BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
 {
     const uint32_t all_verify_flags =
@@ -104,7 +129,12 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
         verify_flags_discourage_upgradable_nops |
         verify_flags_cleanstack |
         verify_flags_checklocktimeverify |
-        verify_flags_checksequenceverify;
+        verify_flags_checksequenceverify |
+        verify_flags_witness |
+        verify_flags_discourage_upgradable_witness_program |
+        verify_flags_minimal_if |
+        verify_flags_null_fail |
+        verify_flags_witness_public_key_compressed;
 
     const uint32_t all_script_flags =
         SCRIPT_VERIFY_NONE |
@@ -118,7 +148,12 @@ BOOST_AUTO_TEST_CASE(consensus__verify_flags_to_script_flags__all__all)
         SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_NOPS |
         SCRIPT_VERIFY_CLEANSTACK |
         SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY |
-        SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
+        SCRIPT_VERIFY_CHECKSEQUENCEVERIFY |
+        SCRIPT_VERIFY_WITNESS |
+        SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM |
+        SCRIPT_VERIFY_MINIMALIF |
+        SCRIPT_VERIFY_NULLFAIL |
+        SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
 
     BOOST_REQUIRE_EQUAL(verify_flags_to_script_flags(all_verify_flags), all_script_flags);
 }

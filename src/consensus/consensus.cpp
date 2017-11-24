@@ -154,10 +154,32 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
             return verify_result_pubkeytype;
         case SCRIPT_ERR_CLEANSTACK:
             return verify_result_cleanstack;
+        case SCRIPT_ERR_MINIMALIF:
+            return verify_result_minimalif;
+        case SCRIPT_ERR_SIG_NULLFAIL:
+            return verify_result_sig_nullfail;
 
         // Softfork safeness
         case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS:
             return verify_result_discourage_upgradable_nops;
+        case SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM:
+            return verify_result_discourage_upgradable_witness_program;
+
+        // Segregated witness
+        case SCRIPT_ERR_WITNESS_PROGRAM_WRONG_LENGTH:
+            return verify_result_witness_program_wrong_length;
+        case SCRIPT_ERR_WITNESS_PROGRAM_WITNESS_EMPTY:
+            return verify_result_witness_program_empty_witness;
+        case SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH:
+            return verify_result_witness_program_mismatch;
+        case SCRIPT_ERR_WITNESS_MALLEATED:
+            return verify_result_witness_malleated;
+        case SCRIPT_ERR_WITNESS_MALLEATED_P2SH:
+            return verify_result_witness_malleated_p2sh;
+        case SCRIPT_ERR_WITNESS_UNEXPECTED:
+            return verify_result_witness_unexpected;
+        case SCRIPT_ERR_WITNESS_PUBKEYTYPE:
+            return verify_result_witness_pubkeytype;
 
         // Other
         case SCRIPT_ERR_OP_RETURN:
@@ -198,6 +220,16 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
         script_flags |= SCRIPT_VERIFY_CHECKLOCKTIMEVERIFY;
     if ((flags & verify_flags_checksequenceverify) != 0)
         script_flags |= SCRIPT_VERIFY_CHECKSEQUENCEVERIFY;
+    if ((flags & verify_flags_witness) != 0)
+        script_flags |= SCRIPT_VERIFY_WITNESS;
+    if ((flags & verify_flags_discourage_upgradable_witness_program) != 0)
+        script_flags |= SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM;
+    if ((flags & verify_flags_minimal_if) != 0)
+        script_flags |= SCRIPT_VERIFY_MINIMALIF;
+    if ((flags & verify_flags_null_fail) != 0)
+        script_flags |= SCRIPT_VERIFY_NULLFAIL;
+    if ((flags & verify_flags_witness_public_key_compressed) != 0)
+        script_flags |= SCRIPT_VERIFY_WITNESS_PUBKEYTYPE;
 
     return script_flags;
 }
@@ -239,11 +271,13 @@ verify_result_type verify_script(const unsigned char* transaction,
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
     const auto& input_script = tx->vin[tx_input_index].scriptSig;
+    const auto witness_stack = &tx->vin[tx_input_index].scriptWitness;
 
-    // See libbitcoin-blockchain : validate.cpp :
-    // if (!output_script.run(input.script, current_tx, input_index, flags))...
-    const CScriptWitness* witness = nullptr;
-    VerifyScript(input_script, output_script, witness, script_flags, checker, &error);
+    // See libbitcoin-blockchain : validate_input.cpp :
+    // bc::blockchain::validate_input::verify_script(const transaction& tx,
+    //     uint32_t input_index, uint32_t forks, bool use_libconsensus)...
+    VerifyScript(input_script, output_script, witness_stack, script_flags,
+        checker, &error);
 
     return script_error_to_verify_result(error);
 }
