@@ -66,13 +66,25 @@ typedef enum verify_result_type
     verify_result_sig_nulldummy,
     verify_result_pubkeytype,
     verify_result_cleanstack,
+    verify_result_minimalif,
+    verify_result_sig_nullfail,
 
     // Softfork safeness
     verify_result_discourage_upgradable_nops,
+    verify_result_discourage_upgradable_witness_program,
 
     // Other
     verify_result_op_return,
     verify_result_unknown_error,
+
+    // Segregated witness
+    verify_result_witness_program_wrong_length,
+    verify_result_witness_program_empty_witness,
+    verify_result_witness_program_mismatch,
+    verify_result_witness_malleated,
+    verify_result_witness_malleated_p2sh,
+    verify_result_witness_unexpected,
+    verify_result_witness_pubkeytype,
 
     // augmention codes for tx deserialization
     verify_result_tx_invalid,
@@ -172,7 +184,32 @@ typedef enum verify_flags_type
     /**
      * Verify CHECKSEQUENCEVERIFY, see BIP112 for details.
      */
-    verify_flags_checksequenceverify = (1U << 10)
+    verify_flags_checksequenceverify = (1U << 10),
+
+    /**
+     * SCRIPT_VERIFY_WITNESS (bip141).
+     */
+    verify_flags_witness = (1U << 11),
+
+    /**
+     * SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM (bip141 policy).
+     */
+    verify_flags_discourage_upgradable_witness_program = (1U << 12),
+
+    /**
+     * SCRIPT_VERIFY_MINIMALIF (bip141 p2wsh policy).
+     */
+    verify_flags_minimal_if = (1U << 13),
+
+    /**
+     * SCRIPT_VERIFY_NULLFAIL (bip141 global policy, bip146 soft fork).
+     */
+    verify_flags_null_fail = (1U << 14),
+
+    /**
+     * SCRIPT_VERIFY_WITNESS_PUBKEYTYPE (bip141/bip143 p2wsh/p2wpkh policy).
+     */
+    verify_flags_witness_public_key_compressed = (1U << 15)
 } verify_flags;
 
 /**
