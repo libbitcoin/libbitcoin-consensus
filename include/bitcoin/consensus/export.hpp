@@ -122,7 +122,7 @@ typedef enum verify_flags_type
 
     /**
      * Passing a non-strict-DER signature to a checksig operation causes script
-     * failure (softfork safe, BIP62 rule 1).
+     * failure (softfork safe, BIP62 rule 1, BIP66).
      */
     verify_flags_dersig = (1U << 2),
 
