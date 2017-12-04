@@ -135,7 +135,7 @@ typedef enum verify_flags_type
 
     /**
      * verify dummy stack item consumed by CHECKMULTISIG is of zero-length
-     * (softfork safe, BIP62 rule 7).
+     * (softfork safe, BIP62 rule 7, BIP147).
      */
     verify_flags_nulldummy = (1U << 4),
 
@@ -219,6 +219,7 @@ typedef enum verify_flags_type
  * @param[in]  transaction_size    The byte length of the transaction.
  * @param[in]  prevout_script      The script public key to verify against.
  * @param[in]  prevout_script_size The byte length of the script public key.
+ * @param[in]  prevout_value       The value of the output being spent.
  * @param[in]  tx_input_index      The zero-based index of the transaction
  *                                 input with signature to be verified.
  * @param[in]  flags               Verification constraint flags.
@@ -226,8 +227,8 @@ typedef enum verify_flags_type
  */
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
-    size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags);
+    size_t prevout_script_size, unsigned long long prevout_value,
+    unsigned int tx_input_index, unsigned int flags);
 
 } // namespace consensus
 } // namespace libbitcoin
