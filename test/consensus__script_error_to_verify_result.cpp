@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__EVAL_FALSE__eval_
     BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_EVAL_FALSE), verify_result_eval_false);
 }
 
-// Max size errors
+// Max size errors.
 
 BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SCRIPT_SIZE__script_size)
 {
@@ -180,11 +180,63 @@ BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__CLEANSTACK__clean
     BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_CLEANSTACK), verify_result_cleanstack);
 }
 
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__MINIMALIF__minimalif)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_MINIMALIF), verify_result_minimalif);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result__SIG_NULLFAIL__nullfail)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_SIG_NULLFAIL), verify_result_sig_nullfail);
+}
+
 // Softfork safeness
 
 BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___DISCOURAGE_UPGRADABLE_NOPS___discourage_upgradable_nops)
 {
     BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_DISCOURAGE_UPGRADABLE_NOPS), verify_result_discourage_upgradable_nops);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM___discourage_upgradable_witness_program)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM), verify_result_discourage_upgradable_witness_program);
+}
+
+// Segregated witness
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_PROGRAM_WRONG_LENGTH___witness_program_wrong_length)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PROGRAM_WRONG_LENGTH), verify_result_witness_program_wrong_length);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_PROGRAM_WITNESS_EMPTY___witness_program_empty_witness)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PROGRAM_WITNESS_EMPTY), verify_result_witness_program_empty_witness);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_PROGRAM_MISMATCH___witness_program_mismatch)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PROGRAM_MISMATCH), verify_result_witness_program_mismatch);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_MALLEATED___witness_malleated)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_MALLEATED), verify_result_witness_malleated);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_MALLEATED_P2SH___witness_malleated_p2sh)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_MALLEATED_P2SH), verify_result_witness_malleated_p2sh);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_UNEXPECTED___witness_unexpected)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_UNEXPECTED), verify_result_witness_unexpected);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_error_to_verify_result___WITNESS_PUBKEYTYPE___witness_pubkeytype)
+{
+    BOOST_REQUIRE_EQUAL(script_error_to_verify_result(SCRIPT_ERR_WITNESS_PUBKEYTYPE), verify_result_witness_pubkeytype);
 }
 
 // Other
