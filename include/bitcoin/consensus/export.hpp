@@ -66,13 +66,25 @@ typedef enum verify_result_type
     verify_result_sig_nulldummy,
     verify_result_pubkeytype,
     verify_result_cleanstack,
+    verify_result_minimalif,
+    verify_result_sig_nullfail,
 
     // Softfork safeness
     verify_result_discourage_upgradable_nops,
+    verify_result_discourage_upgradable_witness_program,
 
     // Other
     verify_result_op_return,
     verify_result_unknown_error,
+
+    // Segregated witness
+    verify_result_witness_program_wrong_length,
+    verify_result_witness_program_empty_witness,
+    verify_result_witness_program_mismatch,
+    verify_result_witness_malleated,
+    verify_result_witness_malleated_p2sh,
+    verify_result_witness_unexpected,
+    verify_result_witness_pubkeytype,
 
     // augmention codes for tx deserialization
     verify_result_tx_invalid,
@@ -110,7 +122,7 @@ typedef enum verify_flags_type
 
     /**
      * Passing a non-strict-DER signature to a checksig operation causes script
-     * failure (softfork safe, BIP62 rule 1).
+     * failure (softfork safe, BIP62 rule 1, BIP66).
      */
     verify_flags_dersig = (1U << 2),
 
@@ -123,7 +135,7 @@ typedef enum verify_flags_type
 
     /**
      * verify dummy stack item consumed by CHECKMULTISIG is of zero-length
-     * (softfork safe, BIP62 rule 7).
+     * (softfork safe, BIP62 rule 7, BIP147).
      */
     verify_flags_nulldummy = (1U << 4),
 
@@ -172,7 +184,32 @@ typedef enum verify_flags_type
     /**
      * Verify CHECKSEQUENCEVERIFY, see BIP112 for details.
      */
-    verify_flags_checksequenceverify = (1U << 10)
+    verify_flags_checksequenceverify = (1U << 10),
+
+    /**
+     * SCRIPT_VERIFY_WITNESS (bip141).
+     */
+    verify_flags_witness = (1U << 11),
+
+    /**
+     * SCRIPT_VERIFY_DISCOURAGE_UPGRADABLE_WITNESS_PROGRAM (bip141 policy).
+     */
+    verify_flags_discourage_upgradable_witness_program = (1U << 12),
+
+    /**
+     * SCRIPT_VERIFY_MINIMALIF (bip141 p2wsh policy).
+     */
+    verify_flags_minimal_if = (1U << 13),
+
+    /**
+     * SCRIPT_VERIFY_NULLFAIL (bip141 global policy, bip146 soft fork).
+     */
+    verify_flags_null_fail = (1U << 14),
+
+    /**
+     * SCRIPT_VERIFY_WITNESS_PUBKEYTYPE (bip141/bip143 p2wsh/p2wpkh policy).
+     */
+    verify_flags_witness_public_key_compressed = (1U << 15)
 } verify_flags;
 
 /**
@@ -182,6 +219,7 @@ typedef enum verify_flags_type
  * @param[in]  transaction_size    The byte length of the transaction.
  * @param[in]  prevout_script      The script public key to verify against.
  * @param[in]  prevout_script_size The byte length of the script public key.
+ * @param[in]  prevout_value       The value of the output being spent.
  * @param[in]  tx_input_index      The zero-based index of the transaction
  *                                 input with signature to be verified.
  * @param[in]  flags               Verification constraint flags.
@@ -189,8 +227,8 @@ typedef enum verify_flags_type
  */
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
-    size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags);
+    size_t prevout_script_size, unsigned long long prevout_value,
+    unsigned int tx_input_index, unsigned int flags);
 
 } // namespace consensus
 } // namespace libbitcoin
