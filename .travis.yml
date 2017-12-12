@@ -78,9 +78,9 @@ install:
     - if [[ $GCC                         ]]; then export CC=gcc-4.8; export CXX=g++-4.8; fi
 
     # Download and install packages.
-    - if [[ $OSX   && $CLANG && $STATIC  ]]; then brew unlink swig; brew install swig; fi
-    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew unlink boost; brew install boost; fi
-    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew unlink swig; brew install swig; fi
+    - if [[ $OSX   && $CLANG && $STATIC  ]]; then brew install swig; fi
+    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew install boost; fi
+    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew install swig; fi
 
 script:
 
