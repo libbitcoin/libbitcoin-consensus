@@ -237,9 +237,12 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
 // This function is published. The implementation exposes no satoshi internals.
 verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
-    size_t prevout_script_size, unsigned int tx_input_index,
-    unsigned int flags)
+    size_t prevout_script_size, unsigned long long prevout_value,
+    unsigned int tx_input_index, unsigned int flags)
 {
+    if (prevout_value > INT64_MAX)
+        throw std::invalid_argument("value");
+
     if (transaction_size > 0 && transaction == NULL)
         throw std::invalid_argument("transaction");
 
@@ -265,8 +268,8 @@ verify_result_type verify_script(const unsigned char* transaction,
         return verify_result_tx_size_invalid;
 
     ScriptError_t error;
-    const CAmount amount = 0;
     const auto& tx_ref = *tx;
+    const CAmount amount(static_cast<int64_t>(prevout_value));
     TransactionSignatureChecker checker(&tx_ref, tx_input_index, amount);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
     CScript output_script(prevout_script, prevout_script + prevout_script_size);
