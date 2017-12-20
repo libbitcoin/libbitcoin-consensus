@@ -81,7 +81,6 @@ install:
 
     # Download and install packages.
     - if [[ $OSX   && $CLANG && $STATIC  ]]; then brew install swig; fi
-    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew install boost; fi
     - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew install swig; fi
 
 script:
