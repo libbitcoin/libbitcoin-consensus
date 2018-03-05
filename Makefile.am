@@ -71,13 +71,13 @@ src_libbitcoin_consensus_la_SOURCES = \
     src/consensus/consensus.cpp \
     src/consensus/consensus.hpp
 
-# local: test/libbitcoin_consensus_test
+# local: test/libbitcoin-consensus-test
 #------------------------------------------------------------------------------
 if WITH_TESTS
 
-TESTS = libbitcoin_consensus_test_runner.sh
+TESTS = libbitcoin-consensus-test_runner.sh
 
-check_PROGRAMS = test/libbitcoin_consensus_test
+check_PROGRAMS = test/libbitcoin-consensus-test
 test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${boost_CPPFLAGS} ${secp256k1_CPPFLAGS}
 test_libbitcoin_consensus_test_LDFLAGS = ${boost_LDFLAGS}
 test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${boost_unit_test_framework_LIBS} ${secp256k1_LIBS}
