@@ -19,16 +19,20 @@ echo Generating consensus bindings...
 cd `dirname "$0"`
 
 # Clean and make required directories.
-rm -rf "bindings/java/wrap"
-rm -rf "bindings/java/proxy/org/libbitcoin/consensus"
-rm -rf "bindings/python/wrap"
-rm -rf "bindings/python/proxy"
+rm -rf "bindings/target/generated-sources/src/main/cpp"
+rm -rf "bindings/target/generated-sources/src/main/java/org/libbitcoin/consensus"
+rm -rf "bindings/target/generated-sources/src/main/python"
+rm -rf "bindings/target/generated-sources/src/main/python3"
 
-mkdir -p "bindings/java/wrap"
-mkdir -p "bindings/java/proxy/org/libbitcoin/consensus"
-mkdir -p "bindings/python/wrap"
-mkdir -p "bindings/python/proxy"
+mkdir -p "bindings/target/generated-sources/src/main/java/org/libbitcoin/consensus"
+mkdir -p "bindings/target/generated-sources/src/main/cpp/java-wrap"
+mkdir -p "bindings/target/generated-sources/src/main/python"
+mkdir -p "bindings/target/generated-sources/src/main/cpp/python-wrap"
+mkdir -p "bindings/target/generated-sources/src/main/python3"
+mkdir -p "bindings/target/generated-sources/src/main/cpp/python3-wrap"
 
 # Generate bindings.
-swig -c++ -java -outdir "bindings/java/proxy/org/libbitcoin/consensus" -o "bindings/java/wrap/consensus.cpp" "bindings/consensus.swg"
-swig -c++ -python -outdir "bindings/python/proxy" -o "bindings/python/wrap/consensus.cpp" "bindings/consensus.swg"
+#swig -c++ -debug-tmsearch -java -package org.libbitcoin.consensus -outdir "bindings/target/generated-sources/src/main/java/org/libbitcoin/consensus" -o "bindings/target/generated-sources/src/main/cpp/java-wrap/consensus.cpp" "bindings/src/main/swig/consensus-java.i"
+swig -c++ -java -package org.libbitcoin.consensus -outdir "bindings/target/generated-sources/src/main/java/org/libbitcoin/consensus" -o "bindings/target/generated-sources/src/main/cpp/java-wrap/consensus.cpp" "bindings/src/main/swig/consensus-java.i"
+swig -c++ -python -py3 -outdir "bindings/target/generated-sources/src/main/python3" -o "bindings/target/generated-sources/src/main/cpp/python3-wrap/consensus.cpp" "bindings/src/main/swig/consensus.i"
+swig -c++ -python -outdir "bindings/target/generated-sources/src/main/python" -o "bindings/target/generated-sources/src/main/cpp/python-wrap/consensus.cpp" "bindings/src/main/swig/consensus.i"
