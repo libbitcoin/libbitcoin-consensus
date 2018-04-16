@@ -225,10 +225,13 @@ typedef enum verify_flags_type
  * @param[in]  flags               Verification constraint flags.
  * @returns                        A script verification result code.
  */
+ //#pragma once
+ //extern "C" {
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned long long prevout_value,
     unsigned int tx_input_index, unsigned int flags);
+//    }
 
 } // namespace consensus
 } // namespace libbitcoin
