@@ -10,6 +10,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{D282EF8C-6217-483C-0000-000000000000}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\.deps">
+      <UniqueIdentifier>{D282EF8C-6217-483C-0000-000000000001}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\test\consensus__script_error_to_verify_result.cpp">
