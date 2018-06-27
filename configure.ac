@@ -355,7 +355,7 @@ AC_CHECK_HEADERS([sys/endian.h],
 AS_CASE([${CC}], [*],
     [AX_BOOST_BASE([1.62.0],
         [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
-         AC_SUBST([boost_SYS_CPPFLAGS], [`echo ${BOOST_CPPFLAGS} | $SED s/-I/-isystem/g`])
+         AC_SUBST([boost_SYS_CPPFLAGS], [`echo ${BOOST_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
          AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
          AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
          AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
@@ -372,7 +372,7 @@ AS_CASE([${with_tests}], [yes],
 PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1])
 AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.0.1'])
 AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
-AC_SUBST([secp256k1_SYS_CPPFLAGS], [`echo ${secp256k1_CFLAGS} | $SED s/-I/-isystem/g`])
+AC_SUBST([secp256k1_SYS_CPPFLAGS], [`echo ${secp256k1_CFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
 AC_MSG_NOTICE([secp256k1_CPPFLAGS : ${secp256k1_CPPFLAGS}])
 AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])
 
@@ -445,6 +445,12 @@ AS_CASE([${CC}], [*],
 AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wno-reorder],
         [CXXFLAGS="$CXXFLAGS -Wno-reorder"])])
+
+# Suppress warning for incomplete field initialization.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-missing-field-initializers],
+        [CXXFLAGS="$CXXFLAGS -Wno-missing-field-initializers"])])
 
 # Conform to style.
 #------------------------------------------------------------------------------
