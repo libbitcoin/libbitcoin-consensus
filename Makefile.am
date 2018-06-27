@@ -32,7 +32,7 @@ doc_DATA = \
 # src/libbitcoin-consensus.la => ${libdir}
 #------------------------------------------------------------------------------
 lib_LTLIBRARIES = src/libbitcoin-consensus.la
-src_libbitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${secp256k1_CPPFLAGS}
+src_libbitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${secp256k1_SYS_CPPFLAGS}
 src_libbitcoin_consensus_la_LIBADD = ${secp256k1_LIBS}
 src_libbitcoin_consensus_la_SOURCES = \
     src/clone/amount.h \
@@ -78,7 +78,7 @@ if WITH_TESTS
 TESTS = libbitcoin-consensus-test_runner.sh
 
 check_PROGRAMS = test/libbitcoin-consensus-test
-test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${boost_CPPFLAGS} ${secp256k1_CPPFLAGS}
+test_libbitcoin_consensus_test_CPPFLAGS = -I${srcdir}/include -I${srcdir}/src -I${srcdir}/src/clone ${boost_SYS_CPPFLAGS} ${secp256k1_SYS_CPPFLAGS}
 test_libbitcoin_consensus_test_LDFLAGS = ${boost_LDFLAGS}
 test_libbitcoin_consensus_test_LDADD = src/libbitcoin-consensus.la ${boost_unit_test_framework_LIBS} ${secp256k1_LIBS}
 test_libbitcoin_consensus_test_SOURCES = \
@@ -107,7 +107,7 @@ include_bitcoin_consensus_HEADERS = \
 if WITH_JAVA
 
 lib_LTLIBRARIES += bindings/java/wrap/libbitcoin-consensus-jni.la
-bindings_java_wrap_libbitcoin_consensus_jni_la_CPPFLAGS = -I${srcdir}/include ${java_CPPFLAGS} ${secp256k1_CPPFLAGS}
+bindings_java_wrap_libbitcoin_consensus_jni_la_CPPFLAGS = -I${srcdir}/include ${java_SYS_CPPFLAGS} ${secp256k1_SYS_CPPFLAGS}
 bindings_java_wrap_libbitcoin_consensus_jni_la_LIBADD = src/libbitcoin-consensus.la ${secp256k1_LIBS}
 bindings_java_wrap_libbitcoin_consensus_jni_la_SOURCES = \
     bindings/java/wrap/consensus.cpp
@@ -152,7 +152,7 @@ endif WITH_JAVA
 if WITH_PYTHON
 
 pkgpyexec_LTLIBRARIES = bindings/python/wrap/_bitcoin-consensus.la
-bindings_python_wrap__bitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include ${python_CPPFLAGS} ${secp256k1_CPPFLAGS}
+bindings_python_wrap__bitcoin_consensus_la_CPPFLAGS = -I${srcdir}/include ${python_SYS_CPPFLAGS} ${secp256k1_SYS_CPPFLAGS}
 bindings_python_wrap__bitcoin_consensus_la_LDFLAGS = -module
 bindings_python_wrap__bitcoin_consensus_la_LIBADD = src/libbitcoin-consensus.la ${secp256k1_LIBS}
 bindings_python_wrap__bitcoin_consensus_la_SOURCES = \
