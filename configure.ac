@@ -44,6 +44,9 @@ AC_PROG_CXX
 # Enable shared libraries if available, and static if they don't conflict.
 AC_PROG_LIBTOOL
 
+# Enable sed for substitution.
+AC_PROG_SED
+
 # Compute the canonical host-system type variable host, including host_os.
 AC_CANONICAL_HOST
 
@@ -52,6 +55,9 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 # Check for pkg-config.
 PKG_PROG_PKG_CONFIG
+AS_IF([test -n "$PKG_CONFIG"], [],
+    [AC_MSG_ERROR([pkg-config is required but was not found.])])
+
 
 # Declare environment variables that affect the build.
 #------------------------------------------------------------------------------
@@ -124,6 +130,16 @@ AS_CASE([${enable_ndebug}], [yes], AC_DEFINE([NDEBUG]))
 # Inherit --enable-shared and define BOOST_TEST_DYN_LINK.
 #------------------------------------------------------------------------------
 AS_CASE([${enable_shared}], [yes], AC_DEFINE([BOOST_TEST_DYN_LINK]))
+
+# Implement --enable-isystem.
+#------------------------------------------------------------------------------
+AC_MSG_CHECKING([--enable-isystem option])
+AC_ARG_ENABLE([isystem],
+    AS_HELP_STRING([--enable-isystem],
+        [Substitute -isystem for -I in dependencies. @<:@default=no@:>@]),
+    [enable_isystem=$enableval],
+    [enable_isystem=no])
+AC_MSG_RESULT([$enable_isystem])
 
 
 # Set preprocessor defines.
@@ -357,6 +373,12 @@ AS_CASE([${CC}], [*],
          AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
         [AC_MSG_ERROR([Boost 1.62.0 or later is required but was not found.])])])
 
+AS_CASE([${enable_isystem}],[yes],
+    [AC_SUBST([boost_BUILD_CPPFLAGS], [${boost_ISYS_CPPFLAGS}])],
+    [AC_SUBST([boost_BUILD_CPPFLAGS], [${boost_CPPFLAGS}])])
+
+AC_MSG_NOTICE([boost_BUILD_CPPFLAGS : ${boost_BUILD_CPPFLAGS}])
+
 AS_CASE([${with_tests}], [yes],
     [AX_BOOST_UNIT_TEST_FRAMEWORK
      AC_SUBST([boost_unit_test_framework_LIBS], [${BOOST_UNIT_TEST_FRAMEWORK_LIB}])
@@ -365,11 +387,24 @@ AS_CASE([${with_tests}], [yes],
 
 # Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
-PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1])
+PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1],
+    [secp256k1_INCLUDEDIR="`$PKG_CONFIG --variable=includedir "libsecp256k1 >= 0.0.1" 2>/dev/null`"
+     secp256k1_OTHER_CFLAGS="`$PKG_CONFIG --cflags-only-other "libsecp256k1 >= 0.0.1" 2>/dev/null`"],
+    [secp256k1_INCLUDEDIR=""
+     secp256k1_OTHER_CFLAGS=""])
 AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.0.1'])
 AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
+AS_IF([test x${secp256k1_INCLUDEDIR} != "x"],
+    [AC_SUBST([secp256k1_ISYS_CPPFLAGS], [-isystem${secp256k1_INCLUDEDIR} ${secp256k1_OTHER_CFLAGS}])],
+    [AC_SUBST([secp256k1_ISYS_CPPFLAGS], [${secp256k1_OTHER_CFLAGS}])])
 AC_MSG_NOTICE([secp256k1_CPPFLAGS : ${secp256k1_CPPFLAGS}])
 AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])
+
+AS_CASE([${enable_isystem}],[yes],
+    [AC_SUBST([secp256k1_BUILD_CPPFLAGS], [${secp256k1_ISYS_CPPFLAGS}])],
+    [AC_SUBST([secp256k1_BUILD_CPPFLAGS], [${secp256k1_CPPFLAGS}])])
+
+AC_MSG_NOTICE([secp256k1_BUILD_CPPFLAGS : ${secp256k1_BUILD_CPPFLAGS}])
 
 # Require java if --with_java and output ${JAR/JAVAC/javadir} and ${java_CPPFLAGS}.
 #------------------------------------------------------------------------------
@@ -401,11 +436,23 @@ AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wall],
         [CFLAGS="$CFLAGS -Wall"])])
 
+# Warn on all stuff.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wall],
+        [CXXFLAGS="$CXXFLAGS -Wall"])])
+
 # Warn on extra stuff.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wextra],
         [CFLAGS="$CFLAGS -Wextra"])])
+
+# Warn on extra stuff.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wextra],
+        [CXXFLAGS="$CXXFLAGS -Wextra"])])
 
 # Be really annoying.
 #------------------------------------------------------------------------------
@@ -414,6 +461,26 @@ AS_CASE([${CC}], [*],
         [CFLAGS="$CFLAGS -Wpedantic"],
         [AX_CHECK_COMPILE_FLAG([-pedantic],
             [CFLAGS="$CFLAGS -pedantic"])])])
+
+# Be really annoying.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wpedantic],
+        [CXXFLAGS="$CXXFLAGS -Wpedantic"],
+        [AX_CHECK_COMPILE_FLAG([-pedantic],
+            [CXXFLAGS="$CXXFLAGS -pedantic"])])])
+
+# Disallow warning on style order of declarations.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-reorder],
+        [CXXFLAGS="$CXXFLAGS -Wno-reorder"])])
+
+# Suppress warning for incomplete field initialization.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-missing-field-initializers],
+        [CXXFLAGS="$CXXFLAGS -Wno-missing-field-initializers"])])
 
 # Conform to style.
 #------------------------------------------------------------------------------
@@ -438,12 +505,6 @@ AS_CASE([${CC}], [*],
 AS_CASE([${CC}], [*],
     [AX_CHECK_LINK_FLAG([-fstack-protector-all],
         [LDFLAGS="$LDFLAGS -fstack-protector-all"])])
-
-# Hide internal functions from external libs. Enabled in gcc only.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*gcc*],
-    [AX_CHECK_COMPILE_FLAG([-fvisibility-hidden],
-        [CXXFLAGS="$CXXFLAGS -fvisibility-hidden"])])
 
 # Hide inlines from external libs. Enabled in gcc only.
 #------------------------------------------------------------------------------
