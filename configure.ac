@@ -411,7 +411,14 @@ AC_MSG_NOTICE([secp256k1_BUILD_CPPFLAGS : ${secp256k1_BUILD_CPPFLAGS}])
 AS_CASE([${with_java}], [yes],
     [AX_JAVA_DEVEL
      AC_SUBST([java_CPPFLAGS], [${JAVA_CPPFLAGS}])
+     AC_SUBST([java_ISYS_CPPFLAGS], [`echo ${JAVA_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
      AC_MSG_NOTICE([java_CPPFLAGS : ${java_CPPFLAGS}])])
+
+AS_CASE([${enable_isystem}],[yes],
+    [AC_SUBST([java_BUILD_CPPFLAGS], [${java_ISYS_CPPFLAGS}])],
+    [AC_SUBST([java_BUILD_CPPFLAGS], [${java_CPPFLAGS}])])
+
+AC_MSG_NOTICE([java_BUILD_CPPFLAGS : ${java_BUILD_CPPFLAGS}])
 
 # Require python of at least version 2.7 if --with_python and output ${python_CPPFLAGS}.
 #------------------------------------------------------------------------------
@@ -419,7 +426,14 @@ AS_CASE([${with_python}], [yes],
     [AM_PATH_PYTHON([2.7],
         [AX_PYTHON_DEVEL
          AC_SUBST([python_CPPFLAGS], [${PYTHON_CPPFLAGS}])
+         AC_SUBST([python_ISYS_CPPFLAGS], [`echo ${PYTHON_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
          AC_MSG_NOTICE([python_CPPFLAGS : ${python_CPPFLAGS}])])])
+
+AS_CASE([${enable_isystem}],[yes],
+    [AC_SUBST([python_BUILD_CPPFLAGS], [${python_ISYS_CPPFLAGS}])],
+    [AC_SUBST([python_BUILD_CPPFLAGS], [${python_CPPFLAGS}])])
+
+AC_MSG_NOTICE([python_BUILD_CPPFLAGS : ${python_BUILD_CPPFLAGS}])
 
 
 # Set flags.
