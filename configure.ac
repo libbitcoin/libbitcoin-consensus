@@ -368,8 +368,10 @@ AC_CHECK_HEADERS([sys/endian.h],
 AS_CASE([${CC}], [*],
     [AX_BOOST_BASE([1.62.0],
         [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
+         AC_SUBST([boost_ISYS_CPPFLAGS], [`echo ${BOOST_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
          AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
          AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
+         AC_MSG_NOTICE([boost_ISYS_CPPFLAGS : ${boost_ISYS_CPPFLAGS}])
          AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
         [AC_MSG_ERROR([Boost 1.62.0 or later is required but was not found.])])])
 
@@ -395,9 +397,12 @@ PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1],
 AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.0.1'])
 AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
 AS_IF([test x${secp256k1_INCLUDEDIR} != "x"],
-    [AC_SUBST([secp256k1_ISYS_CPPFLAGS], [-isystem${secp256k1_INCLUDEDIR} ${secp256k1_OTHER_CFLAGS}])],
+    [AC_SUBST([secp256k1_ISYS_CPPFLAGS], ["-isystem${secp256k1_INCLUDEDIR} ${secp256k1_OTHER_CFLAGS}"])],
     [AC_SUBST([secp256k1_ISYS_CPPFLAGS], [${secp256k1_OTHER_CFLAGS}])])
 AC_MSG_NOTICE([secp256k1_CPPFLAGS : ${secp256k1_CPPFLAGS}])
+AC_MSG_NOTICE([secp256k1_ISYS_CPPFLAGS : ${secp256k1_ISYS_CPPFLAGS}])
+AC_MSG_NOTICE([secp256k1_OTHER_CFLAGS : ${secp256k1_OTHER_CFLAGS}])
+AC_MSG_NOTICE([secp256k1_INCLUDEDIR : ${secp256k1_INCLUDEDIR}])
 AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])
 
 AS_CASE([${enable_isystem}],[yes],
@@ -412,7 +417,8 @@ AS_CASE([${with_java}], [yes],
     [AX_JAVA_DEVEL
      AC_SUBST([java_CPPFLAGS], [${JAVA_CPPFLAGS}])
      AC_SUBST([java_ISYS_CPPFLAGS], [`echo ${JAVA_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
-     AC_MSG_NOTICE([java_CPPFLAGS : ${java_CPPFLAGS}])])
+     AC_MSG_NOTICE([java_CPPFLAGS : ${java_CPPFLAGS}])
+     AC_MSG_NOTICE([java_ISYS_CPPFLAGS : ${java_ISYS_CPPFLAGS}])])
 
 AS_CASE([${enable_isystem}],[yes],
     [AC_SUBST([java_BUILD_CPPFLAGS], [${java_ISYS_CPPFLAGS}])],
@@ -427,7 +433,8 @@ AS_CASE([${with_python}], [yes],
         [AX_PYTHON_DEVEL
          AC_SUBST([python_CPPFLAGS], [${PYTHON_CPPFLAGS}])
          AC_SUBST([python_ISYS_CPPFLAGS], [`echo ${PYTHON_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
-         AC_MSG_NOTICE([python_CPPFLAGS : ${python_CPPFLAGS}])])])
+         AC_MSG_NOTICE([python_CPPFLAGS : ${python_CPPFLAGS}])])
+         AC_MSG_NOTICE([python_ISYS_CPPFLAGS : ${python_ISYS_CPPFLAGS}])])
 
 AS_CASE([${enable_isystem}],[yes],
     [AC_SUBST([python_BUILD_CPPFLAGS], [${python_ISYS_CPPFLAGS}])],
