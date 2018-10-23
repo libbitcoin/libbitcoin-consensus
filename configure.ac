@@ -1,5 +1,5 @@
 ###############################################################################
-#  Copyright (c) 2014-2015 libbitcoin-consensus developers (see COPYING).
+#  Copyright (c) 2014-2018 libbitcoin-consensus developers (see COPYING).
 #
 #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
@@ -36,6 +36,7 @@ AC_USE_SYSTEM_EXTENSIONS
 AM_PROG_AR
 
 # Initialize libtool.
+LT_PREREQ(2.4.2)
 LT_INIT
 
 # Determine C++ compiler to use.
@@ -58,6 +59,9 @@ PKG_PROG_PKG_CONFIG
 AS_IF([test -n "$PKG_CONFIG"], [],
     [AC_MSG_ERROR([pkg-config is required but was not found.])])
 
+AS_CASE([${enable_static}],
+    [yes], [AC_SUBST([PKG_CONFIG], ["$PKG_CONFIG --static"])],
+    [])
 
 # Declare environment variables that affect the build.
 #------------------------------------------------------------------------------
@@ -93,28 +97,6 @@ AC_ARG_WITH([tests],
     [with_tests=yes])
 AC_MSG_RESULT([$with_tests])
 AM_CONDITIONAL([WITH_TESTS], [test x$with_tests != xno])
-
-# Implement --with-java and declare WITH_JAVA.
-#------------------------------------------------------------------------------
-AC_MSG_CHECKING([--with-java option])
-AC_ARG_WITH([java],
-    AS_HELP_STRING([--with-java],
-        [Compile the Java bindings. @<:@default=no@:>@]),
-    [with_java=$withval],
-    [with_java=no])
-AC_MSG_RESULT([$with_java])
-AM_CONDITIONAL([WITH_JAVA], [test x$with_java != xno])
-
-# Implement --with-python and declare WITH_PYTHON.
-#------------------------------------------------------------------------------
-AC_MSG_CHECKING([--with-python option])
-AC_ARG_WITH([python],
-    AS_HELP_STRING([--with-python],
-        [Compile the Python bindings. @<:@default=no@:>@]),
-    [with_python=$withval],
-    [with_python=no])
-AC_MSG_RESULT([$with_python])
-AM_CONDITIONAL([WITH_PYTHON], [test x$with_python != xno])
 
 # Implement --enable-ndebug and define NDEBUG.
 #------------------------------------------------------------------------------
@@ -410,37 +392,6 @@ AS_CASE([${enable_isystem}],[yes],
     [AC_SUBST([secp256k1_BUILD_CPPFLAGS], [${secp256k1_CPPFLAGS}])])
 
 AC_MSG_NOTICE([secp256k1_BUILD_CPPFLAGS : ${secp256k1_BUILD_CPPFLAGS}])
-
-# Require java if --with_java and output ${JAR/JAVAC/javadir} and ${java_CPPFLAGS}.
-#------------------------------------------------------------------------------
-AS_CASE([${with_java}], [yes],
-    [AX_JAVA_DEVEL
-     AC_SUBST([java_CPPFLAGS], [${JAVA_CPPFLAGS}])
-     AC_SUBST([java_ISYS_CPPFLAGS], [`echo ${JAVA_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
-     AC_MSG_NOTICE([java_CPPFLAGS : ${java_CPPFLAGS}])
-     AC_MSG_NOTICE([java_ISYS_CPPFLAGS : ${java_ISYS_CPPFLAGS}])])
-
-AS_CASE([${enable_isystem}],[yes],
-    [AC_SUBST([java_BUILD_CPPFLAGS], [${java_ISYS_CPPFLAGS}])],
-    [AC_SUBST([java_BUILD_CPPFLAGS], [${java_CPPFLAGS}])])
-
-AC_MSG_NOTICE([java_BUILD_CPPFLAGS : ${java_BUILD_CPPFLAGS}])
-
-# Require python of at least version 2.7 if --with_python and output ${python_CPPFLAGS}.
-#------------------------------------------------------------------------------
-AS_CASE([${with_python}], [yes],
-    [AM_PATH_PYTHON([2.7],
-        [AX_PYTHON_DEVEL
-         AC_SUBST([python_CPPFLAGS], [${PYTHON_CPPFLAGS}])
-         AC_SUBST([python_ISYS_CPPFLAGS], [`echo ${PYTHON_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
-         AC_MSG_NOTICE([python_CPPFLAGS : ${python_CPPFLAGS}])])
-         AC_MSG_NOTICE([python_ISYS_CPPFLAGS : ${python_ISYS_CPPFLAGS}])])
-
-AS_CASE([${enable_isystem}],[yes],
-    [AC_SUBST([python_BUILD_CPPFLAGS], [${python_ISYS_CPPFLAGS}])],
-    [AC_SUBST([python_BUILD_CPPFLAGS], [${python_CPPFLAGS}])])
-
-AC_MSG_NOTICE([python_BUILD_CPPFLAGS : ${python_BUILD_CPPFLAGS}])
 
 
 # Set flags.

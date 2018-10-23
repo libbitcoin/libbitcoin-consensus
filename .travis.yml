@@ -1,5 +1,5 @@
 ###############################################################################
-#  Copyright (c) 2014-2015 libbitcoin-consensus developers (see COPYING).
+#  Copyright (c) 2014-2018 libbitcoin-consensus developers (see COPYING).
 #
 #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
@@ -36,7 +36,6 @@ matrix:
                 - sourceline: 'ppa:h-rayflood/llvm'
               packages:
                 - clang-3.4
-                - swig
         - os: linux
           compiler: gcc
           env: LINK=dynamic
@@ -44,14 +43,9 @@ matrix:
             apt:
               packages:
                 - g++-4.8
-                - swig
         - os: linux
           compiler: gcc
           env: LINK=static
-          addons:
-            apt:
-              packages:
-                - swig
     fast_finish:
         - true
 
@@ -79,18 +73,16 @@ install:
     - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then export CC=gcc-4.8; export CXX=g++-4.8; fi
 
     # Download and install packages.
-    - if [[ $OSX   && $CLANG && $STATIC  ]]; then brew install swig; fi
-    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew install swig; fi
 
 script:
 
     # Download and build libbitcoin-consensus and all dependencies.
-    - if [[ $OSX   && $CLANG && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --with-java --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix; fi
-    - if [[ $LINUX && $CLANG && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --with-python --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os' CXXFLAGS='-Os'; fi
-    - if [[ $LINUX && $GCC   && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --with-java --disable-shared --build-boost --build-dir=my-build --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Og -g --coverage' CXXFLAGS='-Og -g --coverage'; fi
-    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-static --with-python; fi
+    - if [[ $OSX   && $CLANG && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix; fi
+    - if [[ $LINUX && $CLANG && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os' CXXFLAGS='-Os'; fi
+    - if [[ $LINUX && $GCC   && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-shared --build-boost --build-dir=my-build --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Og -g --coverage' CXXFLAGS='-Og -g --coverage'; fi
+    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-static; fi
     - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --build-boost --disable-ndebug --disable-static --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os' CXXFLAGS='-Os'; fi
-    - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --with-java --with-python --disable-static --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os -s' CXXFLAGS='-Os -s'; fi
+    - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-static --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os -s' CXXFLAGS='-Os -s'; fi
 
 after_success:
 
