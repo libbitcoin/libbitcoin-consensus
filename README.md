@@ -20,7 +20,7 @@ $ sudo ldconfig
 
 ## Dependencies
 
-This library has no dependencies, although the test cases have a boost dependency.
+This library requires [libsecp256k1](https://github.com/libbitcoin/secp256k1). The test cases have a boost dependency.
 
 ## Configure Options
 
