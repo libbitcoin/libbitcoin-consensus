@@ -264,7 +264,7 @@ verify_result_type verify_script(const unsigned char* transaction,
     if (tx_input_index >= tx->vin.size())
         return verify_result_tx_input_invalid;
 
-    if (GetSerializeSize(*tx, SER_NETWORK, PROTOCOL_VERSION) != transaction_size)
+    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction_size)
         return verify_result_tx_size_invalid;
 
     ScriptError_t error;
