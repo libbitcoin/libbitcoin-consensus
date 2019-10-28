@@ -84,7 +84,7 @@
     <ClCompile Include="..\..\..\..\src\clone\script\interpreter.cpp" />
     <ClCompile Include="..\..\..\..\src\clone\script\script.cpp" />
     <ClCompile Include="..\..\..\..\src\clone\uint256.cpp" />
-    <ClCompile Include="..\..\..\..\src\clone\utilstrencodings.cpp" />
+    <ClCompile Include="..\..\..\..\src\clone\util\strencodings.cpp" />
     <ClCompile Include="..\..\..\..\src\consensus\consensus.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +93,7 @@
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\export.hpp" />
     <ClInclude Include="..\..\..\..\include\bitcoin\consensus\version.hpp" />
     <ClInclude Include="..\..\..\..\src\clone\amount.h" />
+    <ClInclude Include="..\..\..\..\src\clone\attributes.h" />
     <ClInclude Include="..\..\..\..\src\clone\compat\byteswap.h" />
     <ClInclude Include="..\..\..\..\src\clone\compat\endian.h" />
     <ClInclude Include="..\..\..\..\src\clone\crypto\common.h" />
@@ -109,9 +110,10 @@
     <ClInclude Include="..\..\..\..\src\clone\script\script.h" />
     <ClInclude Include="..\..\..\..\src\clone\script\script_error.h" />
     <ClInclude Include="..\..\..\..\src\clone\serialize.h" />
+    <ClInclude Include="..\..\..\..\src\clone\span.h" />
     <ClInclude Include="..\..\..\..\src\clone\tinyformat.h" />
     <ClInclude Include="..\..\..\..\src\clone\uint256.h" />
-    <ClInclude Include="..\..\..\..\src\clone\utilstrencodings.h" />
+    <ClInclude Include="..\..\..\..\src\clone\util\strencodings.h" />
     <ClInclude Include="..\..\..\..\src\clone\version.h" />
     <ClInclude Include="..\..\..\..\src\consensus\consensus.hpp" />
     <ClInclude Include="..\..\resource.h" />
@@ -125,12 +127,12 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(NuGetPackageRoot)secp256k1_vc120.0.1.0.16\build\native\secp256k1_vc120.targets" Condition="Exists('$(NuGetPackageRoot)secp256k1_vc120.0.1.0.16\build\native\secp256k1_vc120.targets')" />
+    <Import Project="$(NuGetPackageRoot)secp256k1_vc120.0.1.0.17\build\native\secp256k1_vc120.targets" Condition="Exists('$(NuGetPackageRoot)secp256k1_vc120.0.1.0.17\build\native\secp256k1_vc120.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('$(NuGetPackageRoot)secp256k1_vc120.0.1.0.16\build\native\secp256k1_vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackageRoot)secp256k1_vc120.0.1.0.16\build\native\secp256k1_vc120.targets'))" />
+    <Error Condition="!Exists('$(NuGetPackageRoot)secp256k1_vc120.0.1.0.17\build\native\secp256k1_vc120.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(NuGetPackageRoot)secp256k1_vc120.0.1.0.17\build\native\secp256k1_vc120.targets'))" />
   </Target>
 </Project>

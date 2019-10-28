@@ -322,7 +322,8 @@ BOOST_OPTIONS=(
 #------------------------------------------------------------------------------
 SECP256K1_OPTIONS=(
 "--disable-tests" \
-"--enable-module-recovery")
+"--enable-module-recovery" \
+"--enable-endomorphism")
 
 # Define bitcoin-consensus options.
 #------------------------------------------------------------------------------
@@ -683,7 +684,7 @@ build_from_travis()
 build_all()
 {
     build_from_tarball_boost "$BOOST_URL" "$BOOST_ARCHIVE" bzip2 . "$PARALLEL" "$BUILD_BOOST" "${BOOST_OPTIONS[@]}"
-    build_from_github libbitcoin secp256k1 version5 "$PARALLEL" "${SECP256K1_OPTIONS[@]}" "$@"
+    build_from_github libbitcoin secp256k1 version6 "$PARALLEL" "${SECP256K1_OPTIONS[@]}" "$@"
     build_from_travis libbitcoin libbitcoin-consensus master "$PARALLEL" "${BITCOIN_CONSENSUS_OPTIONS[@]}" "$@"
 }
 
