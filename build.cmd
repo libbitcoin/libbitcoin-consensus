@@ -1,5 +1,5 @@
 REM ###########################################################################
-REM #  Copyright (c) 2014-2019 libbitcoin-consensus developers (see COPYING).
+REM #  Copyright (c) 2014-2020 libbitcoin-consensus developers (see COPYING).
 REM #
 REM #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 REM #

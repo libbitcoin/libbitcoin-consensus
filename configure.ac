@@ -1,5 +1,5 @@
 ###############################################################################
-#  Copyright (c) 2014-2019 libbitcoin-consensus developers (see COPYING).
+#  Copyright (c) 2014-2020 libbitcoin-consensus developers (see COPYING).
 #
 #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
@@ -374,8 +374,7 @@ AS_CASE([${with_tests}], [yes],
 PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1],
     [secp256k1_INCLUDEDIR="`$PKG_CONFIG --variable=includedir "libsecp256k1 >= 0.0.1" 2>/dev/null`"
      secp256k1_OTHER_CFLAGS="`$PKG_CONFIG --cflags-only-other "libsecp256k1 >= 0.0.1" 2>/dev/null`"],
-    [secp256k1_INCLUDEDIR=""
-     secp256k1_OTHER_CFLAGS=""])
+    [AC_MSG_ERROR([libsecp256k1 >= 0.0.1 is required but was not found.])])
 AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.0.1'])
 AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
 AS_IF([test x${secp256k1_INCLUDEDIR} != "x"],
