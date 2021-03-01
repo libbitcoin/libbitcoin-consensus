@@ -336,22 +336,22 @@ endif()
 # Define project common library directories
 #------------------------------------------------------------------------------
 if (BUILD_SHARED_LIBS)
-    link_directories( 
+    link_directories(
         ${secp256k1_LIBRARY_DIRS} )
 else()
-    link_directories( 
+    link_directories(
         ${secp256k1_STATIC_LIBRARY_DIRS} )
 endif()
 
 # Define project common libraries/linker flags.
 #------------------------------------------------------------------------------
 if (BUILD_SHARED_LIBS)
-    link_libraries( 
+    link_libraries(
         "-fstack-protector"
         "-fstack-protector-all"
         ${secp256k1_LIBRARIES} )
 else()
-    link_libraries( 
+    link_libraries(
         "-fstack-protector"
         "-fstack-protector-all"
         ${secp256k1_STATIC_LIBRARIES} )
