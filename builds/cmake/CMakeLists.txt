@@ -305,7 +305,7 @@ endif()
 
 # Find boost
 #------------------------------------------------------------------------------
-find_package( Boost 1.62.0 REQUIRED COMPONENTS
+find_package( Boost 1.72.0 REQUIRED COMPONENTS
     unit_test_framework )
 
 set( boost_unit_test_framework_LIBS "-lboost_unit_test_framework" )
@@ -374,6 +374,7 @@ add_library( ${CANONICAL_LIB_NAME}
     "../../src/clone/uint256.h"
     "../../src/clone/version.h"
     "../../src/clone/compat/byteswap.h"
+    "../../src/clone/compat/cpuid.h"
     "../../src/clone/compat/endian.h"
     "../../src/clone/crypto/common.h"
     "../../src/clone/crypto/hmac_sha512.cpp"
@@ -395,6 +396,7 @@ add_library( ${CANONICAL_LIB_NAME}
     "../../src/clone/script/script_error.h"
     "../../src/clone/util/strencodings.cpp"
     "../../src/clone/util/strencodings.h"
+    "../../src/clone/util/string.h"
     "../../src/consensus/consensus.cpp"
     "../../src/consensus/consensus.hpp" )
 

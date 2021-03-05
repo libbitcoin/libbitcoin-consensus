@@ -49,6 +49,7 @@ src_libbitcoin_consensus_la_SOURCES = \
     src/clone/uint256.h \
     src/clone/version.h \
     src/clone/compat/byteswap.h \
+    src/clone/compat/cpuid.h \
     src/clone/compat/endian.h \
     src/clone/crypto/common.h \
     src/clone/crypto/hmac_sha512.cpp \
@@ -70,6 +71,7 @@ src_libbitcoin_consensus_la_SOURCES = \
     src/clone/script/script_error.h \
     src/clone/util/strencodings.cpp \
     src/clone/util/strencodings.h \
+    src/clone/util/string.h \
     src/consensus/consensus.cpp \
     src/consensus/consensus.hpp
 
