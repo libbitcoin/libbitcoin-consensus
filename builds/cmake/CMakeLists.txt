@@ -60,6 +60,9 @@ add_compile_options( "-Wno-missing-braces" )
 # Ignore comments within comments or commenting of backslash extended lines.
 add_compile_options( "-Wno-comment" )
 
+# Allow unused parameters.
+add_compile_options( "-Wno-unused-parameter" )
+
 # Conflict in stdlib under clang.
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options( "-Wno-mismatched-tags" )

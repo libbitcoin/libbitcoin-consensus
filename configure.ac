@@ -483,6 +483,12 @@ AS_CASE([${CC}], [*],
     [AX_CHECK_LINK_FLAG([-fstack-protector-all],
         [LDFLAGS="$LDFLAGS -fstack-protector-all"])])
 
+# Allow unused parameters.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-unused-parameter],
+        [CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])])
+
 
 # Process outputs into templates.
 #==============================================================================
