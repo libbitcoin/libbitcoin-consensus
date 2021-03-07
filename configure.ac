@@ -489,6 +489,12 @@ AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wno-unused-parameter],
         [CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])])
 
+# Allow c++17 extensions ('nodiscard').
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-c++17-extensions],
+        [CXXFLAGS="$CXXFLAGS -Wno-c++17-extensions"])])
+
 
 # Process outputs into templates.
 #==============================================================================

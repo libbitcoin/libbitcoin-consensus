@@ -60,6 +60,9 @@ add_compile_options( "-Wno-missing-braces" )
 # Ignore comments within comments or commenting of backslash extended lines.
 add_compile_options( "-Wno-comment" )
 
+# Allow c++17 extensions ('nodiscard').
+add_compile_options( "-Wno-c++17-extensions" )
+
 # Allow unused parameters.
 add_compile_options( "-Wno-unused-parameter" )
 
