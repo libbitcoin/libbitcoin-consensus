@@ -60,15 +60,17 @@ add_compile_options( "-Wno-missing-braces" )
 # Ignore comments within comments or commenting of backslash extended lines.
 add_compile_options( "-Wno-comment" )
 
-# Allow c++17 extensions ('nodiscard').
-add_compile_options( "-Wno-c++17-extensions" )
-
-# Allow unused parameters.
+# Suppress frequent warning in cloned files.
 add_compile_options( "-Wno-unused-parameter" )
 
 # Conflict in stdlib under clang.
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options( "-Wno-mismatched-tags" )
+endif()
+
+# Suppress frequent warning in cloned files.
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_compile_options( "-Wno-c++17-extensions" )
 endif()
 
 # Implement -Dpkgconfigdir and output ${pkgconfigdir}.
@@ -327,7 +329,7 @@ set( boost_LDFLAGS "-L${Boost_LIBRARY_DIR}" )
 
 # Find secp256k1
 #------------------------------------------------------------------------------
-find_package( Secp256K1 0.0.1 REQUIRED )
+find_package( Secp256K1 0.1.0.19 REQUIRED )
 
 # Define project common includes directories
 #------------------------------------------------------------------------------
