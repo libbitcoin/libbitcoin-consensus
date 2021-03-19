@@ -107,6 +107,9 @@
     <ClInclude Include="..\..\..\..\src\clone\compat\byteswap.h">
       <Filter>src\clone\compat</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\compat\cpuid.h">
+      <Filter>src\clone\compat</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\src\clone\compat\endian.h">
       <Filter>src\clone\compat</Filter>
     </ClInclude>
@@ -162,6 +165,9 @@
       <Filter>src\clone</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\clone\util\strencodings.h">
+      <Filter>src\clone\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\clone\util\string.h">
       <Filter>src\clone\util</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\src\clone\version.h">

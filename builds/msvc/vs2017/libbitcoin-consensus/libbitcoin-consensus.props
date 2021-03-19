@@ -12,10 +12,15 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>$(RepoRoot)src\;$(RepoRoot)src\clone\;$(RepoRoot)include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-	  <!-- can't define _SCL_SECURE_NO_WARNINGS when using boost, can produce redefined symbol error, use 4996 instead -->
-      <DisableSpecificWarnings>4244;4267;4425;4800;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <!-- 4018: (1) signed/unsigned mismatch. -->
+      <!-- 4101: (4 - bogus vc140 warning) unreferenced local variable ('formatter'). -->
+      <!-- 4244: (x64:36, x32:17) conversion from '[integer]' to '[integer]', possible loss of data. -->
+      <!-- 4267: (x64:17, x32:4) conversion from 'size_t' to '[integer]', possible loss of data. -->
+      <!-- 4715: (1) not all control paths return a value. -->
+      <!-- 4800: (4 - vc140 warning) forcing value to bool. -->
+      <!-- 4996: (2) unchecked iterator, call to 'std::copy' with parameters that may be unsafe. -->
+      <DisableSpecificWarnings>4018;4244;4267;4715;4800;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnablePREfast>false</EnablePREfast>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0600;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(ConfigurationType)' == 'DynamicLibrary'">BCK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(ConfigurationType)' == 'StaticLibrary'">BCK_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
