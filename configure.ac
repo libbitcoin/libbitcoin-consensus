@@ -1,5 +1,5 @@
 ###############################################################################
-#  Copyright (c) 2014-2015 libbitcoin-consensus developers (see COPYING).
+#  Copyright (c) 2014-2020 libbitcoin-consensus developers (see COPYING).
 #
 #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
@@ -13,7 +13,7 @@
 AC_PREREQ([2.65])
 
 # Process command-line arguments and perform initialization and verification.
-AC_INIT([libbitcoin-consensus], [3.6.0], [eric@voskuil.org])
+AC_INIT([libbitcoin-consensus], [3.7.0], [eric@voskuil.org])
 
 # Do compilation tests.
 AC_LANG(C++)
@@ -36,6 +36,7 @@ AC_USE_SYSTEM_EXTENSIONS
 AM_PROG_AR
 
 # Initialize libtool.
+LT_PREREQ(2.4.2)
 LT_INIT
 
 # Determine C++ compiler to use.
@@ -58,6 +59,9 @@ PKG_PROG_PKG_CONFIG
 AS_IF([test -n "$PKG_CONFIG"], [],
     [AC_MSG_ERROR([pkg-config is required but was not found.])])
 
+AS_CASE([${enable_static}],
+    [yes], [AC_SUBST([PKG_CONFIG], ["$PKG_CONFIG --static"])],
+    [])
 
 # Declare environment variables that affect the build.
 #------------------------------------------------------------------------------
@@ -93,28 +97,6 @@ AC_ARG_WITH([tests],
     [with_tests=yes])
 AC_MSG_RESULT([$with_tests])
 AM_CONDITIONAL([WITH_TESTS], [test x$with_tests != xno])
-
-# Implement --with-java and declare WITH_JAVA.
-#------------------------------------------------------------------------------
-AC_MSG_CHECKING([--with-java option])
-AC_ARG_WITH([java],
-    AS_HELP_STRING([--with-java],
-        [Compile the Java bindings. @<:@default=no@:>@]),
-    [with_java=$withval],
-    [with_java=no])
-AC_MSG_RESULT([$with_java])
-AM_CONDITIONAL([WITH_JAVA], [test x$with_java != xno])
-
-# Implement --with-python and declare WITH_PYTHON.
-#------------------------------------------------------------------------------
-AC_MSG_CHECKING([--with-python option])
-AC_ARG_WITH([python],
-    AS_HELP_STRING([--with-python],
-        [Compile the Python bindings. @<:@default=no@:>@]),
-    [with_python=$withval],
-    [with_python=no])
-AC_MSG_RESULT([$with_python])
-AM_CONDITIONAL([WITH_PYTHON], [test x$with_python != xno])
 
 # Implement --enable-ndebug and define NDEBUG.
 #------------------------------------------------------------------------------
@@ -363,17 +345,17 @@ AC_CHECK_HEADERS([sys/endian.h],
 
 # Check dependencies.
 #==============================================================================
-# Require Boost of at least version 1.62.0 and output ${boost_CPPFLAGS/LDFLAGS}.
+# Require Boost of at least version 1.72.0 and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
-    [AX_BOOST_BASE([1.62.0],
+    [AX_BOOST_BASE([1.72.0],
         [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
          AC_SUBST([boost_ISYS_CPPFLAGS], [`echo ${BOOST_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
          AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
          AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
          AC_MSG_NOTICE([boost_ISYS_CPPFLAGS : ${boost_ISYS_CPPFLAGS}])
          AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
-        [AC_MSG_ERROR([Boost 1.62.0 or later is required but was not found.])])])
+        [AC_MSG_ERROR([Boost 1.72.0 or later is required but was not found.])])])
 
 AS_CASE([${enable_isystem}],[yes],
     [AC_SUBST([boost_BUILD_CPPFLAGS], [${boost_ISYS_CPPFLAGS}])],
@@ -387,14 +369,13 @@ AS_CASE([${with_tests}], [yes],
      AC_MSG_NOTICE([boost_unit_test_framework_LIBS : ${boost_unit_test_framework_LIBS}])],
     [AC_SUBST([boost_unit_test_framework_LIBS], [])])
 
-# Require secp256k1 of at least version 0.0.1 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+# Require secp256k1 of at least version 0.1.0.19 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
-PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.0.1],
-    [secp256k1_INCLUDEDIR="`$PKG_CONFIG --variable=includedir "libsecp256k1 >= 0.0.1" 2>/dev/null`"
-     secp256k1_OTHER_CFLAGS="`$PKG_CONFIG --cflags-only-other "libsecp256k1 >= 0.0.1" 2>/dev/null`"],
-    [secp256k1_INCLUDEDIR=""
-     secp256k1_OTHER_CFLAGS=""])
-AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.0.1'])
+PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.1.0.19],
+    [secp256k1_INCLUDEDIR="`$PKG_CONFIG --variable=includedir "libsecp256k1 >= 0.1.0.19" 2>/dev/null`"
+     secp256k1_OTHER_CFLAGS="`$PKG_CONFIG --cflags-only-other "libsecp256k1 >= 0.1.0.19" 2>/dev/null`"],
+    [AC_MSG_ERROR([libsecp256k1 >= 0.1.0.19 is required but was not found.])])
+AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.1.0.19'])
 AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
 AS_IF([test x${secp256k1_INCLUDEDIR} != "x"],
     [AC_SUBST([secp256k1_ISYS_CPPFLAGS], ["-isystem${secp256k1_INCLUDEDIR} ${secp256k1_OTHER_CFLAGS}"])],
@@ -410,37 +391,6 @@ AS_CASE([${enable_isystem}],[yes],
     [AC_SUBST([secp256k1_BUILD_CPPFLAGS], [${secp256k1_CPPFLAGS}])])
 
 AC_MSG_NOTICE([secp256k1_BUILD_CPPFLAGS : ${secp256k1_BUILD_CPPFLAGS}])
-
-# Require java if --with_java and output ${JAR/JAVAC/javadir} and ${java_CPPFLAGS}.
-#------------------------------------------------------------------------------
-AS_CASE([${with_java}], [yes],
-    [AX_JAVA_DEVEL
-     AC_SUBST([java_CPPFLAGS], [${JAVA_CPPFLAGS}])
-     AC_SUBST([java_ISYS_CPPFLAGS], [`echo ${JAVA_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
-     AC_MSG_NOTICE([java_CPPFLAGS : ${java_CPPFLAGS}])
-     AC_MSG_NOTICE([java_ISYS_CPPFLAGS : ${java_ISYS_CPPFLAGS}])])
-
-AS_CASE([${enable_isystem}],[yes],
-    [AC_SUBST([java_BUILD_CPPFLAGS], [${java_ISYS_CPPFLAGS}])],
-    [AC_SUBST([java_BUILD_CPPFLAGS], [${java_CPPFLAGS}])])
-
-AC_MSG_NOTICE([java_BUILD_CPPFLAGS : ${java_BUILD_CPPFLAGS}])
-
-# Require python of at least version 2.7 if --with_python and output ${python_CPPFLAGS}.
-#------------------------------------------------------------------------------
-AS_CASE([${with_python}], [yes],
-    [AM_PATH_PYTHON([2.7],
-        [AX_PYTHON_DEVEL
-         AC_SUBST([python_CPPFLAGS], [${PYTHON_CPPFLAGS}])
-         AC_SUBST([python_ISYS_CPPFLAGS], [`echo ${PYTHON_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
-         AC_MSG_NOTICE([python_CPPFLAGS : ${python_CPPFLAGS}])])
-         AC_MSG_NOTICE([python_ISYS_CPPFLAGS : ${python_ISYS_CPPFLAGS}])])
-
-AS_CASE([${enable_isystem}],[yes],
-    [AC_SUBST([python_BUILD_CPPFLAGS], [${python_ISYS_CPPFLAGS}])],
-    [AC_SUBST([python_BUILD_CPPFLAGS], [${python_CPPFLAGS}])])
-
-AC_MSG_NOTICE([python_BUILD_CPPFLAGS : ${python_BUILD_CPPFLAGS}])
 
 
 # Set flags.
@@ -532,6 +482,18 @@ AS_CASE([${CC}], [*],
 AS_CASE([${CC}], [*],
     [AX_CHECK_LINK_FLAG([-fstack-protector-all],
         [LDFLAGS="$LDFLAGS -fstack-protector-all"])])
+
+# Suppress frequent warning in cloned files.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-unused-parameter],
+        [CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])])
+
+# Suppress frequent warning in cloned files. Enabled in clang only.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*clang*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-c++17-extensions],
+        [CXXFLAGS="$CXXFLAGS -Wno-c++17-extensions"])])
 
 
 # Process outputs into templates.
