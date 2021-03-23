@@ -1,5 +1,5 @@
 ###############################################################################
-#  Copyright (c) 2014-2015 libbitcoin-consensus developers (see COPYING).
+#  Copyright (c) 2014-2020 libbitcoin-consensus developers (see COPYING).
 #
 #         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 #
@@ -19,6 +19,7 @@ addons:
 matrix:
     include:
         - os: osx
+          osx_image: xcode12.2
           compiler: clang
           env: LINK=dynamic
         - os: osx
@@ -36,7 +37,6 @@ matrix:
                 - sourceline: 'ppa:h-rayflood/llvm'
               packages:
                 - clang-5.0
-                - swig
         - os: linux
           compiler: gcc
           env: LINK=dynamic
@@ -44,14 +44,9 @@ matrix:
             apt:
               packages:
                 - g++-4.8
-                - swig
         - os: linux
           compiler: gcc
           env: LINK=static
-          addons:
-            apt:
-              packages:
-                - swig
     fast_finish:
         - true
 
@@ -65,36 +60,31 @@ before_install:
     - if [[ $TRAVIS_OS_NAME == osx     ]]; then OSX=true; fi
     - if [[ $TRAVIS_OS_NAME == linux   ]]; then LINUX=true; fi
 
-    # Update homebrew.
-    - if [[ $OSX   && $CLANG             ]]; then brew update; fi
-
 install:
 
     # Export CC/CXX to control compiler/version.
-    - if [[ $OSX   && $CLANG && $STATIC  ]]; then export CC=clang; export CXX=clang++; fi
-    - if [[ $LINUX && $CLANG && $STATIC  ]]; then export CC=clang-5.0; export CXX=clang++-5.0; fi
-    - if [[ $LINUX && $GCC   && $STATIC  ]]; then export CC=gcc; export CXX=g++; fi
     - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then export CC=clang; export CXX=clang++; fi
+    - if [[ $OSX   && $CLANG && $STATIC  ]]; then export CC=clang; export CXX=clang++; fi
     - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then export CC=clang; export CXX=clang++; fi
+    - if [[ $LINUX && $CLANG && $STATIC  ]]; then export CC=clang-5.0; export CXX=clang++-5.0; fi
     - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then export CC=gcc-4.8; export CXX=g++-4.8; fi
+    - if [[ $LINUX && $GCC   && $STATIC  ]]; then export CC=gcc; export CXX=g++; fi
 
     # Download and install packages.
-    - if [[ $OSX   && $CLANG && $STATIC  ]]; then brew install swig; fi
-    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then brew install swig; fi
 
 script:
 
     # Download and build libbitcoin-consensus and all dependencies.
-    - if [[ $OSX   && $CLANG && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --with-java --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix; fi
-    - if [[ $LINUX && $CLANG && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --with-python --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os' CXXFLAGS='-Os'; fi
-    - if [[ $LINUX && $GCC   && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --with-java --disable-shared --build-boost --build-dir=my-build --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Og -g --coverage' CXXFLAGS='-Og -g --coverage'; fi
-    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-static --with-python; fi
+    - if [[ $OSX   && $CLANG && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-static; fi
+    - if [[ $OSX   && $CLANG && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix; fi
     - if [[ $LINUX && $CLANG && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --build-boost --disable-ndebug --disable-static --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os' CXXFLAGS='-Os'; fi
-    - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --with-java --with-python --disable-static --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os -s' CXXFLAGS='-Os -s'; fi
+    - if [[ $LINUX && $CLANG && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-shared --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os' CXXFLAGS='-Os'; fi
+    - if [[ $LINUX && $GCC   && $DYNAMIC ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-static --build-boost --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Os -s' CXXFLAGS='-Os -s'; fi
+    - if [[ $LINUX && $GCC   && $STATIC  ]]; then CC=$CC CXX=$CXX ./install.sh --enable-isystem --disable-shared --build-boost --build-dir=my-build --prefix=$TRAVIS_BUILD_DIR/my-prefix CFLAGS='-Og -g --coverage' CXXFLAGS='-Og -g --coverage'; fi
 
 after_success:
 
-    # Download and unpack lcov > 1.10
+    # Download and unpack lcov.
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then wget https://github.com/linux-test-project/lcov/releases/download/v1.12/lcov-1.12.tar.gz; fi
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then tar xzf lcov-1.12.tar.gz; fi
     - if [[ $LINUX && $GCC   && $STATIC  ]]; then cd lcov-1.12; PREFIX="$TRAVIS_BUILD_DIR/my-prefix" make install; cd ..; fi

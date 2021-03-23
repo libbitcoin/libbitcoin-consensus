@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2014-2015 libbitcoin-consensus developers (see COPYING).
+// Copyright (c) 2014-2020 libbitcoin-consensus developers (see COPYING).
 //
 //        GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
 //
@@ -12,9 +12,9 @@
  * For interpretation of the versioning scheme see: http://semver.org
  */
 
-#define LIBBITCOIN_CONSENSUS_VERSION "3.6.0"
+#define LIBBITCOIN_CONSENSUS_VERSION "3.7.0"
 #define LIBBITCOIN_CONSENSUS_MAJOR_VERSION 3
-#define LIBBITCOIN_CONSENSUS_MINOR_VERSION 6
+#define LIBBITCOIN_CONSENSUS_MINOR_VERSION 7
 #define LIBBITCOIN_CONSENSUS_PATCH_VERSION 0
 
 #endif
