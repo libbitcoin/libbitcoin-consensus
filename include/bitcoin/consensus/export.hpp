@@ -93,7 +93,13 @@ typedef enum verify_result_type
 
     // BIP65/BIP112 (shared codes)
     verify_result_negative_locktime,
-    verify_result_unsatisfied_locktime
+    verify_result_unsatisfied_locktime,
+
+    // Deserialization errors
+    verify_transaction_null,
+    verify_prevout_script_null,
+    verify_prevout_value_overflow,
+    verify_evaluation_throws
 } verify_result;
 
 /**
@@ -228,7 +234,7 @@ typedef enum verify_flags_type
  BCK_API verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned long long prevout_value,
-    unsigned int tx_input_index, unsigned int flags);
+    unsigned int tx_input_index, unsigned int flags) noexcept;
 
 } // namespace consensus
 } // namespace libbitcoin

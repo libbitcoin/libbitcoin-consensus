@@ -21,6 +21,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <iterator>
 #include <memory>
 #include <stdexcept>
 #include <string.h>
@@ -83,7 +84,7 @@ private:
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
 // This function is not published (but non-static for testability).
-verify_result_type script_error_to_verify_result(ScriptError_t code)
+verify_result_type script_error_to_verify_result(ScriptError_t code) noexcept
 {
     switch (code)
     {
@@ -194,7 +195,7 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
 // This function is not published (but non-static for testability).
-unsigned int verify_flags_to_script_flags(unsigned int flags)
+unsigned int verify_flags_to_script_flags(unsigned int flags) noexcept
 {
     unsigned int script_flags = SCRIPT_VERIFY_NONE;
 
@@ -238,16 +239,16 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
 verify_result_type verify_script(const unsigned char* transaction,
     size_t transaction_size, const unsigned char* prevout_script,
     size_t prevout_script_size, unsigned long long prevout_value,
-    unsigned int tx_input_index, unsigned int flags)
+    unsigned int tx_input_index, unsigned int flags) noexcept
 {
+    if (transaction == NULL)
+        return verify_transaction_null;
+
+    if (prevout_script == NULL)
+        return verify_prevout_script_null;
+
     if (prevout_value > INT64_MAX)
-        throw std::invalid_argument("value");
-
-    if (transaction_size > 0 && transaction == NULL)
-        throw std::invalid_argument("transaction");
-
-    if (prevout_script_size > 0 && prevout_script == NULL)
-        throw std::invalid_argument("prevout_script");
+        return verify_prevout_value_overflow;
 
     std::shared_ptr<CTransaction> tx;
 
@@ -272,15 +273,23 @@ verify_result_type verify_script(const unsigned char* transaction,
     const CAmount amount(static_cast<int64_t>(prevout_value));
     TransactionSignatureChecker checker(&tx_ref, tx_input_index, amount);
     const unsigned int script_flags = verify_flags_to_script_flags(flags);
-    CScript output_script(prevout_script, prevout_script + prevout_script_size);
+    const auto prevout_script_end = std::next(prevout_script, prevout_script_size);
+    CScript output_script(prevout_script, prevout_script_end);
     const auto& input_script = tx->vin[tx_input_index].scriptSig;
     const auto witness_stack = &tx->vin[tx_input_index].scriptWitness;
 
-    // See libbitcoin-blockchain : validate_input.cpp :
-    // bc::blockchain::validate_input::verify_script(const transaction& tx,
-    //     uint32_t input_index, uint32_t forks, bool use_libconsensus)...
-    VerifyScript(input_script, output_script, witness_stack, script_flags,
-        checker, &error);
+    try
+    {
+        // See libbitcoin-blockchain : validate_input.cpp :
+        // bc::blockchain::validate_input::verify_script(const transaction& tx,
+        //     uint32_t input_index, uint32_t forks, bool use_libconsensus)...
+        VerifyScript(input_script, output_script, witness_stack, script_flags,
+            checker, &error);
+    }
+    catch (const std::exception&)
+    {
+        return verify_evaluation_throws;
+    }
 
     return script_error_to_verify_result(error);
 }

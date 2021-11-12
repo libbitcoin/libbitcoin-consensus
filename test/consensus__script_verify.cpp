@@ -96,25 +96,26 @@ static verify_result test_verify(const std::string& transaction,
 #define CONSENSUS_SCRIPT_VERIFY_WITNESS_PREVOUT_SCRIPT \
     "a914642bda298792901eb1b48f654dd7225d99e5e68c87"
 
-BOOST_AUTO_TEST_CASE(consensus__script_verify__null_tx__throws_invalid_argument)
+BOOST_AUTO_TEST_CASE(consensus__script_verify__null_tx__verify_transaction_null)
 {
-    data_chunk prevout_script_data;
+    data_chunk prevout_script_data{ 0x42 };
     BOOST_REQUIRE(decode_base16(prevout_script_data, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
-    BOOST_REQUIRE_THROW(verify_script(NULL, 1, &prevout_script_data[0], prevout_script_data.size(), 0, 0, 0), std::invalid_argument);
+    BOOST_REQUIRE(verify_script(NULL, 0, &prevout_script_data[0], prevout_script_data.size(), 0, 0, 0) == verify_transaction_null);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_verify__value_overflow__throws_invalid_argument)
+BOOST_AUTO_TEST_CASE(consensus__script_verify__null_prevout_script__verify_prevout_script_null)
 {
-    data_chunk prevout_script_data;
-    BOOST_REQUIRE(decode_base16(prevout_script_data, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
-    BOOST_REQUIRE_THROW(verify_script(NULL, 1, &prevout_script_data[0], prevout_script_data.size(), 0xffffffffffffffff, 0, 0), std::invalid_argument);
-}
-
-BOOST_AUTO_TEST_CASE(consensus__script_verify__null_prevout_script__throws_invalid_argument)
-{
-    data_chunk tx_data;
+    data_chunk tx_data{ 0x42 };
     BOOST_REQUIRE(decode_base16(tx_data, CONSENSUS_SCRIPT_VERIFY_TX));
-    BOOST_REQUIRE_THROW(verify_script(&tx_data[0], tx_data.size(), NULL, 1, 0, 0, 0), std::invalid_argument);
+    BOOST_REQUIRE(verify_script(&tx_data[0], tx_data.size(), NULL, 0, 0, 0, 0) == verify_prevout_script_null);
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__value_overflow__verify_prevout_value_overflow)
+{
+    data_chunk tx_data{ 0x42 };
+    data_chunk prevout_script_data;
+    BOOST_REQUIRE(decode_base16(prevout_script_data, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
+    BOOST_REQUIRE(verify_script(&tx_data[0], tx_data.size(), &prevout_script_data[0], prevout_script_data.size(), 0xffffffffffffffff, 0, 0) == verify_prevout_value_overflow);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)
@@ -169,11 +170,73 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid_nested_p2wpkh__true)
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
 
-// TODO: create negative test vector.
-//BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid__false)
-//{
-//    const verify_result result = test_verify(...);
-//    BOOST_REQUIRE_EQUAL(result, verify_result_eval_false);
-//}
+// TODO: evaluate script.h vectors, for stepping through implementation.
+
+////// Test helpers.
+//////------------------------------------------------------------------------------
+////
+////transaction new_tx(const script_test& test)
+////{
+////    // Parse input script from string.
+////    script input_script;
+////    if (!input_script.from_string(test.input))
+////        return {};
+////
+////    // Parse output script from string.
+////    script output_script;
+////    if (!output_script.from_string(test.output))
+////        return {};
+////
+////    // Assign output script to input's prevout validation metadata.
+////    output_point outpoint;
+////    outpoint.metadata.cache.set_script(std::move(output_script));
+////
+////    // Cosntruct transaction with one input and no outputs.
+////    return transaction
+////    {
+////        test.version,
+////        test.locktime,
+////        input::list
+////        {
+////            input
+////            {
+////                std::move(outpoint),
+////                std::move(input_script),
+////                test.input_sequence
+////            }
+////        },
+////        output::list
+////        {
+////        }
+////    };
+////}
+////
+////std::string test_name(const script_test& test)
+////{
+////    std::stringstream out;
+////    out << "input: \"" << test.input << "\" "
+////        << "prevout: \"" << test.output << "\" "
+////        << "("
+////            << test.input_sequence << ", "
+////            << test.locktime << ", "
+////            << test.version
+////        << ") "
+////        << "name: " << test.description;
+////    return out.str();
+////}
+////
+////BOOST_AUTO_TEST_CASE(consensus__context_free__valid)
+////{
+////    for (const auto& test: valid_context_free_scripts)
+////    {
+////        const auto tx = new_tx(test);
+////        const auto name = test_name(test);
+////        BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
+////
+////        // These are always valid.
+////        BOOST_CHECK_MESSAGE(script::verify(tx, 0, rule_fork::no_rules) == error::success, name);
+////        BOOST_CHECK_MESSAGE(script::verify(tx, 0, rule_fork::all_rules) == error::success, name);
+////    }
+////}
 
 BOOST_AUTO_TEST_SUITE_END()

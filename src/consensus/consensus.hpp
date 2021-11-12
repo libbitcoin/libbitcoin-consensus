@@ -28,8 +28,8 @@ namespace libbitcoin {
 namespace consensus {
 
 // These are not published in the public header but are exposed here for test.
-BCK_API verify_result_type script_error_to_verify_result(ScriptError_t code);
-BCK_API unsigned int verify_flags_to_script_flags(unsigned int flags);
+BCK_API verify_result_type script_error_to_verify_result(ScriptError_t code) noexcept;
+BCK_API unsigned int verify_flags_to_script_flags(unsigned int flags) noexcept;
 
 } // namespace consensus
 } // namespace libbitcoin
