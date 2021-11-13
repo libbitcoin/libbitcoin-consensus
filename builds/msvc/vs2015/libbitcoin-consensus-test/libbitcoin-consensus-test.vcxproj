@@ -74,9 +74,11 @@
     <ClCompile Include="..\..\..\..\test\consensus__script_verify.cpp" />
     <ClCompile Include="..\..\..\..\test\consensus__verify_flags_to_script_flags.cpp" />
     <ClCompile Include="..\..\..\..\test\main.cpp" />
+    <ClCompile Include="..\..\..\..\test\test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\test\script.hpp" />
+    <ClInclude Include="..\..\..\..\test\test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

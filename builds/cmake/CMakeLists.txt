@@ -445,7 +445,9 @@ if (with-tests)
         "../../test/consensus__script_verify.cpp"
         "../../test/consensus__verify_flags_to_script_flags.cpp"
         "../../test/main.cpp"
-        "../../test/script.hpp" )
+        "../../test/script.hpp"
+        "../../test/test.cpp"
+        "../../test/test.hpp" )
 
     add_test( NAME libbitcoin-consensus-test COMMAND libbitcoin-consensus-test
             --run_test=*
