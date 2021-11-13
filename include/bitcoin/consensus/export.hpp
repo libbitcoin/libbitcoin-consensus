@@ -20,6 +20,8 @@
 #define LIBBITCOIN_CONSENSUS_EXPORT_HPP
 
 #include <cstddef>
+#include <cstdint>
+#include <vector>
 #include <bitcoin/consensus/define.hpp>
 #include <bitcoin/consensus/version.hpp>
 
@@ -29,7 +31,7 @@ namespace consensus {
 /**
  * Result values from calling verify_script.
  */
-typedef enum verify_result_type
+typedef enum verify_result
 {
     // Logical result
     verify_result_eval_false = 0,
@@ -96,16 +98,14 @@ typedef enum verify_result_type
     verify_result_unsatisfied_locktime,
 
     // Deserialization errors
-    verify_transaction_null,
-    verify_prevout_script_null,
-    verify_prevout_value_overflow,
+    verify_value_overflow,
     verify_evaluation_throws
 } verify_result;
 
 /**
  * Flags to use when calling verify_script.
  */
-typedef enum verify_flags_type
+typedef enum : uint32_t
 {
     /**
      * Set no flags.
@@ -215,26 +215,61 @@ typedef enum verify_flags_type
     /**
      * SCRIPT_VERIFY_WITNESS_PUBKEYTYPE (bip141/bip143 p2wsh/p2wpkh policy).
      */
-    verify_flags_witness_public_key_compressed = (1U << 15)
+    verify_flags_witness_public_key_compressed = (1U << 15),
+
+    /**
+    * Set all flags.
+    */
+    verify_flags_all = 0x7fff
 } verify_flags;
+
+typedef std::vector<uint8_t> chunk;
+typedef struct output
+{
+    chunk script;
+    uint64_t value;
+} output;
+typedef std::vector<output> outputs;
+
+// TODO: this is ready for test.
+#ifdef UNTESTED
+/**
+ * Verify that all transaction inputs correctly spend the corresponding
+ * previous outputs, considering any additional constraints specified by flags.
+ * This avoids repeated deserialization of the transaction for each input.
+ * @param[in]  transaction  The transaction with the input scripts to verify.
+ * @param[in]  prevouts     The public key scripts to verify against (in order).
+ * @param[in]  flags        Verification constraint flags.
+ * @returns                 A script verification result code.
+ */
+BCK_API verify_result verify_script(const chunk& transaction,
+    const outputs& prevouts, uint32_t flags) noexcept;
+#endif
 
 /**
  * Verify that the transaction input correctly spends the previous output,
  * considering any additional constraints specified by flags.
- * @param[in]  transaction         The transaction with the script to verify.
- * @param[in]  transaction_size    The byte length of the transaction.
- * @param[in]  prevout_script      The script public key to verify against.
- * @param[in]  prevout_script_size The byte length of the script public key.
- * @param[in]  prevout_value       The value of the output being spent.
- * @param[in]  tx_input_index      The zero-based index of the transaction
- *                                 input with signature to be verified.
- * @param[in]  flags               Verification constraint flags.
- * @returns                        A script verification result code.
+ * @param[in]  transaction  The transaction with the input script to verify.
+ * @param[in]  prevout      The public key script to verify against.
+ * @param[in]  input_index  The zero-based index of the transaction input.
+ * @param[in]  flags        Verification constraint flags.
+ * @returns                 A script verification result code.
  */
- BCK_API verify_result_type verify_script(const unsigned char* transaction,
-    size_t transaction_size, const unsigned char* prevout_script,
-    size_t prevout_script_size, unsigned long long prevout_value,
-    unsigned int tx_input_index, unsigned int flags) noexcept;
+ BCK_API verify_result verify_script(const chunk& transaction,
+    const output& prevout, uint32_t input_index, uint32_t flags) noexcept;
+
+ /**
+ * Verify that the unsigned input correctly spends the previous output,
+ * considering any additional constraints specified by flags. This is useful
+ * for evaluating script execution without a transaction (checksig excluded).
+ * @param[in]  prevout       The public key script to verify against.
+ * @param[in]  input_script  The (unsigned) script sig to verify.
+ * @param[in]  witness       The input's witness to verify (or empty).
+ * @param[in]  flags         Verification constraint flags.
+ * @returns                  A script verification result code.
+ */
+ BCK_API verify_result verify_unsigned_script(const output& prevout,
+     const chunk& input_script, const chunk& witness, uint32_t flags) noexcept;
 
 } // namespace consensus
 } // namespace libbitcoin

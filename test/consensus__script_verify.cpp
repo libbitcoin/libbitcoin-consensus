@@ -16,72 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-//#include "script.hpp"
-
+#include <cstddef>
+#include <cstdint>
+#include <iostream>
+#include <limits>
+#include <sstream>
 #include <stdint.h>
-#include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 #include <bitcoin/consensus.hpp>
 #include <boost/test/unit_test.hpp>
 
+#include "script.hpp"
+#include "test.hpp"
+
 BOOST_AUTO_TEST_SUITE(consensus__script_verify)
 
 using namespace libbitcoin::consensus;
-
-typedef std::vector<uint8_t> data_chunk;
-
-static unsigned from_hex(const char ch)
-{
-    if ('A' <= ch && ch <= 'F')
-        return 10 + ch - 'A';
-
-    if ('a' <= ch && ch <= 'f')
-        return 10 + ch - 'a';
-
-    return ch - '0';
-}
-
-static bool decode_base16_private(uint8_t* out, size_t size, const char* in)
-{
-    for (size_t i = 0; i < size; ++i)
-    {
-        if (!isxdigit(in[0]) || !isxdigit(in[1]))
-            return false;
-
-        out[i] = (from_hex(in[0]) << 4) + from_hex(in[1]);
-        in += 2;
-    }
-
-    return true;
-}
-
-static bool decode_base16(data_chunk& out, const std::string& in)
-{
-    // This prevents a last odd character from being ignored:
-    if (in.size() % 2 != 0)
-        return false;
-
-    data_chunk result(in.size() / 2);
-    if (!decode_base16_private(result.data(), result.size(), in.data()))
-        return false;
-
-    out = result;
-    return true;
-}
-
-static verify_result test_verify(const std::string& transaction,
-    const std::string& prevout_script, uint64_t prevout_value=0,
-    uint32_t tx_input_index=0, const uint32_t flags=verify_flags_p2sh,
-    int32_t tx_size_hack=0)
-{
-    data_chunk tx_data, prevout_script_data;
-    BOOST_REQUIRE(decode_base16(tx_data, transaction));
-    BOOST_REQUIRE(decode_base16(prevout_script_data, prevout_script));
-    return verify_script(&tx_data[0], tx_data.size() + tx_size_hack,
-        &prevout_script_data[0], prevout_script_data.size(), prevout_value,
-        tx_input_index, flags);
-}
 
 // Test case derived from:
 // github.com/libbitcoin/libbitcoin-explorer/wiki/How-to-Spend-Bitcoin
@@ -96,26 +48,42 @@ static verify_result test_verify(const std::string& transaction,
 #define CONSENSUS_SCRIPT_VERIFY_WITNESS_PREVOUT_SCRIPT \
     "a914642bda298792901eb1b48f654dd7225d99e5e68c87"
 
-BOOST_AUTO_TEST_CASE(consensus__script_verify__null_tx__verify_transaction_null)
+// test helper
+static verify_result test_verify(const std::string& transaction,
+    const std::string& prevout_script, uint64_t value=0,
+    uint32_t input_index=0, const uint32_t flags=verify_flags_p2sh,
+    bool tx_size_hack=false)
 {
-    data_chunk prevout_script_data{ 0x42 };
-    BOOST_REQUIRE(decode_base16(prevout_script_data, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
-    BOOST_REQUIRE(verify_script(NULL, 0, &prevout_script_data[0], prevout_script_data.size(), 0, 0, 0) == verify_transaction_null);
+    data_chunk tx, prevout;
+    BOOST_REQUIRE(decode_base16(tx, transaction));
+    BOOST_REQUIRE(decode_base16(prevout, prevout_script));
+
+    if (tx_size_hack)
+        tx.push_back(0x42);
+
+    return verify_script(tx, { prevout, value }, input_index, flags);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_verify__null_prevout_script__verify_prevout_script_null)
+// test helper
+static verify_result test_verify_unsigned(const std::string& input_script,
+    const std::string& prevout_script, const uint32_t flags)
 {
-    data_chunk tx_data{ 0x42 };
-    BOOST_REQUIRE(decode_base16(tx_data, CONSENSUS_SCRIPT_VERIFY_TX));
-    BOOST_REQUIRE(verify_script(&tx_data[0], tx_data.size(), NULL, 0, 0, 0, 0) == verify_prevout_script_null);
+    // Implement once we have vectors.
+    static const data_chunk witness;
+    static const uint64_t value = 0;
+
+    // Convert scripts from mnemonic to bytes.
+    const auto input = mnemonic_to_data(input_script);
+    const auto prevout = mnemonic_to_data(prevout_script);
+
+    return verify_unsigned_script({ prevout, 0 }, input, witness, flags);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__value_overflow__verify_prevout_value_overflow)
 {
-    data_chunk tx_data{ 0x42 };
-    data_chunk prevout_script_data;
-    BOOST_REQUIRE(decode_base16(prevout_script_data, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
-    BOOST_REQUIRE(verify_script(&tx_data[0], tx_data.size(), &prevout_script_data[0], prevout_script_data.size(), 0xffffffffffffffff, 0, 0) == verify_prevout_value_overflow);
+    data_chunk tx{ 0x42 }, prevout;
+    BOOST_REQUIRE(decode_base16(prevout, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT));
+    BOOST_REQUIRE(verify_script(tx, { prevout, 0xffffffffffffffff }, 0, 0) == verify_value_overflow);
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_tx__tx_invalid)
@@ -130,16 +98,12 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__invalid_input__tx_input_invalid)
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_input_invalid);
 }
 
-BOOST_AUTO_TEST_CASE(consensus__script_verify__undersized_tx__tx_invalid)
-{
-    const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0, 0, verify_flags_p2sh, -1);
-    BOOST_REQUIRE_EQUAL(result, verify_result_tx_invalid);
-}
-
 BOOST_AUTO_TEST_CASE(consensus__script_verify__oversized_tx__tx_size_invalid)
 {
+#ifndef NDEBUG
     const verify_result result = test_verify(CONSENSUS_SCRIPT_VERIFY_TX, CONSENSUS_SCRIPT_VERIFY_PREVOUT_SCRIPT, 0, 0, verify_flags_p2sh, +1);
     BOOST_REQUIRE_EQUAL(result, verify_result_tx_size_invalid);
+#endif // NDEBUG
 }
 
 BOOST_AUTO_TEST_CASE(consensus__script_verify__incorrect_pubkey_hash__equalverify)
@@ -170,73 +134,122 @@ BOOST_AUTO_TEST_CASE(consensus__script_verify__valid_nested_p2wpkh__true)
     BOOST_REQUIRE_EQUAL(result, verify_result_eval_true);
 }
 
-// TODO: evaluate script.h vectors, for stepping through implementation.
+BOOST_AUTO_TEST_CASE(consensus__script_verify__bip16__valid)
+{
+    for (const auto& test: valid_bip16_scripts)
+    {
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_none) == verify_result_eval_true, test.description);
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_p2sh) == verify_result_eval_true, test.description);
+    }
+}
 
-////// Test helpers.
-//////------------------------------------------------------------------------------
-////
-////transaction new_tx(const script_test& test)
+BOOST_AUTO_TEST_CASE(consensus__script_verify__bip16__invalidated)
+{
+    for (const auto& test: invalidated_bip16_scripts)
+    {
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_none) == verify_result_eval_true, test.description);
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_p2sh) != verify_result_eval_true, test.description);
+    }
+}
+
+////// Requires tx test for locktime values (set on vectors, see libbitcoin tests).
+////BOOST_AUTO_TEST_CASE(consensus__script_verify__bip65__valid)
 ////{
-////    // Parse input script from string.
-////    script input_script;
-////    if (!input_script.from_string(test.input))
-////        return {};
-////
-////    // Parse output script from string.
-////    script output_script;
-////    if (!output_script.from_string(test.output))
-////        return {};
-////
-////    // Assign output script to input's prevout validation metadata.
-////    output_point outpoint;
-////    outpoint.metadata.cache.set_script(std::move(output_script));
-////
-////    // Cosntruct transaction with one input and no outputs.
-////    return transaction
+////    for (const auto& test: valid_bip65_scripts)
 ////    {
-////        test.version,
-////        test.locktime,
-////        input::list
-////        {
-////            input
-////            {
-////                std::move(outpoint),
-////                std::move(input_script),
-////                test.input_sequence
-////            }
-////        },
-////        output::list
-////        {
-////        }
-////    };
-////}
-////
-////std::string test_name(const script_test& test)
-////{
-////    std::stringstream out;
-////    out << "input: \"" << test.input << "\" "
-////        << "prevout: \"" << test.output << "\" "
-////        << "("
-////            << test.input_sequence << ", "
-////            << test.locktime << ", "
-////            << test.version
-////        << ") "
-////        << "name: " << test.description;
-////    return out.str();
-////}
-////
-////BOOST_AUTO_TEST_CASE(consensus__context_free__valid)
-////{
-////    for (const auto& test: valid_context_free_scripts)
-////    {
-////        const auto tx = new_tx(test);
-////        const auto name = test_name(test);
-////        BOOST_REQUIRE_MESSAGE(tx.is_valid(), name);
-////
-////        // These are always valid.
-////        BOOST_CHECK_MESSAGE(script::verify(tx, 0, rule_fork::no_rules) == error::success, name);
-////        BOOST_CHECK_MESSAGE(script::verify(tx, 0, rule_fork::all_rules) == error::success, name);
+////        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_none) == verify_result_eval_true, test.description);
+////        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_checklocktimeverify) == verify_result_eval_true, test.description);
 ////    }
 ////}
+////
+////// Requires tx test for locktime values (set on vectors, see libbitcoin tests).
+////BOOST_AUTO_TEST_CASE(consensus__script_verify__bip65__invalid)
+////{
+////    for (const auto& test: invalid_bip65_scripts)
+////    {
+////        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_none) != verify_result_eval_true, test.description);
+////        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_checklocktimeverify) != verify_result_eval_true, test.description);
+////    }
+////}
+////
+////// Requires tx test for locktime values (set on vectors, see libbitcoin tests).
+////BOOST_AUTO_TEST_CASE(consensus__script_verify__bip65__invalidated)
+////{
+////    for (const auto& test: invalidated_bip65_scripts)
+////    {
+////        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_none) != verify_result_eval_true, test.description);
+////        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_checklocktimeverify) != verify_result_eval_true, test.description);
+////    }
+////}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__multisig__valid)
+{
+    for (const auto& test: valid_multisig_scripts)
+    {
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_none) == verify_result_eval_true, test.description);
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_dersig) == verify_result_eval_true, test.description);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__multisig__invalid)
+{
+    for (const auto& test: invalid_multisig_scripts)
+    {
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_none) != verify_result_eval_true, test.description);
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_dersig) != verify_result_eval_true, test.description);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__context_free__valid)
+{
+    for (const auto& test: valid_context_free_scripts)
+    {
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_none) == verify_result_eval_true, test.description);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(consensus__script_verify__context_free__invalid)
+{
+    for (const auto& test: invalid_context_free_scripts)
+    {
+        BOOST_CHECK_MESSAGE(test_verify_unsigned(test.input, test.output, verify_flags_none) != verify_result_eval_true, test.description);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(script__parse__not_invalid)
+{
+    for (const auto& test: not_invalid_parse_scripts)
+    {
+        mnemonic_to_data(test.input, true);
+        mnemonic_to_data(test.output, true);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(script__parse_syntax__invalid_input)
+{
+    for (const auto& test: invalid_syntax_scripts)
+    {
+        mnemonic_to_data(test.input, false);
+        mnemonic_to_data(test.output, true);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(script__parse_push_not_overflow__valid)
+{
+    for (const auto& test: valid_push_data_scripts)
+    {
+        mnemonic_to_data(test.input, true);
+        mnemonic_to_data(test.output, true);
+    }
+}
+
+BOOST_AUTO_TEST_CASE(script__parse_push_overflow__invalid_input)
+{
+    for (const auto& test: invalid_overflowed_push_data_scripts)
+    {
+        mnemonic_to_data(test.input, false);
+        mnemonic_to_data(test.output, true);
+    }
+}
 
 BOOST_AUTO_TEST_SUITE_END()
