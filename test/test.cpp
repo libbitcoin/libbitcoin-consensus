@@ -940,9 +940,10 @@ private:
             code_ = nominal_opcode_from_data(data_);
             return true;
         }
+
+        return false;
     }
 
-    bool valid_;
     opcode code_;
     data_chunk data_;
 };

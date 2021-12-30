@@ -70,7 +70,6 @@ static verify_result test_verify_unsigned(const std::string& input_script,
 {
     // Implement once we have vectors.
     static const data_chunk witness;
-    static const uint64_t value = 0;
 
     // Convert scripts from mnemonic to bytes.
     const auto input = mnemonic_to_data(input_script);
