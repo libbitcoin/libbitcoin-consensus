@@ -345,7 +345,7 @@ verify_result verify_script(const chunk& transaction, const output& prevout,
 }
 
 verify_result verify_unsigned_script(const output& prevout,
-    const chunk& input_script, const chunk& witness, uint32_t flags) noexcept
+    const chunk& input_script, const stack& witness, uint32_t flags) noexcept
 {
     if (prevout.value > std::numeric_limits<int64_t>::max())
         return verify_value_overflow;
@@ -357,7 +357,7 @@ verify_result verify_unsigned_script(const output& prevout,
     const auto script_flags = verify_flags_to_script_flags(flags);
 
     CScriptWitness witness_stack;
-    witness_stack.stack.push_back(witness);
+    witness_stack.stack.assign(witness.begin(), witness.end());
     CScript input_cscript(input_script.begin(), input_script.end());
     CScript output_cscript(prevout.script.begin(), prevout.script.end());
 

@@ -224,6 +224,7 @@ typedef enum : uint32_t
 } verify_flags;
 
 typedef std::vector<uint8_t> chunk;
+typedef std::vector<chunk> stack;
 typedef struct output
 {
     chunk script;
@@ -264,12 +265,12 @@ BCK_API verify_result verify_script(const chunk& transaction,
  * for evaluating script execution without a transaction (checksig excluded).
  * @param[in]  prevout       The public key script to verify against.
  * @param[in]  input_script  The (unsigned) script sig to verify.
- * @param[in]  witness       The input's witness to verify (or empty).
+ * @param[in]  witness       The input's witness stack to verify (or empty).
  * @param[in]  flags         Verification constraint flags.
  * @returns                  A script verification result code.
  */
  BCK_API verify_result verify_unsigned_script(const output& prevout,
-     const chunk& input_script, const chunk& witness, uint32_t flags) noexcept;
+     const chunk& input_script, const stack& witness, uint32_t flags) noexcept;
 
 } // namespace consensus
 } // namespace libbitcoin
