@@ -161,7 +161,7 @@ inline size_t byte_width(uint64_t value)
     return ceilinged_divide(bit_width(value), byte_bits);
 }
 
-static void to_little_endian(data_chunk& out, size_t value) noexcept
+static void to_little_endian(data_chunk& out, uint64_t value) noexcept
 {
     for (auto& byte: out)
     {
