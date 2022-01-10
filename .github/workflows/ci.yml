@@ -18,88 +18,88 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            packager: "apt"
-            packages: "clang"
             compiler: "clang"
-            coverage: "false"
+            link: "--disable-static"
+            boost: "--build-boost"
+            icu: ""
             assert: "--disable-ndebug"
             cc: "clang"
             cflags: "-Os -fPIE"
             cxx: "clang++"
             cxxflags: "-Os -fPIE"
-            link: "--disable-static"
-            icu: ""
-            boost: "--build-boost"
-
-          - os: ubuntu-latest
             packager: "apt"
             packages: "clang"
-            compiler: "clang"
             coverage: "false"
+
+          - os: ubuntu-latest
+            compiler: "clang"
+            link: "--disable-shared"
+            boost: "--build-boost"
+            icu: "--build-icu --with-icu"
             assert: ""
             cc: "clang"
             cflags: "-Os -fPIE"
             cxx: "clang++"
             cxxflags: "-Os -fPIE"
-            link: "--disable-shared"
-            icu: "--build-icu --with-icu"
-            boost: "--build-boost"
+            packager: "apt"
+            packages: "clang"
+            coverage: "false"
 
           - os: ubuntu-latest
-            packager: "apt"
-            packages: "gcc"
             compiler: "gcc"
-            coverage: "false"
+            link: "--disable-static"
+            boost: "--build-boost"
+            icu: ""
             assert: ""
             cc: "gcc"
             cflags: "-Os -fPIE"
             cxx: "g++"
             cxxflags: "-Os -fPIE"
-            link: "--disable-static"
-            icu: ""
-            boost: "--build-boost"
-
-          - os: ubuntu-latest
             packager: "apt"
             packages: "gcc"
+            coverage: "false"
+
+          - os: ubuntu-latest
             compiler: "gcc"
-            coverage: "true"
+            link: "--disable-shared"
+            boost: "--build-boost"
+            icu: "--build-icu --with-icu"
             assert: ""
             cc: "gcc"
             cflags: "-Og -g --coverage -fPIE"
             cxx: "g++"
             cxxflags: "-Og -g --coverage -fPIE"
-            link: "--disable-shared"
-            icu: "--build-icu --with-icu"
-            boost: "--build-boost"
+            packager: "apt"
+            packages: "gcc"
+            coverage: "true"
 
           - os: macos-latest
+            compiler: "clang"
+            link: "--disable-static"
+            boost: ""
+            icu: "--with-icu"
+            assert: ""
+            cc: "clang"
+            cflags: "-Os -fPIE"
+            cxx: "clang++"
+            cxxflags: "-Os -fPIE"
             packager: "brew"
             packages: "boost icu4c"
-            compiler: "clang"
             coverage: "false"
-            assert: ""
-            cc: "clang"
-            cflags: "-Os -fPIE"
-            cxx: "clang++"
-            cxxflags: "-Os -fPIE"
-            link: "--disable-static"
-            icu: "--with-icu"
-            boost: ""
 
           - os: macos-latest
-            packager: "brew"
-            packages: ""
             compiler: "clang"
-            coverage: "false"
+            link: "--disable-shared"
+            boost: "--build-boost"
+            icu: "--build-icu --with-icu"
             assert: ""
             cc: "clang"
             cflags: "-Os -fPIE"
             cxx: "clang++"
             cxxflags: "-Os -fPIE"
-            link: "--disable-shared"
-            icu: "--build-icu --with-icu"
-            boost: "--build-boost"
+            packager: "brew"
+            packages: ""
+            coverage: "false"
 
     runs-on: ${{ matrix.os }}
 
@@ -156,6 +156,4 @@ jobs:
           gcc -v
           clang -v
           cat ${{ github.workspace }}/build/build-*/bootstrap.log
-
-
 

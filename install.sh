@@ -321,23 +321,6 @@ set_with_boost_prefix()
     fi
 }
 
-
-# Initialize the build environment.
-#==============================================================================
-enable_exit_on_error
-parse_command_line_options "$@"
-handle_help_line_option
-handle_custom_options
-set_operating_system
-configure_build_parallelism
-set_os_specific_compiler_settings "$@"
-link_to_standard_library
-normalize_static_and_shared_options "$@"
-remove_build_options
-set_prefix
-set_pkgconfigdir
-set_with_boost_prefix
-
 display_configuration()
 {
     display_message "libbitcoin-consensus installer configuration."
@@ -360,29 +343,6 @@ display_configuration()
     display_message "with_pkgconfigdir     : ${with_pkgconfigdir}"
     display_message "--------------------------------------------------------------------"
 }
-
-
-# Define build options.
-#==============================================================================
-# Define boost options.
-#------------------------------------------------------------------------------
-BOOST_OPTIONS=(
-"--with-system" \
-"--with-test")
-
-# Define secp256k1 options.
-#------------------------------------------------------------------------------
-SECP256K1_OPTIONS=(
-"--disable-tests" \
-"--enable-experimental" \
-"--enable-module-recovery" \
-"--enable-module-schnorrsig")
-
-# Define bitcoin-consensus options.
-#------------------------------------------------------------------------------
-BITCOIN_CONSENSUS_OPTIONS=(
-"${with_boost}" \
-"${with_pkgconfigdir}")
 
 
 # Define build functions.
@@ -699,6 +659,46 @@ build_all()
     build_from_github evoskuil secp256k1 version8 "$PARALLEL" "${SECP256K1_OPTIONS[@]}" "$@"
     build_from_ci evoskuil libbitcoin-consensus master "$PARALLEL" "${BITCOIN_CONSENSUS_OPTIONS[@]}" "$@"
 }
+
+
+# Initialize the build environment.
+#==============================================================================
+enable_exit_on_error
+parse_command_line_options "$@"
+handle_help_line_option
+handle_custom_options
+set_operating_system
+configure_build_parallelism
+set_os_specific_compiler_settings "$@"
+link_to_standard_library
+normalize_static_and_shared_options "$@"
+remove_build_options
+set_prefix
+set_pkgconfigdir
+set_with_boost_prefix
+
+
+# Define build options.
+#==============================================================================
+# Define boost options.
+#------------------------------------------------------------------------------
+BOOST_OPTIONS=(
+"--with-system" \
+"--with-test")
+
+# Define secp256k1 options.
+#------------------------------------------------------------------------------
+SECP256K1_OPTIONS=(
+"--disable-tests" \
+"--enable-experimental" \
+"--enable-module-recovery" \
+"--enable-module-schnorrsig")
+
+# Define bitcoin-consensus options.
+#------------------------------------------------------------------------------
+BITCOIN_CONSENSUS_OPTIONS=(
+"${with_boost}" \
+"${with_pkgconfigdir}")
 
 
 # Build the primary library and all dependencies.
