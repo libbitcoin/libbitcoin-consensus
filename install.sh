@@ -558,6 +558,7 @@ build_from_tarball_boost()
     # "-sICU_LINK=${ICU_LIBS[*]}"
 
     ./b2 install \
+        "cxxstd=11" \
         "variant=release" \
         "threading=multi" \
         "$BOOST_TOOLSET" \
