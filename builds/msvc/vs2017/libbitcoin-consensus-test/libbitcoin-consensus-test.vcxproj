@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- |  Copyright (c) 2014-2020 libbitcoin-consensus developers (see COPYING).
+ |  Copyright (c) 2014-2021 libbitcoin-consensus developers (see COPYING).
  |
  |         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
  |
@@ -100,5 +100,8 @@
     <ProjectReference Include="..\libbitcoin-consensus\libbitcoin-consensus.vcxproj">
       <Project>{6C521D95-00CE-4120-97D1-430E2870D738}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\..\debug.natvis" />
   </ItemGroup>
 </Project>
