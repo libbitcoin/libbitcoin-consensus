@@ -111,7 +111,7 @@ make_jobs()
     shift 1
 
     SEQUENTIAL=1
-    # Avoid setting -j1 (causes problems on Travis).
+    # Avoid setting -j1 (causes problems on single threaded systems [TRAVIS]).
     if [[ $JOBS > $SEQUENTIAL ]]; then
         make -j"$JOBS" "$@"
     else
@@ -321,23 +321,6 @@ set_with_boost_prefix()
     fi
 }
 
-
-# Initialize the build environment.
-#==============================================================================
-enable_exit_on_error
-parse_command_line_options "$@"
-handle_help_line_option
-handle_custom_options
-set_operating_system
-configure_build_parallelism
-set_os_specific_compiler_settings "$@"
-link_to_standard_library
-normalize_static_and_shared_options "$@"
-remove_build_options
-set_prefix
-set_pkgconfigdir
-set_with_boost_prefix
-
 display_configuration()
 {
     display_message "libbitcoin-consensus installer configuration."
@@ -360,27 +343,6 @@ display_configuration()
     display_message "with_pkgconfigdir     : ${with_pkgconfigdir}"
     display_message "--------------------------------------------------------------------"
 }
-
-
-# Define build options.
-#==============================================================================
-# Define boost options.
-#------------------------------------------------------------------------------
-BOOST_OPTIONS=(
-"--with-system" \
-"--with-test")
-
-# Define secp256k1 options.
-#------------------------------------------------------------------------------
-SECP256K1_OPTIONS=(
-"--disable-tests" \
-"--enable-module-recovery")
-
-# Define bitcoin-consensus options.
-#------------------------------------------------------------------------------
-BITCOIN_CONSENSUS_OPTIONS=(
-"${with_boost}" \
-"${with_pkgconfigdir}")
 
 
 # Define build functions.
@@ -596,6 +558,7 @@ build_from_tarball_boost()
     # "-sICU_LINK=${ICU_LIBS[*]}"
 
     ./b2 install \
+        "cxxstd=11" \
         "variant=release" \
         "threading=multi" \
         "$BOOST_TOOLSET" \
@@ -664,8 +627,8 @@ build_from_local()
     make_current_directory "$JOBS" "${CONFIGURATION[@]}"
 }
 
-# Because Travis alread has downloaded the primary repo.
-build_from_travis()
+# Because continuous integration services has downloaded the primary repository.
+build_from_ci()
 {
     local ACCOUNT=$1
     local REPO=$2
@@ -674,9 +637,9 @@ build_from_travis()
     local OPTIONS=$5
     shift 5
 
-    # The primary build is not downloaded if we are running in Travis.
-    if [[ $TRAVIS == true ]]; then
-        build_from_local "Local $TRAVIS_REPO_SLUG" "$JOBS" "${OPTIONS[@]}" "$@"
+    # The primary build is not downloaded if we are running on a continuous integration system.
+    if [[ $CI == true ]]; then
+        build_from_local "Local $CI_REPOSITORY" "$JOBS" "${OPTIONS[@]}" "$@"
         make_tests "$JOBS"
     else
         build_from_github "$ACCOUNT" "$REPO" "$BRANCH" "$JOBS" "${OPTIONS[@]}" "$@"
@@ -695,8 +658,46 @@ build_all()
 {
     build_from_tarball_boost "$BOOST_URL" "$BOOST_ARCHIVE" bzip2 . "$PARALLEL" "$BUILD_BOOST" "${BOOST_OPTIONS[@]}"
     build_from_github libbitcoin secp256k1 version7 "$PARALLEL" "${SECP256K1_OPTIONS[@]}" "$@"
-    build_from_travis libbitcoin libbitcoin-consensus version3 "$PARALLEL" "${BITCOIN_CONSENSUS_OPTIONS[@]}" "$@"
+    build_from_ci libbitcoin libbitcoin-consensus version3 "$PARALLEL" "${BITCOIN_CONSENSUS_OPTIONS[@]}" "$@"
 }
+
+
+# Initialize the build environment.
+#==============================================================================
+enable_exit_on_error
+parse_command_line_options "$@"
+handle_help_line_option
+handle_custom_options
+set_operating_system
+configure_build_parallelism
+set_os_specific_compiler_settings "$@"
+link_to_standard_library
+normalize_static_and_shared_options "$@"
+remove_build_options
+set_prefix
+set_pkgconfigdir
+set_with_boost_prefix
+
+
+# Define build options.
+#==============================================================================
+# Define boost options.
+#------------------------------------------------------------------------------
+BOOST_OPTIONS=(
+"--with-system" \
+"--with-test")
+
+# Define secp256k1 options.
+#------------------------------------------------------------------------------
+SECP256K1_OPTIONS=(
+"--disable-tests" \
+"--enable-module-recovery")
+
+# Define bitcoin-consensus options.
+#------------------------------------------------------------------------------
+BITCOIN_CONSENSUS_OPTIONS=(
+"${with_boost}" \
+"${with_pkgconfigdir}")
 
 
 # Build the primary library and all dependencies.
