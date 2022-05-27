@@ -143,7 +143,7 @@ jobs:
         if: ${{ matrix.coverage == 'cov' }}
         run: |
           lcov --directory . --capture --output-file coverage.info
-          lcov --remove coverage.info "/usr/*" "${{ github.workspace }}/prefixenv/*" "${{ github.workspace }}/build/*" "${{ github.workspace }}/examples/*" "${{ github.workspace }}/test/*" --output-file coverage.info
+          lcov --remove coverage.info "/usr/*" "${{ github.workspace }}/prefixenv/*" "${{ github.workspace }}/build/*" "${{ github.workspace }}/examples/*" "${{ github.workspace }}/test/*" "${{ github.workspace }}/src/clone/*" --output-file coverage.info
           lcov --list coverage.info
 
       - name: Coveralls.io Upload
@@ -153,11 +153,17 @@ jobs:
           path-to-lcov: "./coverage.info"
           github-token: ${{ secrets.github_token }}
 
-      - name: Failure display compiler version
+      - name: Failure display selected compiler version
         if: ${{ failure() }}
         run: |
-          gcc -v
+          ${CC} -v
+          ${CXX} -v
+
+      - name: Failure display default compiler version
+        if: ${{ failure() }}
+        run: |
           clang -v
+          gcc -v
 
       - name: Failure display env
         if: ${{ failure() }}
