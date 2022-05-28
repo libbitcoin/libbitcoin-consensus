@@ -19,7 +19,12 @@
       <!-- 4715: (1) not all control paths return a value. -->
       <!-- 4800: (4 - vc140 warning) forcing value to bool. -->
       <!-- 4996: (2) unchecked iterator, call to 'std::copy' with parameters that may be unsafe. -->
-      <DisableSpecificWarnings>4018;4244;4267;4715;4800;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <!-- 4100: (7) unreferenced formal parameter. -->
+      <!-- 4701: (2) potentially uninitialized local variable 'ext_flag' used. -->
+      <!-- 4702: (2) unreachable code. -->
+      <!-- 4456: (3) declaration of 'out' hides previous local declaration. -->
+      <!-- 4127: (2) conditional expression is constant. -->
+      <DisableSpecificWarnings>4018;4244;4267;4715;4800;4996;4100;4701;4702;4456;4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <EnablePREfast>false</EnablePREfast>
       <PreprocessorDefinitions Condition="'$(ConfigurationType)' == 'DynamicLibrary'">BCK_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(ConfigurationType)' == 'StaticLibrary'">BCK_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>

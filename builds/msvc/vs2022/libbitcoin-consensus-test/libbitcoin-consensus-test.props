@@ -20,8 +20,12 @@
       <!-- 4715: (1) not all control paths return a value. -->
       <!-- 4800: (4 - vc140 warning) forcing value to bool. -->
       <!-- 4996: (2) unchecked iterator, call to 'std::copy' with parameters that may be unsafe. -->
-      <DisableSpecificWarnings>4018;4244;4267;4715;4800;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PreprocessorDefinitions Condition="'$(DefaultLinkage)' == 'dynamic'">BOOST_TEST_DYN_LINK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <!-- 4100: (7) unreferenced formal parameter. -->
+      <!-- 4701: (2) potentially uninitialized local variable 'ext_flag' used. -->
+      <!-- 4702: (2) unreachable code. -->
+      <!-- 4456: (3) declaration of 'out' hides previous local declaration. -->
+      <!-- 4127: (2) conditional expression is constant. -->
+      <DisableSpecificWarnings>4018;4244;4267;4715;4800;4996;4100;4701;4702;4456;4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <!-- We have a problem in configuration of boost test with dynamic lib, run tests after release builds. -->
     <PostBuildEvent Condition="'$(DefaultLinkage)' != 'dynamic' and '$(DebugOrRelease)' == 'release'">
