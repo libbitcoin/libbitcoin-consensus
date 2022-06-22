@@ -314,6 +314,12 @@ if (HAVE_SYS_ENDIAN_H)
     add_definitions( -DHAVE_DECL_HTOBE64=${HAVE_DECL_HTOBE64} )
 endif()
 
+if (BUILD_SHARED_LIBS)
+    set( Boost_USE_STATIC_LIBS "off" )
+else()
+    set( Boost_USE_STATIC_LIBS "on" )
+endif()
+
 # Find boost
 #------------------------------------------------------------------------------
 find_package( Boost 1.72.0 REQUIRED COMPONENTS
