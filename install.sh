@@ -720,7 +720,7 @@ build_all()
     create_from_github libbitcoin secp256k1 version7
     build_from_github secp256k1 "$PARALLEL" false "${SECP256K1_OPTIONS[@]}" "$@"
     if [[ ! ($CI == true) ]]; then
-        create_from_github pmienk libbitcoin-consensus install-cmake-v3
+        create_from_github libbitcoin libbitcoin-consensus version3
         build_from_github libbitcoin-consensus "$PARALLEL" true "${BITCOIN_CONSENSUS_OPTIONS[@]}" "$@"
     else
         push_directory "$PRESUMED_CI_PROJECT_PATH"
