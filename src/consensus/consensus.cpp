@@ -21,6 +21,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <iostream>
+#include <iterator>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 #include <string.h>
@@ -83,7 +85,7 @@ private:
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
 // This function is not published (but non-static for testability).
-verify_result_type script_error_to_verify_result(ScriptError_t code)
+verify_result script_error_to_verify_result(ScriptError_t code) noexcept
 {
     switch (code)
     {
@@ -194,7 +196,7 @@ verify_result_type script_error_to_verify_result(ScriptError_t code)
 // This mapping decouples the consensus API from the satoshi implementation
 // files. We prefer to keep our copies of consensus files isomorphic.
 // This function is not published (but non-static for testability).
-unsigned int verify_flags_to_script_flags(unsigned int flags)
+unsigned int verify_flags_to_script_flags(uint32_t flags) noexcept
 {
     unsigned int script_flags = SCRIPT_VERIFY_NONE;
 
@@ -234,26 +236,15 @@ unsigned int verify_flags_to_script_flags(unsigned int flags)
     return script_flags;
 }
 
-// This function is published. The implementation exposes no satoshi internals.
-verify_result_type verify_script(const unsigned char* transaction,
-    size_t transaction_size, const unsigned char* prevout_script,
-    size_t prevout_script_size, unsigned long long prevout_value,
-    unsigned int tx_input_index, unsigned int flags)
+#ifdef UNTESTED
+verify_result verify_transaction(const chunk& transaction,
+    const outputs& prevouts, uint32_t flags) noexcept
 {
-    if (prevout_value > INT64_MAX)
-        throw std::invalid_argument("value");
-
-    if (transaction_size > 0 && transaction == NULL)
-        throw std::invalid_argument("transaction");
-
-    if (prevout_script_size > 0 && prevout_script == NULL)
-        throw std::invalid_argument("prevout_script");
-
     std::shared_ptr<CTransaction> tx;
 
     try
     {
-        transaction_istream stream(transaction, transaction_size);
+        transaction_istream stream(transaction.data(), transaction.size());
         tx = std::make_shared<CTransaction>(deserialize, stream);
     }
     catch (const std::exception&)
@@ -261,26 +252,125 @@ verify_result_type verify_script(const unsigned char* transaction,
         return verify_result_tx_invalid;
     }
 
-    if (tx_input_index >= tx->vin.size())
+#ifndef NDEBUG
+    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction.size())
+        return verify_result_tx_size_invalid;
+#endif // NDEBUG
+
+    if (prevouts.size() != tx->vin.size())
         return verify_result_tx_input_invalid;
 
-    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction_size)
+    ScriptError_t error;
+    uint32_t input_index = 0;
+    auto prevout = prevouts.begin();
+    const auto script_flags = verify_flags_to_script_flags(flags);
+
+    for (const auto& input: tx->vin)
+    {
+        if (prevout->value > std::numeric_limits<int64_t>::max())
+            return verify_value_overflow;
+
+        const CAmount amount(static_cast<int64_t>(prevout->value));
+        TransactionSignatureChecker checker(&(*tx), input_index, amount);
+        CScript output_cscript(prevout->script.begin(), prevout->script.end());
+
+        try
+        {
+            VerifyScript(input.scriptSig, output_cscript, &input.scriptWitness,
+                script_flags, checker, &error);
+        }
+        catch (const std::exception&)
+        {
+            return verify_evaluation_throws;
+        }
+
+        if (error != ScriptError_t::SCRIPT_ERR_OK)
+            break;
+
+        ++prevout;
+        ++input_index;
+    }
+
+    return script_error_to_verify_result(error);
+}
+#endif
+
+verify_result verify_script(const chunk& transaction, const output& prevout,
+    uint32_t input_index, uint32_t flags) noexcept
+{
+    if (prevout.value > std::numeric_limits<int64_t>::max())
+        return verify_value_overflow;
+
+    std::shared_ptr<CTransaction> tx;
+
+    try
+    {
+        transaction_istream stream(transaction.data(), transaction.size());
+        tx = std::make_shared<CTransaction>(deserialize, stream);
+    }
+    catch (const std::exception&)
+    {
+        return verify_result_tx_invalid;
+    }
+
+    if (input_index >= tx->vin.size())
+        return verify_result_tx_input_invalid;
+
+#ifndef NDEBUG
+    if (GetSerializeSize(*tx, PROTOCOL_VERSION) != transaction.size())
         return verify_result_tx_size_invalid;
+#endif // NDEBUG
 
     ScriptError_t error;
-    const auto& tx_ref = *tx;
-    const CAmount amount(static_cast<int64_t>(prevout_value));
-    TransactionSignatureChecker checker(&tx_ref, tx_input_index, amount);
-    const unsigned int script_flags = verify_flags_to_script_flags(flags);
-    CScript output_script(prevout_script, prevout_script + prevout_script_size);
-    const auto& input_script = tx->vin[tx_input_index].scriptSig;
-    const auto witness_stack = &tx->vin[tx_input_index].scriptWitness;
+    const CAmount amount(static_cast<int64_t>(prevout.value));
+    const auto script_flags = verify_flags_to_script_flags(flags);
+    TransactionSignatureChecker checker(&(*tx), input_index, amount);
+    CScript output_cscript(prevout.script.begin(), prevout.script.end());
+    const auto& input = tx->vin[input_index];
 
-    // See libbitcoin-blockchain : validate_input.cpp :
-    // bc::blockchain::validate_input::verify_script(const transaction& tx,
-    //     uint32_t input_index, uint32_t forks, bool use_libconsensus)...
-    VerifyScript(input_script, output_script, witness_stack, script_flags,
-        checker, &error);
+    try
+    {
+        // See libbitcoin-blockchain : validate_input.cpp :
+        // bc::blockchain::validate_input::verify_script(const transaction& tx,
+        //     uint32_t input_index, uint32_t forks, bool use_libconsensus)...
+        VerifyScript(input.scriptSig, output_cscript, &input.scriptWitness,
+            script_flags, checker, &error);
+    }
+    catch (const std::exception&)
+    {
+        return verify_evaluation_throws;
+    }
+
+    return script_error_to_verify_result(error);
+}
+
+verify_result verify_unsigned_script(const output& prevout,
+    const chunk& input_script, const stack& witness, uint32_t flags) noexcept
+{
+    if (prevout.value > std::numeric_limits<int64_t>::max())
+        return verify_value_overflow;
+
+    CTransaction tx;
+    ScriptError_t error;
+    const CAmount amount(static_cast<int64_t>(prevout.value));
+    TransactionSignatureChecker checker(&tx, 0, amount);
+    const auto script_flags = verify_flags_to_script_flags(flags);
+
+    CScriptWitness witness_stack;
+    witness_stack.stack.assign(witness.begin(), witness.end());
+    CScript input_cscript(input_script.begin(), input_script.end());
+    CScript output_cscript(prevout.script.begin(), prevout.script.end());
+
+    try
+    {
+        // The checker has an empty transaction, fails if checksig is invoked.
+        VerifyScript(input_cscript, output_cscript, &witness_stack, script_flags,
+            checker, &error);
+    }
+    catch (const std::exception&)
+    {
+        return verify_evaluation_throws;
+    }
 
     return script_error_to_verify_result(error);
 }

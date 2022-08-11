@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2019 libbitcoin developers (see AUTHORS)
+ * Copyright (c) 2011-2021 libbitcoin developers (see AUTHORS)
  *
  * This file is part of libbitcoin.
  *
@@ -16,22 +16,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef LIBBITCOIN_CONSENSUS_CONSENSUS_HPP
-#define LIBBITCOIN_CONSENSUS_CONSENSUS_HPP
+#ifndef LIBBITCOIN_CONSENSUS_TEST_TEST_HPP
+#define LIBBITCOIN_CONSENSUS_TEST_TEST_HPP
 
-#include <cstddef>
-#include <bitcoin/consensus/define.hpp>
-#include <bitcoin/consensus/export.hpp>
-#include "script/script_error.h"
+#include <string>
+#include <vector>
 
-namespace libbitcoin {
-namespace consensus {
+typedef std::vector<uint8_t> data_chunk;
 
-// These are not published in the public header but are exposed here for test.
-BCK_API verify_result script_error_to_verify_result(ScriptError_t code) noexcept;
-BCK_API unsigned int verify_flags_to_script_flags(uint32_t flags) noexcept;
+bool decode_base16(data_chunk& out, const std::string& in);
 
-} // namespace consensus
-} // namespace libbitcoin
+// Set valid to false to establish a parse failure expectation.
+data_chunk mnemonic_to_data(const std::string& mnemonic, bool valid=true);
 
 #endif

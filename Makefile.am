@@ -90,7 +90,9 @@ test_libbitcoin_consensus_test_SOURCES = \
     test/consensus__script_verify.cpp \
     test/consensus__verify_flags_to_script_flags.cpp \
     test/main.cpp \
-    test/script.hpp
+    test/script.hpp \
+    test/test.cpp \
+    test/test.hpp
 
 endif WITH_TESTS
 

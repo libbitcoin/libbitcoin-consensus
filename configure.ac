@@ -69,9 +69,9 @@ AC_ARG_VAR([CC], "C compiler to use, such as gcc or clang")
 AC_ARG_VAR([CXX], "C++ compiler to use, such as g++ or clang++")
 AC_ARG_VAR([PKG_CONFIG_PATH], "Additional directories for package discovery.")
 
-# Check for baseline language coverage in the compiler for the C++11 standard.
+# Check for baseline language coverage in the compiler for the C++20 standard.
 #------------------------------------------------------------------------------
-AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
+AX_CXX_COMPILE_STDCXX([20], [noext], [mandatory])
 
 
 # Process options.
@@ -345,17 +345,17 @@ AC_CHECK_HEADERS([sys/endian.h],
 
 # Check dependencies.
 #==============================================================================
-# Require Boost of at least version 1.72.0 and output ${boost_CPPFLAGS/LDFLAGS}.
+# Require Boost of at least version 1.76.0 and output ${boost_CPPFLAGS/LDFLAGS}.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
-    [AX_BOOST_BASE([1.72.0],
+    [AX_BOOST_BASE([1.76.0],
         [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
          AC_SUBST([boost_ISYS_CPPFLAGS], [`echo ${BOOST_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
          AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
          AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
          AC_MSG_NOTICE([boost_ISYS_CPPFLAGS : ${boost_ISYS_CPPFLAGS}])
          AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
-        [AC_MSG_ERROR([Boost 1.72.0 or later is required but was not found.])])])
+        [AC_MSG_ERROR([Boost 1.76.0 or later is required but was not found.])])])
 
 AS_CASE([${enable_isystem}],[yes],
     [AC_SUBST([boost_BUILD_CPPFLAGS], [${boost_ISYS_CPPFLAGS}])],
@@ -369,13 +369,13 @@ AS_CASE([${with_tests}], [yes],
      AC_MSG_NOTICE([boost_unit_test_framework_LIBS : ${boost_unit_test_framework_LIBS}])],
     [AC_SUBST([boost_unit_test_framework_LIBS], [])])
 
-# Require secp256k1 of at least version 0.1.0.19 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+# Require secp256k1 of at least version 0.1.0.20 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
 #------------------------------------------------------------------------------
-PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.1.0.19],
-    [secp256k1_INCLUDEDIR="`$PKG_CONFIG --variable=includedir "libsecp256k1 >= 0.1.0.19" 2>/dev/null`"
-     secp256k1_OTHER_CFLAGS="`$PKG_CONFIG --cflags-only-other "libsecp256k1 >= 0.1.0.19" 2>/dev/null`"],
-    [AC_MSG_ERROR([libsecp256k1 >= 0.1.0.19 is required but was not found.])])
-AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.1.0.19'])
+PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.1.0.20],
+    [secp256k1_INCLUDEDIR="`$PKG_CONFIG --variable=includedir "libsecp256k1 >= 0.1.0.20" 2>/dev/null`"
+     secp256k1_OTHER_CFLAGS="`$PKG_CONFIG --cflags-only-other "libsecp256k1 >= 0.1.0.20" 2>/dev/null`"],
+    [AC_MSG_ERROR([libsecp256k1 >= 0.1.0.20 is required but was not found.])])
+AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.1.0.20'])
 AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
 AS_IF([test x${secp256k1_INCLUDEDIR} != "x"],
     [AC_SUBST([secp256k1_ISYS_CPPFLAGS], ["-isystem${secp256k1_INCLUDEDIR} ${secp256k1_OTHER_CFLAGS}"])],
@@ -395,11 +395,11 @@ AC_MSG_NOTICE([secp256k1_BUILD_CPPFLAGS : ${secp256k1_BUILD_CPPFLAGS}])
 
 # Set flags.
 #==============================================================================
-# Require c++11 for all c++ products.
+# Require c++20 for all c++ products.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-std=c++11],
-        [CXXFLAGS="$CXXFLAGS -std=c++11"])])
+    [AX_CHECK_COMPILE_FLAG([-std=c++20],
+        [CXXFLAGS="$CXXFLAGS -std=c++20"])])
 
 # Warn on all stuff.
 #------------------------------------------------------------------------------
@@ -425,22 +425,6 @@ AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wextra],
         [CXXFLAGS="$CXXFLAGS -Wextra"])])
 
-# Be really annoying.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-Wpedantic],
-        [CFLAGS="$CFLAGS -Wpedantic"],
-        [AX_CHECK_COMPILE_FLAG([-pedantic],
-            [CFLAGS="$CFLAGS -pedantic"])])])
-
-# Be really annoying.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*],
-    [AX_CHECK_COMPILE_FLAG([-Wpedantic],
-        [CXXFLAGS="$CXXFLAGS -Wpedantic"],
-        [AX_CHECK_COMPILE_FLAG([-pedantic],
-            [CXXFLAGS="$CXXFLAGS -pedantic"])])])
-
 # Disallow warning on style order of declarations.
 #------------------------------------------------------------------------------
 AS_CASE([${CC}], [*],
@@ -464,6 +448,12 @@ AS_CASE([${CC}], [*],
 AS_CASE([${CC}], [*],
     [AX_CHECK_COMPILE_FLAG([-Wno-comment],
         [CXXFLAGS="$CXXFLAGS -Wno-comment"])])
+
+# Suppress warning for copy of implicitly generated copy constructor.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_CHECK_COMPILE_FLAG([-Wno-deprecated-copy],
+        [CXXFLAGS="$CXXFLAGS -Wno-deprecated-copy"])])
 
 # Conflict in stdlib under clang. Enabled in clang only.
 #------------------------------------------------------------------------------

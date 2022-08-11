@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- |  Copyright (c) 2014-2020 libbitcoin-consensus developers (see COPYING).
+ |  Copyright (c) 2014-2021 libbitcoin-consensus developers (see COPYING).
  |
  |         GENERATED SOURCE CODE, DO NOT EDIT EXCEPT EXPERIMENTALLY
  |
@@ -74,9 +74,11 @@
     <ClCompile Include="..\..\..\..\test\consensus__script_verify.cpp" />
     <ClCompile Include="..\..\..\..\test\consensus__verify_flags_to_script_flags.cpp" />
     <ClCompile Include="..\..\..\..\test\main.cpp" />
+    <ClCompile Include="..\..\..\..\test\test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\test\script.hpp" />
+    <ClInclude Include="..\..\..\..\test\test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -100,5 +102,8 @@
     <ProjectReference Include="..\libbitcoin-consensus\libbitcoin-consensus.vcxproj">
       <Project>{6C521D95-00CE-4120-97D1-430E2870D738}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\..\debug.natvis" />
   </ItemGroup>
 </Project>
