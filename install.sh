@@ -733,10 +733,10 @@ build_all()
 {
     unpack_from_tarball "$BOOST_ARCHIVE" "$BOOST_URL" bzip2 "$BUILD_BOOST"
     build_from_tarball_boost "$BOOST_ARCHIVE" "$PARALLEL" "$BUILD_BOOST" "${BOOST_OPTIONS[@]}"
-    create_from_github evoskuil secp256k1 version8
+    create_from_github libbitcoin secp256k1 version8
     build_from_github secp256k1 "$PARALLEL" false "${SECP256K1_OPTIONS[@]}" "$@"
     if [[ ! ($CI == true) ]]; then
-        create_from_github evoskuil libbitcoin-consensus master
+        create_from_github libbitcoin libbitcoin-consensus master
         build_from_github libbitcoin-consensus "$PARALLEL" true "${BITCOIN_CONSENSUS_OPTIONS[@]}" "$@"
     else
         push_directory "$PRESUMED_CI_PROJECT_PATH"
