@@ -26,3 +26,5 @@ libbitcoin-consensus.pc
 bin
 obj
 
+*.lock
+*.vsidx
