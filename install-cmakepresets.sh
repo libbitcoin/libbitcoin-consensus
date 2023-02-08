@@ -13,6 +13,7 @@
 #                            checks.
 # --build-boost            Builds Boost libraries.
 # --build-dir=<path>       Location of downloaded and intermediate files.
+# --preset=<label>         CMakePreset label.
 # --prefix=<absolute-path> Library install location (defaults to /usr/local).
 # --disable-shared         Disables shared library builds.
 # --disable-static         Disables static library builds.
@@ -31,6 +32,11 @@
 
 # Define constants.
 #==============================================================================
+
+# Declare associative array for computed presets.
+#------------------------------------------------------------------------------
+declare -A REPO_PRESET
+
 # Sentinel for comparison of sequential build.
 #------------------------------------------------------------------------------
 SEQUENTIAL=1
@@ -211,6 +217,7 @@ display_help()
     display_message "                             checks."
     display_message "  --build-boost            Builds Boost libraries."
     display_message "  --build-dir=<path>       Location of downloaded and intermediate files."
+    display_message "  --preset=<label>         CMakePreset label."
     display_message "  --prefix=<absolute-path> Library install location (defaults to /usr/local)."
     display_message "  --disable-shared         Disables shared library builds."
     display_message "  --disable-static         Disables static library builds."
@@ -242,6 +249,7 @@ parse_command_line_options()
 
             # Unique script options.
             (--build-dir=*)         BUILD_DIR="${OPTION#*=}";;
+            (--preset=*)            PRESET_ID="${OPTION#*=}";;
 
             # Handle ndebug declarations due to disabled argument passthrough
             (--enable-ndebug)       ENABLE_NDEBUG="yes";;
@@ -319,6 +327,42 @@ normalize_static_and_shared_options()
 
 handle_custom_options()
 {
+    if [[
+        ($PRESET_ID != "nix-base") &&
+        ($PRESET_ID != "gnu-debug") &&
+        ($PRESET_ID != "gnu-release") &&
+        ($PRESET_ID != "static") &&
+        ($PRESET_ID != "shared") &&
+        ($PRESET_ID != "gnu-optimized-size") &&
+        ($PRESET_ID != "nix-gnu-debug-static") &&
+        ($PRESET_ID != "nix-gnu-debug-shared") &&
+        ($PRESET_ID != "nix-gnu-release-static") &&
+        ($PRESET_ID != "nix-gnu-release-shared") &&
+        ($PRESET_ID != "nix-gnu-release-static-size") &&
+        ($PRESET_ID != "nix-gnu-release-shared-size")]]; then
+        display_error "Unsupported preset: $PRESET_ID"
+        display_error "Supported values are:"
+        display_error "  nix-base"
+        display_error "  gnu-debug"
+        display_error "  gnu-release"
+        display_error "  static"
+        display_error "  shared"
+        display_error "  gnu-optimized-size"
+        display_error "  nix-gnu-debug-static"
+        display_error "  nix-gnu-debug-shared"
+        display_error "  nix-gnu-release-static"
+        display_error "  nix-gnu-release-shared"
+        display_error "  nix-gnu-release-static-size"
+        display_error "  nix-gnu-release-shared-size"
+        display_error ""
+        display_help
+        exit 1
+    fi
+
+    BASE_PRESET_ID="$PRESET_ID"
+    REPO_PRESET[libbitcoin-consensus]="$PRESET_ID"
+    display_message "REPO_PRESET[libbitcoin-consensus]=${REPO_PRESET[libbitcoin-consensus]}"
+
     CUMULATIVE_FILTERED_ARGS=""
     CUMULATIVE_FILTERED_ARGS_CMAKE=""
 
@@ -360,15 +404,6 @@ handle_custom_options()
             export CMAKE_LIBRARY_PATH="${PREFIX}/lib:${CMAKE_LIBRARY_PATH}"
         fi
     fi
-
-    # Process Consensus
-    if [[ $WITH_BITCOIN_CONSENSUS = "yes" ]]; then
-        CUMULATIVE_FILTERED_ARGS+=" --with-consensus"
-        CUMULATIVE_FILTERED_ARGS_CMAKE+=" -Dwith-consensus=yes"
-    else
-        CUMULATIVE_FILTERED_ARGS+=" --without-consensus"
-        CUMULATIVE_FILTERED_ARGS_CMAKE+=" -Dwith-consensus=no"
-    fi
 }
 
 remove_build_options()
@@ -385,6 +420,7 @@ remove_install_options()
     CONFIGURE_OPTIONS=("${CONFIGURE_OPTIONS[@]/--enable-*/}")
     CONFIGURE_OPTIONS=("${CONFIGURE_OPTIONS[@]/--disable-*/}")
     CONFIGURE_OPTIONS=("${CONFIGURE_OPTIONS[@]/--prefix=*/}")
+    CONFIGURE_OPTIONS=("${CONFIGURE_OPTIONS[@]/--preset=*/}")
 }
 
 set_prefix()
@@ -451,6 +487,7 @@ display_configuration()
     display_message "LDLIBS                : $LDLIBS"
     display_message "BUILD_BOOST           : $BUILD_BOOST"
     display_message "BUILD_DIR                      : $BUILD_DIR"
+    display_message "PRESET_ID                      : $PRESET_ID"
     display_message "CUMULATIVE_FILTERED_ARGS       : $CUMULATIVE_FILTERED_ARGS"
     display_message "CUMULATIVE_FILTERED_ARGS_CMAKE : $CUMULATIVE_FILTERED_ARGS_CMAKE"
     display_message "PREFIX                : $PREFIX"
@@ -686,15 +723,21 @@ cmake_tests()
 cmake_project_directory()
 {
     local PROJ_NAME=$1
-    local JOBS=$2
-    local TEST=$3
-    shift 3
+    local PRESET=$2
+    local JOBS=$3
+    local TEST=$4
+    shift 4
 
     push_directory "$PROJ_NAME"
     local PROJ_CONFIG_DIR
     PROJ_CONFIG_DIR=$(pwd)
 
-    cmake $@ builds/cmake
+    push_directory "builds/cmake"
+    display_message "Preparing cmake --preset=$PRESET $@"
+    cmake --preset=$PRESET $@
+    popd
+
+    push_directory "obj/$PRESET"
     make_jobs "$JOBS"
 
     if [[ $TEST == true ]]; then
@@ -704,16 +747,18 @@ cmake_project_directory()
     make install
     configure_links
     pop_directory
+    pop_directory
 }
 
 build_from_github_cmake()
 {
     local REPO=$1
-    local JOBS=$2
-    local TEST=$3
-    local BUILD=$4
-    local OPTIONS=$5
-    shift 5
+    local PRESET=$2
+    local JOBS=$3
+    local TEST=$4
+    local BUILD=$5
+    local OPTIONS=$6
+    shift 6
 
     if [[ ! ($BUILD) || ($BUILD == "no") ]]; then
         return
@@ -725,7 +770,7 @@ build_from_github_cmake()
     display_heading_message "Prepairing to build $REPO"
 
     # Build the local repository clone.
-    cmake_project_directory "$REPO" "$JOBS" "$TEST" "${CONFIGURATION[@]}"
+    cmake_project_directory "$REPO" "$PRESET" "$JOBS" "$TEST" "${CONFIGURATION[@]}"
 }
 
 # Because boost ICU static lib detection assumes in incorrect ICU path.
@@ -885,11 +930,13 @@ build_all()
     build_from_github secp256k1 "$PARALLEL" false "yes" "${SECP256K1_OPTIONS[@]}" $CUMULATIVE_FILTERED_ARGS
     if [[ ! ($CI == true) ]]; then
         create_from_github libbitcoin libbitcoin-consensus version3 "yes"
-        build_from_github_cmake libbitcoin-consensus "$PARALLEL" true "yes" "${BITCOIN_CONSENSUS_OPTIONS[@]}" $CUMULATIVE_FILTERED_ARGS_CMAKE "$@"
+        display_message "libbitcoin-consensus PRESET ${REPO_PRESET[libbitcoin-consensus]}"
+        build_from_github_cmake libbitcoin-consensus ${REPO_PRESET[libbitcoin-consensus]} "$PARALLEL" true           "yes" "${BITCOIN_CONSENSUS_OPTIONS[@]}" $CUMULATIVE_FILTERED_ARGS_CMAKE "$@"
     else
         push_directory "$PRESUMED_CI_PROJECT_PATH"
         push_directory ".."
-        build_from_github_cmake libbitcoin-consensus "$PARALLEL" true "yes" "${BITCOIN_CONSENSUS_OPTIONS[@]}" $CUMULATIVE_FILTERED_ARGS_CMAKE "$@"
+        display_message "libbitcoin-consensus PRESET ${REPO_PRESET[libbitcoin-consensus]}"
+        build_from_github_cmake libbitcoin-consensus ${REPO_PRESET[libbitcoin-consensus]} "$PARALLEL" true "yes" "${BITCOIN_CONSENSUS_OPTIONS[@]}" $CUMULATIVE_FILTERED_ARGS_CMAKE "$@"
         pop_directory
         pop_directory
     fi
