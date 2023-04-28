@@ -343,56 +343,6 @@ AC_CHECK_HEADERS([sys/endian.h],
          #endif])])
 
 
-# Check dependencies.
-#==============================================================================
-# Require Boost of at least version 1.76.0 and output ${boost_CPPFLAGS/LDFLAGS}.
-#------------------------------------------------------------------------------
-AS_CASE([${CC}], [*],
-    [AX_BOOST_BASE([1.76.0],
-        [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
-         AC_SUBST([boost_ISYS_CPPFLAGS], [`echo ${BOOST_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
-         AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
-         AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
-         AC_MSG_NOTICE([boost_ISYS_CPPFLAGS : ${boost_ISYS_CPPFLAGS}])
-         AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
-        [AC_MSG_ERROR([Boost 1.76.0 or later is required but was not found.])])])
-
-AS_CASE([${enable_isystem}],[yes],
-    [AC_SUBST([boost_BUILD_CPPFLAGS], [${boost_ISYS_CPPFLAGS}])],
-    [AC_SUBST([boost_BUILD_CPPFLAGS], [${boost_CPPFLAGS}])])
-
-AC_MSG_NOTICE([boost_BUILD_CPPFLAGS : ${boost_BUILD_CPPFLAGS}])
-
-AS_CASE([${with_tests}], [yes],
-    [AX_BOOST_UNIT_TEST_FRAMEWORK
-     AC_SUBST([boost_unit_test_framework_LIBS], [${BOOST_UNIT_TEST_FRAMEWORK_LIB}])
-     AC_MSG_NOTICE([boost_unit_test_framework_LIBS : ${boost_unit_test_framework_LIBS}])],
-    [AC_SUBST([boost_unit_test_framework_LIBS], [])])
-
-# Require secp256k1 of at least version 0.1.0.20 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
-#------------------------------------------------------------------------------
-PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.1.0.20],
-    [secp256k1_INCLUDEDIR="`$PKG_CONFIG --variable=includedir "libsecp256k1 >= 0.1.0.20" 2>/dev/null`"
-     secp256k1_OTHER_CFLAGS="`$PKG_CONFIG --cflags-only-other "libsecp256k1 >= 0.1.0.20" 2>/dev/null`"],
-    [AC_MSG_ERROR([libsecp256k1 >= 0.1.0.20 is required but was not found.])])
-AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.1.0.20'])
-AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
-AS_IF([test x${secp256k1_INCLUDEDIR} != "x"],
-    [AC_SUBST([secp256k1_ISYS_CPPFLAGS], ["-isystem${secp256k1_INCLUDEDIR} ${secp256k1_OTHER_CFLAGS}"])],
-    [AC_SUBST([secp256k1_ISYS_CPPFLAGS], [${secp256k1_OTHER_CFLAGS}])])
-AC_MSG_NOTICE([secp256k1_CPPFLAGS : ${secp256k1_CPPFLAGS}])
-AC_MSG_NOTICE([secp256k1_ISYS_CPPFLAGS : ${secp256k1_ISYS_CPPFLAGS}])
-AC_MSG_NOTICE([secp256k1_OTHER_CFLAGS : ${secp256k1_OTHER_CFLAGS}])
-AC_MSG_NOTICE([secp256k1_INCLUDEDIR : ${secp256k1_INCLUDEDIR}])
-AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])
-
-AS_CASE([${enable_isystem}],[yes],
-    [AC_SUBST([secp256k1_BUILD_CPPFLAGS], [${secp256k1_ISYS_CPPFLAGS}])],
-    [AC_SUBST([secp256k1_BUILD_CPPFLAGS], [${secp256k1_CPPFLAGS}])])
-
-AC_MSG_NOTICE([secp256k1_BUILD_CPPFLAGS : ${secp256k1_BUILD_CPPFLAGS}])
-
-
 # Set flags.
 #==============================================================================
 # Require c++20 for all c++ products.
@@ -484,6 +434,56 @@ AS_CASE([${CC}], [*],
 AS_CASE([${CC}], [*clang*],
     [AX_CHECK_COMPILE_FLAG([-Wno-c++17-extensions],
         [CXXFLAGS="$CXXFLAGS -Wno-c++17-extensions"])])
+
+
+# Check dependencies.
+#==============================================================================
+# Require Boost of at least version 1.76.0 and output ${boost_CPPFLAGS/LDFLAGS}.
+#------------------------------------------------------------------------------
+AS_CASE([${CC}], [*],
+    [AX_BOOST_BASE([1.76.0],
+        [AC_SUBST([boost_CPPFLAGS], [${BOOST_CPPFLAGS}])
+         AC_SUBST([boost_ISYS_CPPFLAGS], [`echo ${BOOST_CPPFLAGS} | $SED s/^-I/-isystem/g | $SED s/' -I'/' -isystem'/g`])
+         AC_SUBST([boost_LDFLAGS], [${BOOST_LDFLAGS}])
+         AC_MSG_NOTICE([boost_CPPFLAGS : ${boost_CPPFLAGS}])
+         AC_MSG_NOTICE([boost_ISYS_CPPFLAGS : ${boost_ISYS_CPPFLAGS}])
+         AC_MSG_NOTICE([boost_LDFLAGS : ${boost_LDFLAGS}])],
+        [AC_MSG_ERROR([Boost 1.76.0 or later is required but was not found.])])])
+
+AS_CASE([${enable_isystem}],[yes],
+    [AC_SUBST([boost_BUILD_CPPFLAGS], [${boost_ISYS_CPPFLAGS}])],
+    [AC_SUBST([boost_BUILD_CPPFLAGS], [${boost_CPPFLAGS}])])
+
+AC_MSG_NOTICE([boost_BUILD_CPPFLAGS : ${boost_BUILD_CPPFLAGS}])
+
+AS_CASE([${with_tests}], [yes],
+    [AX_BOOST_UNIT_TEST_FRAMEWORK
+     AC_SUBST([boost_unit_test_framework_LIBS], [${BOOST_UNIT_TEST_FRAMEWORK_LIB}])
+     AC_MSG_NOTICE([boost_unit_test_framework_LIBS : ${boost_unit_test_framework_LIBS}])],
+    [AC_SUBST([boost_unit_test_framework_LIBS], [])])
+
+# Require secp256k1 of at least version 0.1.0.20 and output ${secp256k1_CPPFLAGS/LIBS/PKG}.
+#------------------------------------------------------------------------------
+PKG_CHECK_MODULES([secp256k1], [libsecp256k1 >= 0.1.0.20],
+    [secp256k1_INCLUDEDIR="`$PKG_CONFIG --variable=includedir "libsecp256k1 >= 0.1.0.20" 2>/dev/null`"
+     secp256k1_OTHER_CFLAGS="`$PKG_CONFIG --cflags-only-other "libsecp256k1 >= 0.1.0.20" 2>/dev/null`"],
+    [AC_MSG_ERROR([libsecp256k1 >= 0.1.0.20 is required but was not found.])])
+AC_SUBST([secp256k1_PKG], ['libsecp256k1 >= 0.1.0.20'])
+AC_SUBST([secp256k1_CPPFLAGS], [${secp256k1_CFLAGS}])
+AS_IF([test x${secp256k1_INCLUDEDIR} != "x"],
+    [AC_SUBST([secp256k1_ISYS_CPPFLAGS], ["-isystem${secp256k1_INCLUDEDIR} ${secp256k1_OTHER_CFLAGS}"])],
+    [AC_SUBST([secp256k1_ISYS_CPPFLAGS], [${secp256k1_OTHER_CFLAGS}])])
+AC_MSG_NOTICE([secp256k1_CPPFLAGS : ${secp256k1_CPPFLAGS}])
+AC_MSG_NOTICE([secp256k1_ISYS_CPPFLAGS : ${secp256k1_ISYS_CPPFLAGS}])
+AC_MSG_NOTICE([secp256k1_OTHER_CFLAGS : ${secp256k1_OTHER_CFLAGS}])
+AC_MSG_NOTICE([secp256k1_INCLUDEDIR : ${secp256k1_INCLUDEDIR}])
+AC_MSG_NOTICE([secp256k1_LIBS : ${secp256k1_LIBS}])
+
+AS_CASE([${enable_isystem}],[yes],
+    [AC_SUBST([secp256k1_BUILD_CPPFLAGS], [${secp256k1_ISYS_CPPFLAGS}])],
+    [AC_SUBST([secp256k1_BUILD_CPPFLAGS], [${secp256k1_CPPFLAGS}])])
+
+AC_MSG_NOTICE([secp256k1_BUILD_CPPFLAGS : ${secp256k1_BUILD_CPPFLAGS}])
 
 
 # Process outputs into templates.
