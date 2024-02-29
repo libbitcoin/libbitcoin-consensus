@@ -26,7 +26,7 @@
     </ClCompile>
     <!-- We have a problem in configuration of boost test with dynamic lib, run tests after release builds. -->
     <PostBuildEvent Condition="'$(DefaultLinkage)' != 'dynamic' and '$(DebugOrRelease)' == 'release'">
-      <Command>"$(TargetPath)" --run_test=* --show_progress=no --build_info=yes</Command>
+      <Command>"$(TargetPath)" --log_level=warning --run_test=* --show_progress=no --build_info=yes</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
 
